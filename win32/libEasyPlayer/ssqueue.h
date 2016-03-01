@@ -1,3 +1,10 @@
+/*
+	Copyright (c) 2013-2014 EasyDarwin.ORG.  All rights reserved.
+	Github: https://github.com/EasyDarwin
+	WEChat: EasyDarwin
+	Website: http://www.easydarwin.org
+	Author: Gavin@easydarwin.org
+*/
 #ifndef __SHARE_MEMORY_QUEUE_H__
 #define __SHARE_MEMORY_QUEUE_H__
 
@@ -27,23 +34,24 @@
 
 typedef struct __MEDIA_FRAME_INFO
 {
-	unsigned int	codec;			//编码格式
-	unsigned char	type;			//帧类型
-	unsigned char	fps;			//帧率
-	unsigned char	reserved1;
-	unsigned char	reserved2;
+	unsigned int	codec;			/* 音视频格式 */
+	unsigned int	type;			/* 视频帧类型 */
+	unsigned char	fps;			/* 视频帧率 */
+	unsigned short	width;			/* 视频宽 */
+	unsigned short  height;			/* 视频高 */
 
-	unsigned short	width;			//宽
-	unsigned short  height;			//高
-	unsigned int	sample_rate;	//采样率
-	unsigned int	channels;		//声道
-	unsigned int	length;			//帧大小
-	unsigned int    rtptimestamp;	//rtp timestamp
-	unsigned int	timestamp_sec;	//秒
-	//unsigned int	timestamp_usec;	//微秒
+	unsigned int	reserved1;		/* 保留参数1 */
+	unsigned int	reserved2;		/* 保留参数2 */
+
+	unsigned int	sample_rate;	/* 音频采样率 */
+	unsigned int	channels;		/* 音频声道数 */
+
+	unsigned int	length;			/* 音视频帧大小 */
+	unsigned int    timestamp_usec;	/* 时间戳,微妙 */
+	unsigned int	timestamp_sec;	/* 时间戳 秒 */
 	
-	float			bitrate;
-	float			losspacket;
+	float			bitrate;		/* 比特率 */
+	float			losspacket;		/* 丢包率 */
 }MEDIA_FRAME_INFO;
 
 typedef struct __SS_BUF_T

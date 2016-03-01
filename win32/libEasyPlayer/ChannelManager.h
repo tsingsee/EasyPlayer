@@ -1,13 +1,19 @@
+/*
+	Copyright (c) 2013-2014 EasyDarwin.ORG.  All rights reserved.
+	Github: https://github.com/EasyDarwin
+	WEChat: EasyDarwin
+	Website: http://www.easydarwin.org
+	Author: Gavin@easydarwin.org
+*/
 #pragma once
 
 #include "libEasyPlayerAPI.h"
-#include "NVSource\EasyNVSourceAPI.h"
+#include "EasyRTSPClient\EasyRTSPClientAPI.h"
 #include "FFDecoder\FFDecoderAPI.h"
 #include "D3DRender\D3DRenderAPI.h"
 #include "SoundPlayer.h"
 #include "ssqueue.h"
-
-#pragma comment(lib, "NVSource/libEasyNVSource.lib")
+#pragma comment(lib, "EasyRTSPClient/libEasyRTSPClient.lib")
 #pragma comment(lib, "FFDecoder/FFDecoder.lib")
 #pragma comment(lib, "D3DRender/D3DRender.lib")
 
@@ -22,6 +28,7 @@ extern "C"
 #define		MAX_YUV_FRAME_NUM	3		//解码后的最大YUV帧数
 #define		MAX_CACHE_FRAME		30		//最大帧缓存,超过该值将只播放I帧
 #define		MAX_AVQUEUE_SIZE	(1024*1024)	//队列大小
+//#define		MAX_AVQUEUE_SIZE	(1920*1080*2)	//队列大小
 
 typedef struct __CODEC_T
 {
@@ -63,8 +70,7 @@ typedef struct __PLAY_THREAD_OBJ
 	THREAD_OBJ		decodeThread;		//解码线程
 	THREAD_OBJ		displayThread;		//显示线程
 
-
-	Easy_NVS_Handle	nvsHandle;
+	Easy_RTSP_Handle		nvsHandle;
 	HWND			hWnd;				//显示视频的窗口句柄
 	int				channelId;			//通道号
 	int				showStatisticalInfo;//显示统计信息
@@ -79,11 +85,11 @@ typedef struct __PLAY_THREAD_OBJ
 	DWORD			dwLosspacketTime;	//丢包时间
 	DWORD			dwDisconnectTime;	//断线时间
 
-
 	DECODER_OBJ		decoderObj[MAX_DECODER_NUM];
 	D3D_HANDLE		d3dHandle;		//显示句柄
 	D3D_SUPPORT_FORMAT	renderFormat;	//显示格式
 	int				ShownToScale;		//按比例显示
+	int				decodeKeyFrameOnly;	//仅解码显示关键帧
 
 	unsigned int	rtpTimestamp;
 	LARGE_INTEGER	cpuFreq;		//cpu频率
@@ -93,13 +99,16 @@ typedef struct __PLAY_THREAD_OBJ
 	YUV_FRAME_INFO	yuvFrame[MAX_YUV_FRAME_NUM];
 	CRITICAL_SECTION	crit;
 	bool			resetD3d;		//是否需要重建d3dRender
+	RECT			rcSrcRender;
+	D3D9_LINE		d3d9Line;
 
 	char			manuRecordingFile[MAX_PATH];
 	int				manuRecording;
 	MP4C_Handler	mp4cHandle;
 	int				vidFrameNum;
 
-
+	MediaSourceCallBack pCallback;
+	void			*pUserPtr;
 }PLAY_THREAD_OBJ;
 
 
@@ -126,11 +135,17 @@ public:
 	int		Initial();
 
 	//OpenStream 返回一个可用的通道ID
-	int		OpenStream(const char *url, HWND hWnd, RENDER_FORMAT renderFormat, int _rtpovertcp, const char *username, const char *password);
+	int		OpenStream(const char *url, HWND hWnd, RENDER_FORMAT renderFormat, int _rtpovertcp, const char *username, const char *password, MediaSourceCallBack callback=NULL, void *userPtr=NULL);
 	void	CloseStream(int channelId);
 	int		ShowStatisticalInfo(int channelId, int _show);
 	int		SetFrameCache(int channelId, int _cache);
 	int		SetShownToScale(int channelId, int ShownToScale);
+	int		SetDecodeType(int channelId, int _decodeKeyframeOnly);
+	int		SetRenderRect(int channelId, LPRECT lpSrcRect);
+	int		DrawLine(int channelId, LPRECT lpRect);
+	int		SetDragStartPoint(int channelId, POINT pt);
+	int		SetDragEndPoint(int channelId, POINT pt);
+	int		ResetDragPoint(int channelId);
 
 	//同一时间只支持一路声音播放
 	int		PlaySound(int channelId);
@@ -146,7 +161,7 @@ public:
 
 
 
-	int		ProcessData(int _chid, int mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo);
+	int		ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo);
 protected:
 	PLAY_THREAD_OBJ			*pRealtimePlayThread;		//实时播放线程
 	AUDIO_PLAY_THREAD_OBJ	*pAudioPlayThread;			//音频播放线程

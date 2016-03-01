@@ -1,3 +1,10 @@
+/*
+	Copyright (c) 2013-2014 EasyDarwin.ORG.  All rights reserved.
+	Github: https://github.com/EasyDarwin
+	WEChat: EasyDarwin
+	Website: http://www.easydarwin.org
+	Author: Gavin@easydarwin.org
+*/
 #include "ssqueue.h"
 #include <time.h>
 #include <stdarg.h>
@@ -104,8 +111,7 @@ int		SSQ_Init(SS_QUEUE_OBJ_T *pObj, unsigned int sharememory, unsigned int chann
 		}
 	}
 
-	//Create data map
-	
+	//Create data map	
 	if (sharememory == 0x01)
 	{
 		wsprintf(wszDataName, TEXT("%s%d_b"), sharename, channelid);
@@ -272,7 +278,7 @@ int	SSQ_AddFrameInfo(SS_QUEUE_OBJ_T *pObj, unsigned int _pos, MEDIA_FRAME_INFO *
 	pObj->pQueHeader->pFrameinfoList[pObj->pQueHeader->frameno].timestamp = ++nTimestamp;
 #else
 	pObj->pFrameinfoList[pObj->pQueHeader->frameno].timestamp_sec = frameinfo->timestamp_sec;
-	pObj->pFrameinfoList[pObj->pQueHeader->frameno].rtp_timestamp = frameinfo->rtptimestamp;
+	pObj->pFrameinfoList[pObj->pQueHeader->frameno].rtp_timestamp = frameinfo->timestamp_sec*1000+frameinfo->timestamp_usec/1000;
 #endif
 	//SSQ_TRACE("Ö¡ºÅ: %d\n", pObj->pQueHeader->frameno);
 	pObj->pQueHeader->frameno ++;
@@ -584,7 +590,6 @@ int		SSQ_GetData(SS_QUEUE_OBJ_T *pObj, unsigned int *channelid, unsigned int *me
 	}
 #else
 
-
 	if (pObj->pQueHeader->readpos == pObj->pQueHeader->bufsize)
 	{
 		SSQ_TRACE("ÖØÖÃ¶ÁÎ»ÖÃ[%d / %d]..\n", pObj->pQueHeader->readpos, pObj->pQueHeader->bufsize);
@@ -697,7 +702,6 @@ int		SSQ_GetData(SS_QUEUE_OBJ_T *pObj, unsigned int *channelid, unsigned int *me
 					if (NULL!=pbuf)	memcpy(pbuf+remain, pObj->pQueData, frameinfo->length-remain);
 					//memset(pObj->pQueData, 0x00, frameinfo->length-remain);	//clear
 				
-
 					pObj->pQueHeader->readpos = frameinfo->length-remain;
 					pObj->pQueHeader->totalsize -= frameinfo->length;
 					pObj->pQueHeader->totalsize -= sizeof(SS_BUF_T);

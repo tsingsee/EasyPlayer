@@ -7,7 +7,6 @@
 
 
 
-#include "../libEasyPlayer/libEasyPlayerAPI.h"
 
 // CDlgVideo ¶Ô»°¿ò
 
@@ -20,13 +19,12 @@ CDlgVideo::CDlgVideo(CWnd* pParent /*=NULL*/)
 	m_ChannelId	=	-1;
 	bDrag		=	false;
 
-
-
 	InitialComponents();
 }
 
 CDlgVideo::~CDlgVideo()
 {
+
 }
 
 void CDlgVideo::DoDataExchange(CDataExchange* pDX)
@@ -44,6 +42,7 @@ BEGIN_MESSAGE_MAP(CDlgVideo, CDialogEx)
 	ON_BN_CLICKED(IDC_CHECK_OSD, &CDlgVideo::OnBnClickedCheckOsd)
 	ON_WM_HSCROLL()
 	ON_WM_RBUTTONUP()
+	ON_WM_PAINT()
 END_MESSAGE_MAP()
 
 
@@ -296,7 +295,7 @@ void CDlgVideo::OnBnClickedButtonPreview()
 		HWND hWnd = NULL;
 		if (NULL != pDlgRender)	hWnd = pDlgRender->GetSafeHwnd();
 		m_ChannelId = EasyPlayer_OpenStream(szURL, hWnd, (RENDER_FORMAT)RenderFormat, 0x01, szUsername, szPassword);
-		
+
 		if (m_ChannelId > 0)
 		{
 			int iPos = pSliderCache->GetPos();
@@ -308,8 +307,6 @@ void CDlgVideo::OnBnClickedButtonPreview()
 		}
 	}
 }
-
-
 
 void CDlgVideo::OnBnClickedCheckOsd()
 {
@@ -348,4 +345,13 @@ void CDlgVideo::OnRButtonUp(UINT nFlags, CPoint point)
 
 
 	CDialogEx::OnRButtonUp(nFlags, point);
+}
+
+
+void CDlgVideo::OnPaint()
+{
+	CPaintDC dc(this); // device context for painting
+	// TODO: Add your message handler code here
+	// Do not call CDialogEx::OnPaint() for painting messages
+
 }

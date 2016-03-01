@@ -36,4 +36,11 @@ public:
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+
+private:
+	CImageEx	* m_pEasyLogo;
+
+public:
+	afx_msg void OnPaint();
+	virtual BOOL OnInitDialog();
 };

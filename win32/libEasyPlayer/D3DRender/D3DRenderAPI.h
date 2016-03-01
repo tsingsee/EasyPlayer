@@ -1,6 +1,7 @@
 #ifndef __D3D_RENDER_H__
 #define __D3D_RENDER_H__
 
+#define WIN32_LEAN_AND_MEAN
 
 #include <windows.h>
 #include <MMSystem.h>
@@ -12,7 +13,7 @@ typedef enum
 {
 	D3D_FORMAT_YUY2		=	MAKEFOURCC('Y','U','Y','2'),	//844715353			-->decode output format:	PIX_FMT_YUYV422		1
 	D3D_FORMAT_YV12		=	MAKEFOURCC('Y','V','1','2'),	//842094169
-	D3D_FORMAT_UYVY		=	MAKEFOURCC('U','Y','V','Y'),	//1498831189		-->decode output format:	PIX_FMT_UYVY422		17
+	D3D_FORMAT_UYVY		=	MAKEFOURCC('U', 'Y', 'V', 'Y'),	//1498831189		-->decode output format:	PIX_FMT_UYVY422		17
 	D3D_FORMAT_A8R8G8B8	=	21,								//					-->decode output format:	PIX_FMT_BGRA		30
 	D3D_FORMAT_X8R8G8B8	=	22,								//					-->decode output format:	PIX_FMT_BGRA		30
 	D3D_FORMAT_RGB565	=	23,								//					-->decode output format:	PIX_FMT_RGB565LE	44
@@ -134,9 +135,13 @@ extern "C"
 
 	//GDI显示
 	int	D3DRENDER_API  RGB_InitDraw(D3D_HANDLE *handle);
-	int	D3DRENDER_API  RGB_DrawData(D3D_HANDLE handle, HWND hWnd, char *pBuff, int width, int height, int ShownToScale, COLORREF bkColor, int flip=0, int OSDNum=0, D3D_OSD *_osd = NULL);
-	int	D3DRENDER_API  RGB_DeinitDraw(D3D_HANDLE *handle);
-
+	int	D3DRENDER_API  RGB_DrawData(D3D_HANDLE handle, HWND hWnd, char *pBuff, int width, int height, LPRECT lpRectSrc, int ShownToScale, COLORREF bkColor, int flip=0, int OSDNum=0, D3D_OSD *_osd = NULL);
+	void D3DRENDER_API  RGB_SetDragStartPoint(D3D_HANDLE handle, POINT pt);
+	void D3DRENDER_API  RGB_SetDragEndPoint(D3D_HANDLE handle, POINT pt);
+	void D3DRENDER_API  RGB_SetZoomIn(D3D_HANDLE handle, int zoomIn);
+	void D3DRENDER_API  RGB_ResetDragPoint(D3D_HANDLE handle);
+	
+	int D3DRENDER_API  RGB_DeinitDraw(D3D_HANDLE *handle);
 
 	//=====================================================
 	//初始化,申请资源

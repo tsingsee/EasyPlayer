@@ -18,6 +18,7 @@ CDlgRender::CDlgRender(CWnd* pParent /*=NULL*/)
 	memset(&channelStatus, 0x00, sizeof(CHANNELSTATUS));
 	hMenu		=	NULL;
 
+	m_pEasyLogo = NULL;
 
 	mChannelId	=	0;
 }
@@ -25,6 +26,8 @@ CDlgRender::CDlgRender(CWnd* pParent /*=NULL*/)
 CDlgRender::~CDlgRender()
 {
 	ClosePopupMenu();
+	UIRenderEngine->RemoveImage(m_pEasyLogo);
+
 }
 
 void CDlgRender::DoDataExchange(CDataExchange* pDX)
@@ -36,6 +39,7 @@ void CDlgRender::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CDlgRender, CDialogEx)
 	ON_WM_LBUTTONDBLCLK()
 	ON_WM_RBUTTONUP()
+	ON_WM_PAINT()
 END_MESSAGE_MAP()
 
 
@@ -102,4 +106,36 @@ BOOL CDlgRender::OnCommand(WPARAM wParam, LPARAM lParam)
 
 
 	return CDialogEx::OnCommand(wParam, lParam);
+}
+
+
+void CDlgRender::OnPaint()
+{
+	CPaintDC dc(this); // device context for painting
+	// TODO: 在此处添加消息处理程序代码
+	// 不为绘图消息调用 CDialogEx::OnPaint()
+	CBrush brushBkgnd; 
+	CRect rcClient;
+	brushBkgnd.CreateSolidBrush(RGB(0, 0, 0));
+	GetClientRect(&rcClient);
+	dc.FillRect(&rcClient, &brushBkgnd);
+	brushBkgnd.DeleteObject(); //释放画刷 
+
+	if ( m_pEasyLogo != NULL && !m_pEasyLogo->IsNull() )
+	{
+		int nStartX = (rcClient.Width()-184)/2;
+		int nStartY =  (rcClient.Height()-184)/2;
+		m_pEasyLogo->DrawImage(CDC::FromHandle(dc.m_hDC),nStartX,nStartY);
+	}
+}
+
+
+BOOL CDlgRender::OnInitDialog()
+{
+	CDialogEx::OnInitDialog();
+
+	m_pEasyLogo = UIRenderEngine->GetImage(TEXT("Res\\EasyTeam\\Easylogo.png"));
+
+	return TRUE;  // return TRUE unless you set the focus to a control
+	// 异常: OCX 属性页应返回 FALSE
 }

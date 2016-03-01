@@ -39,9 +39,6 @@
     <ClInclude Include="mp4creator\libmp4creator.h">
       <Filter>libmp4creator</Filter>
     </ClInclude>
-    <ClInclude Include="CreateDump.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChannelManager.cpp">
@@ -63,9 +60,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="libEasyPlayerAPI.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="CreateDump.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

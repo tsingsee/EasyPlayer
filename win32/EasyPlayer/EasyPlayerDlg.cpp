@@ -13,9 +13,11 @@
 #define new DEBUG_NEW
 #endif
 
-#include "../libEasyPlayer/libEasyPlayerAPI.h"
+#ifdef _DEBUG
 #pragma comment(lib, "../Debug/libEasyPlayer.lib")
-
+#else
+#pragma comment(lib, "../Release/libEasyPlayer.lib")
+#endif
 
 
 //异常处理函数
@@ -33,7 +35,6 @@ LONG CrashHandler_Player(EXCEPTION_POINTERS *pException)
 
 
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
-
 class CAboutDlg : public CDialogEx
 {
 public:
@@ -66,25 +67,25 @@ END_MESSAGE_MAP()
 // CEasyPlayerDlg 对话框
 
 
-
-
 CEasyPlayerDlg::CEasyPlayerDlg(CWnd* pParent /*=NULL*/)
-	: CDialogEx(CEasyPlayerDlg::IDD, pParent)
+	: CSkinDialog(CEasyPlayerDlg::IDD, TEXT("Main_config.xml"), pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 
 	InitialComponents();
-
 
 	SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER)CrashHandler_Player);
 }
 
 void CEasyPlayerDlg::DoDataExchange(CDataExchange* pDX)
 {
-	CDialogEx::DoDataExchange(pDX);
+	CSkinDialog::DoDataExchange(pDX);
+
+
+		DDX_Control(pDX, IDC_CHECK_SHOWNTOSCALE, pChkShownToScale);
 }
 
-BEGIN_MESSAGE_MAP(CEasyPlayerDlg, CDialogEx)
+BEGIN_MESSAGE_MAP(CEasyPlayerDlg, CSkinDialog)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
@@ -92,6 +93,7 @@ BEGIN_MESSAGE_MAP(CEasyPlayerDlg, CDialogEx)
 	ON_CBN_SELCHANGE(IDC_COMBO_SPLIT_SCREEN, &CEasyPlayerDlg::OnCbnSelchangeComboSplitScreen)
 	ON_CBN_SELCHANGE(IDC_COMBO_RENDER_FORMAT, &CEasyPlayerDlg::OnCbnSelchangeComboRenderFormat)
 	ON_BN_CLICKED(IDC_CHECK_SHOWNTOSCALE, &CEasyPlayerDlg::OnBnClickedCheckShowntoscale)
+	ON_WM_LBUTTONDOWN()
 END_MESSAGE_MAP()
 
 
@@ -99,7 +101,7 @@ END_MESSAGE_MAP()
 
 BOOL CEasyPlayerDlg::OnInitDialog()
 {
-	CDialogEx::OnInitDialog();
+	CSkinDialog::OnInitDialog();
 
 	// 将“关于...”菜单项添加到系统菜单中。
 
@@ -166,7 +168,7 @@ void CEasyPlayerDlg::OnSysCommand(UINT nID, LPARAM lParam)
 	}
 	else
 	{
-		CDialogEx::OnSysCommand(nID, lParam);
+		CSkinDialog::OnSysCommand(nID, lParam);
 	}
 }
 
@@ -195,7 +197,7 @@ void CEasyPlayerDlg::OnPaint()
 	}
 	else
 	{
-		CDialogEx::OnPaint();
+		CSkinDialog::OnPaint();
 	}
 }
 
@@ -211,7 +213,7 @@ BOOL CEasyPlayerDlg::DestroyWindow()
 	EasyPlayer_Release();
 	DeleteComponents();
 
-	return CDialogEx::DestroyWindow();
+	return CSkinDialog::DestroyWindow();
 }
 
 
@@ -222,9 +224,8 @@ LRESULT CEasyPlayerDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 		UpdateComponents();
 	}
 
-	return CDialogEx::WindowProc(message, wParam, lParam);
+	return CSkinDialog::WindowProc(message, wParam, lParam);
 }
-
 
 
 void	CEasyPlayerDlg::InitialComponents()
@@ -232,7 +233,7 @@ void	CEasyPlayerDlg::InitialComponents()
 	pComboxSplitScreen	=	NULL;
 	pComboxRenderFormat	=	NULL;
 	pVideoWindow	=	NULL;
-	pChkShownToScale	=	NULL;
+
 	pStaticCopyright	=	NULL;
 
 	RenderFormat	=	DISPLAY_FORMAT_RGB565;//RGB565
@@ -243,10 +244,21 @@ void	CEasyPlayerDlg::CreateComponents()
 {
 	__CREATE_WINDOW(pComboxSplitScreen, CComboBox,		IDC_COMBO_SPLIT_SCREEN);
 	__CREATE_WINDOW(pComboxRenderFormat, CComboBox,		IDC_COMBO_RENDER_FORMAT);
-	__CREATE_WINDOW(pChkShownToScale, CButton,		IDC_CHECK_SHOWNTOSCALE);
+	//__CREATE_WINDOW(pChkShownToScale, CSkinButton,		IDC_CHECK_SHOWNTOSCALE);
 	__CREATE_WINDOW(pStaticCopyright, CStatic,		IDC_STATIC_COPYRIGHT);
 
-	if (NULL != pChkShownToScale)		pChkShownToScale->SetWindowText(TEXT("按比例显示"));
+// 		checkimgtickn="Res\CheckBox\checkbox_tick_normal.png" checkimgtickh="Res\CheckBox\checkbox_tick_highlight.png" 
+// 		size="100,15" trans="true" checked="true" fontnormalcolor="#FFFFFF"/>
+	pChkShownToScale.SetCheckImage(TEXT("Res\\CheckBox\\checkbox_normal.png"), TEXT("Res\\CheckBox\\checkbox_highlight.png"), TEXT("Res\\CheckBox\\checkbox_tick_normal.png"), TEXT("Res\\CheckBox\\checkbox_tick_highlight.png") );
+	pChkShownToScale.SetButtonType(en_CheckButton);
+	HDC hParentDC = GetBackDC();
+
+	pChkShownToScale.SetParentBack(hParentDC);
+	pChkShownToScale.SetSize(68,15);
+	//pChkShownToScale.SetCheck(BST_CHECKED);
+
+
+		pChkShownToScale.SetWindowText(TEXT("按比例显示"));
 
 	if (NULL == pVideoWindow)
 	{
@@ -290,7 +302,7 @@ void	CEasyPlayerDlg::UpdateComponents()
 	if (rcClient.IsRectEmpty())		return;
 
 	CRect	rcVideo;
-	rcVideo.SetRect(rcClient.left, rcClient.top, rcClient.right, rcClient.bottom-30);
+	rcVideo.SetRect(rcClient.left+2, rcClient.top+36, rcClient.right-2, rcClient.bottom-40);
 	UpdateVideoPosition(&rcVideo);
 
 	CRect	rcSplitScreen;
@@ -303,7 +315,11 @@ void	CEasyPlayerDlg::UpdateComponents()
 
 	CRect	rcShownToScale;
 	rcShownToScale.SetRect(rcRenderFormat.right+10, rcRenderFormat.top, rcRenderFormat.right+10+110, rcRenderFormat.top+30);
-	__MOVE_WINDOW(pChkShownToScale, rcShownToScale);
+	//__MOVE_WINDOW(pChkShownToScale, rcShownToScale);
+	if (pChkShownToScale.GetSafeHwnd())
+	{
+		pChkShownToScale.MoveWindow(&rcShownToScale);
+	}
 
 	CRect	rcCopyright;
 	rcCopyright.SetRect(rcClient.right-200, rcSplitScreen.top+5, rcClient.right-2, rcClient.bottom);
@@ -582,4 +598,13 @@ void CEasyPlayerDlg::OnBnClickedCheckShowntoscale()
 	{
 		pVideoWindow->pDlgVideo[i].SetShownToScale(shownToScale);
 	}
+}
+
+
+void CEasyPlayerDlg::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	PostMessage(WM_NCLBUTTONDOWN,HTCAPTION,MAKELPARAM(point.x,point.y));
+
+	CSkinDialog::OnLButtonDown(nFlags, point);
 }

@@ -5,6 +5,8 @@
 #pragma once
 
 #include "DlgVideo.h"
+#include ".\EasySkinUI\skindialog.h"
+
 
 #define	_SURV_MAX_WINDOW_NUM		16
 
@@ -18,7 +20,7 @@ typedef struct __VIDEO_NODE_T
 }VIDEO_NODE_T;
 
 // CEasyPlayerDlg 对话框
-class CEasyPlayerDlg : public CDialogEx
+class CEasyPlayerDlg : public CSkinDialog
 {
 // 构造
 public:
@@ -29,7 +31,7 @@ public:
 	CComboBox		*pComboxSplitScreen;
 	CComboBox		*pComboxRenderFormat;	//IDC_COMBO_RENDER_FORMAT
 	VIDEO_NODE_T	*pVideoWindow;		//视频窗口
-	CButton			*pChkShownToScale;	//按比例显示
+	CSkinButton			pChkShownToScale;	//按比例显示
 	CStatic			*pStaticCopyright;	//IDC_STATIC_COPYRIGHT
 
 	void	InitialComponents();
@@ -62,4 +64,5 @@ public:
 	afx_msg void OnCbnSelchangeComboSplitScreen();
 	afx_msg void OnCbnSelchangeComboRenderFormat();
 	afx_msg void OnBnClickedCheckShowntoscale();
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 };

@@ -4,6 +4,7 @@
 // CDlgVideo ¶Ô»°¿ò
 
 
+#include "../libEasyPlayer/libEasyPlayerAPI.h"
 
 
 class CDlgVideo : public CDialogEx
@@ -56,4 +57,7 @@ public:
 	afx_msg void OnBnClickedCheckOsd();
 	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
+
+public:
+	afx_msg void OnPaint();
 };

@@ -1,3 +1,10 @@
+/*
+	Copyright (c) 2013-2014 EasyDarwin.ORG.  All rights reserved.
+	Github: https://github.com/EasyDarwin
+	WEChat: EasyDarwin
+	Website: http://www.easydarwin.org
+	Author: Gavin@easydarwin.org
+*/
 #include "trace.h"
 
 #include <stdio.h>

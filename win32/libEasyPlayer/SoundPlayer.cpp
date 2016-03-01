@@ -1,3 +1,10 @@
+/*
+	Copyright (c) 2013-2014 EasyDarwin.ORG.  All rights reserved.
+	Github: https://github.com/EasyDarwin
+	WEChat: EasyDarwin
+	Website: http://www.easydarwin.org
+	Author: Gavin@easydarwin.org
+*/
 #include "SoundPlayer.h"
 #include "trace.h"
 #include "vstime.h"
@@ -218,6 +225,9 @@ int	CSoundPlayer::Write(char *pbuf, int bufsize)//, unsigned int _timestamp)
 				soundObj.sleeptimes = uiSleepTimeMin;
 			}
 		}
+		// 这里写死后将导致44100Hz的声音播放不正常 [12/30/2015 Dingshuai]
+		//soundObj.sleeptimes = 64;
+
 	}
 	
 	soundObj.pWaveHdr[idx].dwUser = soundObj.sleeptimes;

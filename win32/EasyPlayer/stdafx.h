@@ -39,6 +39,15 @@
 
 #include "resource.h"
 
+// EasySkinUI的支持
+//图片控件
+#import "ImageOle.dll" named_guids
+//头文件
+//#include "./EasySkinUI/detours.h"
+#include "./EasySkinUI/SkinUI_ScrollBar.h"
+#pragma comment(lib,"Gdiplus.lib")
+#include "./EasySkinUI/SkinUI.h"
+
 
 #define	WM_WINDOW_MAXIMIZED		(WM_USER+2001)
 #define	WM_MANU_RECORDING		(WM_USER+2002)

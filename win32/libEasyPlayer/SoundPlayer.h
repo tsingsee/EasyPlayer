@@ -1,3 +1,10 @@
+/*
+	Copyright (c) 2013-2014 EasyDarwin.ORG.  All rights reserved.
+	Github: https://github.com/EasyDarwin
+	WEChat: EasyDarwin
+	Website: http://www.easydarwin.org
+	Author: Gavin@easydarwin.org
+*/
 #pragma once
 
 #include <winsock2.h>
@@ -5,11 +12,11 @@
 #pragma comment(lib, "winmm.lib")
 #include "ssqueue.h"
 
-//#define		MAX_WAVEHDR_BUFFER_COUNT		(100)
-//#define		MAX_AUDIO_BUFFER_LENGTH			(96000*(16)*2)	// 96Khz,16bit,Stereo,1sec
+#define		MAX_WAVEHDR_BUFFER_COUNT		(100)
+#define		MAX_AUDIO_BUFFER_LENGTH			(96000*(16)*2)	// 96Khz,16bit,Stereo,1sec
 
-#define		MAX_WAVEHDR_BUFFER_COUNT		(50)
-#define		MAX_AUDIO_BUFFER_LENGTH			(32000*(16)*2)	// 16Khz,16bit,Stereo,1sec
+// #define		MAX_WAVEHDR_BUFFER_COUNT		(50)
+// #define		MAX_AUDIO_BUFFER_LENGTH			(32000*(16)*2)	// 16Khz,16bit,Stereo,1sec
 
 typedef struct __SOUND_OBJ_T
 {

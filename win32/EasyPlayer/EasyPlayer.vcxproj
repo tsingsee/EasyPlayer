@@ -41,9 +41,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\bin\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>..\bin\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -51,11 +53,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.\EasySkinUI</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <OutputFile>../bin/$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -76,13 +79,14 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.\EasySkinUI</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <OutputFile>../bin/$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -106,6 +110,34 @@
     <ClInclude Include="DlgVideo.h" />
     <ClInclude Include="EasyPlayer.h" />
     <ClInclude Include="EasyPlayerDlg.h" />
+    <ClInclude Include="EasySkinUI\BuildDialog.h" />
+    <ClInclude Include="EasySkinUI\detours.h" />
+    <ClInclude Include="EasySkinUI\FlashControl.h" />
+    <ClInclude Include="EasySkinUI\Function.h" />
+    <ClInclude Include="EasySkinUI\GifImage.h" />
+    <ClInclude Include="EasySkinUI\ImageEx.h" />
+    <ClInclude Include="EasySkinUI\internal.h" />
+    <ClInclude Include="EasySkinUI\ISkinControl.h" />
+    <ClInclude Include="EasySkinUI\Macro.h" />
+    <ClInclude Include="EasySkinUI\MemoryDC.h" />
+    <ClInclude Include="EasySkinUI\RenderManager.h" />
+    <ClInclude Include="EasySkinUI\resource.h" />
+    <ClInclude Include="EasySkinUI\SkinButton.h" />
+    <ClInclude Include="EasySkinUI\SkinComboBox.h" />
+    <ClInclude Include="EasySkinUI\SkinDialog.h" />
+    <ClInclude Include="EasySkinUI\SkinEdit.h" />
+    <ClInclude Include="EasySkinUI\SkinListBox.h" />
+    <ClInclude Include="EasySkinUI\SkinListCtrl.h" />
+    <ClInclude Include="EasySkinUI\SkinProgressCtrl.h" />
+    <ClInclude Include="EasySkinUI\SkinRichEdit.h" />
+    <ClInclude Include="EasySkinUI\SkinSliderCtrl.h" />
+    <ClInclude Include="EasySkinUI\SkinTabCtrl.h" />
+    <ClInclude Include="EasySkinUI\SkinToolBar.h" />
+    <ClInclude Include="EasySkinUI\SkinTreeCtrl.h" />
+    <ClInclude Include="EasySkinUI\SkinUI.h" />
+    <ClInclude Include="EasySkinUI\SkinUIMenu.h" />
+    <ClInclude Include="EasySkinUI\SkinUI_ScrollBar.h" />
+    <ClInclude Include="EasySkinUI\XmlManager.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -118,6 +150,30 @@
     <ClCompile Include="DlgVideo.cpp" />
     <ClCompile Include="EasyPlayer.cpp" />
     <ClCompile Include="EasyPlayerDlg.cpp" />
+    <ClCompile Include="EasySkinUI\BuildDialog.cpp" />
+    <ClCompile Include="EasySkinUI\FlashControl.cpp" />
+    <ClCompile Include="EasySkinUI\Function.cpp" />
+    <ClCompile Include="EasySkinUI\GifImage.cpp" />
+    <ClCompile Include="EasySkinUI\ImageEx.cpp" />
+    <ClCompile Include="EasySkinUI\ISkinControl.cpp" />
+    <ClCompile Include="EasySkinUI\MemoryDC.cpp" />
+    <ClCompile Include="EasySkinUI\RenderManager.cpp" />
+    <ClCompile Include="EasySkinUI\SkinButton.cpp" />
+    <ClCompile Include="EasySkinUI\SkinComboBox.cpp" />
+    <ClCompile Include="EasySkinUI\SkinDialog.cpp" />
+    <ClCompile Include="EasySkinUI\SkinEdit.cpp" />
+    <ClCompile Include="EasySkinUI\SkinListBox.cpp" />
+    <ClCompile Include="EasySkinUI\SkinListCtrl.cpp" />
+    <ClCompile Include="EasySkinUI\SkinProgressCtrl.cpp" />
+    <ClCompile Include="EasySkinUI\SkinRichEdit.cpp" />
+    <ClCompile Include="EasySkinUI\SkinSliderCtrl.cpp" />
+    <ClCompile Include="EasySkinUI\SkinTabCtrl.cpp" />
+    <ClCompile Include="EasySkinUI\SkinToolBar.cpp" />
+    <ClCompile Include="EasySkinUI\SkinTreeCtrl.cpp" />
+    <ClCompile Include="EasySkinUI\SkinUI.cpp" />
+    <ClCompile Include="EasySkinUI\SkinUIMenu.cpp" />
+    <ClCompile Include="EasySkinUI\SkinUI_ScrollBar.cpp" />
+    <ClCompile Include="EasySkinUI\XmlManager.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

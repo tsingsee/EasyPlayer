@@ -1,0 +1,117 @@
+1. pos项说明: 
+
+
+对应结构：
+struct tagPositionData
+{ 
+	int		nFixedPostion[2];//标识左上角和右下角的停靠位置定位，详见 位置定位 如下枚举
+	CPoint		ptPosition;	//标识x轴和y轴的起始位置
+	CSize		szSize;		//控件长宽大小
+};
+
+//位置定位
+enum
+{
+	en_LTop,    	//0
+	en_RTop,	//1
+	en_LBottom,	//2
+	en_RBottom,	//3
+	en_Center	//4
+};
+
+注意：当在x轴右边的时候，left = 窗口width -ptPosition.x; cx = 窗口width -szSize.cx; 
+同理，当在y轴下边的时候，left = 窗口height-ptPosition.y; cy = 窗口height-szSize.cy; 		
+
+主要功能实现如下：
+void CSkinDialog::RectifyControl( int cx, int cy )
+{
+	//移动准备
+	HDWP hDwp=BeginDeferWindowPos(64);
+	UINT uFlags=SWP_NOACTIVATE|SWP_NOCOPYBITS|SWP_NOZORDER;
+
+	for (int i=0;i<(int)m_ControlArray.size();i++)
+	{
+		ISkinControl*pControl = m_ControlArray[i];
+
+		if ( pControl != NULL )
+		{
+			CRect rcPos;
+
+			//////////////////////////////位置////////////////////////////////////////////
+			if (pControl->m_FixedPostion[0] == en_LTop )
+			{
+				rcPos.left = pControl->m_ptPosition.x;
+				rcPos.top = pControl->m_ptPosition.y;
+			}
+			else if (pControl->m_FixedPostion[0] == en_RTop )
+			{
+				rcPos.left = cx-pControl->m_ptPosition.x;
+				rcPos.top = pControl->m_ptPosition.y;
+			}
+			else if (pControl->m_FixedPostion[0] == en_LBottom )
+			{
+				rcPos.left = pControl->m_ptPosition.x;
+				rcPos.top = cy-pControl->m_ptPosition.y;
+			}
+			else if (pControl->m_FixedPostion[0] == en_RBottom )
+			{
+				rcPos.left = cx-pControl->m_ptPosition.x;
+				rcPos.top = cy-pControl->m_ptPosition.y;
+			}
+
+			///////////////////////////////大小///////////////////////////////////////////
+			if (pControl->m_FixedPostion[1] == en_LTop )
+			{
+				rcPos.right = pControl->m_szSize.cx;
+				rcPos.bottom = pControl->m_szSize.cy;
+			}
+			else if (pControl->m_FixedPostion[1] == en_RTop )
+			{
+				rcPos.right = cx-pControl->m_szSize.cx;
+				rcPos.bottom = pControl->m_szSize.cy;
+			}
+			else if (pControl->m_FixedPostion[1] == en_LBottom )
+			{
+				rcPos.right = pControl->m_szSize.cx;
+				rcPos.bottom = cy-pControl->m_szSize.cy;
+			}
+			else if (pControl->m_FixedPostion[1] == en_RBottom )
+			{
+				rcPos.right = cx-pControl->m_szSize.cx;
+				rcPos.bottom = cy-pControl->m_szSize.cy;
+			}
+
+			DeferWindowPos(hDwp,pControl->m_pOwnWnd->GetSafeHwnd(),NULL,rcPos.left,rcPos.top,rcPos.Width(),rcPos.Height(),SWP_NOACTIVATE);
+		}
+	}
+
+	//结束调整
+	LockWindowUpdate();
+	EndDeferWindowPos(hDwp);
+	UnlockWindowUpdate();
+
+	////重新设置相应的属性，个别属性在设置位置前设置是不好使的
+	for (int i=0;i<(int)m_ControlArray.size();i++)
+	{
+		ISkinControl*pControl = m_ControlArray[i];
+
+		if ( pControl != NULL )
+		{
+			if(pControl->m_bTransparent)
+				pControl->SetParentBack(m_hMemDC);
+
+			TCHAR szClassName[MAX_PATH]={0};
+			GetClassName(pControl->m_pOwnWnd->GetSafeHwnd(),szClassName,_countof(szClassName));
+
+			if ( _tcscmp(TEXT("ComboBox"),szClassName) == 0 )
+			{
+				CSkinComboBox*pComboBox = (CSkinComboBox*)pControl->m_pOwnWnd;
+				pComboBox->SetItemHeight(-1,pComboBox->GetEditItemHeight());
+			}
+		}
+	}
+
+	GetWindowRect(&m_rcWindowSizeNow);
+
+	Invalidate(FALSE);
+}
