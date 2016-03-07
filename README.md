@@ -1,9 +1,8 @@
 # EasyPlayer #
 
-EasyPlayer是由EasyDarwin开源团队成员开发和维护的一个RTSP播放器项目，目前支持Windows(包含ActiveX)/Android/IOS等多个平台，是一套极佳的RTSP播放组件！
+EasyPlayer是由EasyDarwin开源团队成员开发和维护的一个RTSP播放器项目，目前支持Windows(支持多窗口、包含ActiveX Web插件)/Android/IOS等多个平台，是一套极佳的RTSP播放组件！
 
 ![EasyPlayer Win](http://www.easydarwin.org/skin/easydarwin/images/easyplayer_win_1.0.png)
-
 
 ##更新记录##
 
