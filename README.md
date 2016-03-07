@@ -1,28 +1,31 @@
 # EasyPlayer #
 
-Open Source Streaming Player For EasyDarwin Streaming Server;
+EasyPlayeræ˜¯ç”±EasyDarwinå¼€æºå›¢é˜Ÿæˆå‘˜å¼€å‘å’Œç»´æŠ¤çš„ä¸€ä¸ªRTSPæ’­æ”¾å™¨é¡¹ç›®ï¼Œç›®å‰æ”¯æŒWindows(åŒ…å«ActiveX)/Android/IOSç­‰å¤šä¸ªå¹³å°ï¼Œæ˜¯ä¸€å¥—æä½³çš„RTSPæ’­æ”¾ç»„ä»¶ï¼
 
-Get Release versions:http://www.easydarwin.org/forum/forum.php?mod=forumdisplay&fid=65
-
-##¸üĞÂ¼ÇÂ¼##
-
-### v1.0.0.2 (2016-3-7) ###
-
-* Ôö¼ÓSkinUIÆ¤·ô¿â£¬Í¨¹ıxmlÅäÖÃ½çÃæ×ÊÔ´£¬½«½çÃæºÍ´úÂë¶ÀÁ¢¿ªÀ´£¬·½±ã´úÂëÔÄ¶ÁºÍÒÆÖ²;
-* ¸üĞÂlibEasyPlayer¿â£¬Ö§³ÖÉùÒôºÍÊÓÆµµÄ²¥·Å;
-* ¼´½«ÍÆ³öEasyPlayer IEä¯ÀÀÆ÷²å¼ş£¬¾´ÇëÆÚ´ı¡£
+![EasyPlayer Win](http://www.easydarwin.org/skin/easydarwin/images/easyplayer_win_1.0.png)
 
 
-## »ñÈ¡¸ü¶àĞÅÏ¢ ##
+##æ›´æ–°è®°å½•##
 
-ÓÊ¼ş£º[support@easydarwin.org](mailto:support@easydarwin.org) 
+### v1.0.16.0309 (2016-3-9) ###
 
-WEB£º[www.EasyDarwin.org](http://www.easydarwin.org)
+* å¢åŠ SkinUIçš®è‚¤åº“ï¼Œé€šè¿‡xmlé…ç½®ç•Œé¢èµ„æºï¼Œå°†ç•Œé¢å’Œä»£ç ç‹¬ç«‹å¼€æ¥ï¼Œæ–¹ä¾¿ä»£ç é˜…è¯»å’Œç§»æ¤;
+* æ›´æ–°libEasyPlayeråº“ï¼Œæ”¯æŒå£°éŸ³å’Œè§†é¢‘çš„æ’­æ”¾;
+* å³å°†æ¨å‡ºEasyPlayer IEæµè§ˆå™¨æ’ä»¶ï¼Œæ•¬è¯·æœŸå¾…ã€‚
 
-Author£º[SwordTwevle@EasyDarwin.org](mailto:SwordTwevle@EasyDarwin.org "EasyDarwin SwordTwelve")
 
-Blog£º[http://blog.csdn.net/SwordTwelve/](http://blog.csdn.net/SwordTwelve/ "EasyClient Blog")
+## è·å–æ›´å¤šä¿¡æ¯ ##
 
-Copyright &copy; EasyDarwin.org 2012-2015
+é‚®ä»¶ï¼š[support@easydarwin.org](mailto:support@easydarwin.org) 
+
+WEBï¼š[www.EasyDarwin.org](http://www.easydarwin.org)
+
+Authorï¼š[SwordTwevle@EasyDarwin.org](mailto:SwordTwevle@EasyDarwin.org "EasyDarwin SwordTwelve")
+
+Blogï¼š[http://blog.csdn.net/SwordTwelve/](http://blog.csdn.net/SwordTwelve/ "EasyClient Blog")
+
+QQäº¤æµç¾¤ï¼š[544917793](http://jq.qq.com/?_wv=1027&k=2IDkJId "EasyPlayer")
+
+Copyright &copy; EasyDarwin.org 2012-2016
 
 ![EasyDarwin](http://www.easydarwin.org/skin/easydarwin/images/wx_qrcode.jpg)
