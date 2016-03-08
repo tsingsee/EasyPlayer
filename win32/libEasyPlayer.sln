@@ -8,6 +8,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EasyPlayer", "EasyPlayer\Ea
 		{BC0300E0-E5D5-4A49-88B4-4E79DFF5F1CC} = {BC0300E0-E5D5-4A49-88B4-4E79DFF5F1CC}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EasyPlayerWebActiveX", "EasyPlayerWebActiveX\EasyPlayerWebActiveX.vcxproj", "{C36D2FB3-54B5-4C2C-8600-CD17F063992A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -22,6 +24,10 @@ Global
 		{4890B410-FE84-4408-8D42-4B79BCA92552}.Debug|Win32.Build.0 = Debug|Win32
 		{4890B410-FE84-4408-8D42-4B79BCA92552}.Release|Win32.ActiveCfg = Release|Win32
 		{4890B410-FE84-4408-8D42-4B79BCA92552}.Release|Win32.Build.0 = Release|Win32
+		{C36D2FB3-54B5-4C2C-8600-CD17F063992A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C36D2FB3-54B5-4C2C-8600-CD17F063992A}.Debug|Win32.Build.0 = Debug|Win32
+		{C36D2FB3-54B5-4C2C-8600-CD17F063992A}.Release|Win32.ActiveCfg = Release|Win32
+		{C36D2FB3-54B5-4C2C-8600-CD17F063992A}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
