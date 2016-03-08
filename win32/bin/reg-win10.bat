@@ -1,2 +1,4 @@
-
-regsvr32 E:\Dingshuai\EasyPlayer\win32\bin\EasyPlayerWebActiveX.ocx
+cd ./
+set curPath="%cd%"
+echo ocx path£º%curPath%\EasyPlayerWebActiveX.ocx
+regsvr32 %curPath%\EasyPlayerWebActiveX.ocx
