@@ -34,3 +34,6 @@ _ReSharper*/
 ipch/
 *.opensdf
 *.txt
+/win32/bin/*.lib
+/win32/bin/*.lic
+/win32/bin/*.h
