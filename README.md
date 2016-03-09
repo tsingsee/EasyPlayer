@@ -6,7 +6,11 @@ EasyPlayer是由EasyDarwin开源团队成员开发和维护的一个RTSP播放�
 
 ##更新记录##
 
-### Win v1.0.16.0309 (2016-3-9) ###
+### next version (2016-3-15) ###
+
+* Android版本发布
+
+### Windows v1.0.16.0309 (2016-3-9) ###
 
 * 增加SkinUI皮肤库，通过xml配置界面资源，将界面和代码独立开来，方便代码阅读和移植;
 * 更新libEasyPlayer库，支持声音和视频的播放;
