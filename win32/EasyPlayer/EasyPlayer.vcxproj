@@ -182,6 +182,11 @@
   <ItemGroup>
     <ResourceCompile Include="EasyPlayer.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\libEasyPlayer\libEasyPlayer.vcxproj">
+      <Project>{bc0300e0-e5d5-4a49-88b4-4e79dff5f1cc}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -9,6 +9,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EasyPlayer", "EasyPlayer\Ea
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EasyPlayerWebActiveX", "EasyPlayerWebActiveX\EasyPlayerWebActiveX.vcxproj", "{C36D2FB3-54B5-4C2C-8600-CD17F063992A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BC0300E0-E5D5-4A49-88B4-4E79DFF5F1CC} = {BC0300E0-E5D5-4A49-88B4-4E79DFF5F1CC}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

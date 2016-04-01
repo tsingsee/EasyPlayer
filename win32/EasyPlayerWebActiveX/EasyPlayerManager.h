@@ -11,13 +11,6 @@
 
 #include "../libEasyPlayer/libEasyPlayerAPI.h"
 
-#ifdef _DEBUG
-#pragma comment(lib, "../Debug/libEasyPlayer.lib")
-#else
-#pragma comment(lib, "../Release/libEasyPlayer.lib")
-#endif
-
-
 //Gavin's Source Struct流信息结构
 typedef struct __EASY_LOCAL_SOURCE_T
 {	

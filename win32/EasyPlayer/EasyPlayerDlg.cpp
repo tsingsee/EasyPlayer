@@ -13,13 +13,6 @@
 #define new DEBUG_NEW
 #endif
 
-#ifdef _DEBUG
-#pragma comment(lib, "../Debug/libEasyPlayer.lib")
-#else
-#pragma comment(lib, "../Release/libEasyPlayer.lib")
-#endif
-
-
 //异常处理函数
 LONG CrashHandler_Player(EXCEPTION_POINTERS *pException)
 {
