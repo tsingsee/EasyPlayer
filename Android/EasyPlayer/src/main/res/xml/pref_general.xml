@@ -1,0 +1,10 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:capitalize="words"
+        android:key="enable_syc"
+        android:defaultValue="true"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="使能音视频同步算法" />
+</PreferenceScreen>

@@ -1,0 +1,17 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    tools:context="org.easydarwin.easyplayer.Splash">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:drawableTop="@drawable/img_qrcode"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:drawablePadding="@dimen/activity_vertical_margin"
+        android:text="EasyPlayer v1.0.16.0403"
+        android:layout_height="wrap_content" />
+</FrameLayout>
