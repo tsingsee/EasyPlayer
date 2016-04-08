@@ -4,11 +4,25 @@ EasyPlayer是由EasyDarwin开源团队成员(SwordTwelve & John)开发和维护�
 
 ![EasyPlayer Win](http://www.easydarwin.org/skin/easydarwin/images/easyplayer_win_1.0.png)
 
+![EasyPlayer Android](http://www.easydarwin.org/skin/easydarwin/images/easyplayer_android_1.0.png)
+
 ##更新记录##
 
-### next version (2016-3-15) ###
+### next version ###
 
-* Android版本发布
+* EasyPlayer IOS版本；
+
+### Windows v1.1.16.0405 (2016-04-05) ###
+
+* 增加EasyRTSPClient库的企业级商业授权，个人用户免费试用;
+* 更新libEasyPlayer库，修复单声道声音播放导致程序异常的问题;
+
+### Android v1.0.16.0403 (2016-04-03) ###
+
+* EasyPlayer 安卓初版
+* 视频编码支持H.264
+* 音频编码支持AAC/G.711A(PCMA)/G.711U(PCMU)
+* 仅支持RTSP/RTP协议
 
 ### Windows v1.0.16.0309 (2016-3-9) ###
 
