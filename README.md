@@ -1,6 +1,6 @@
-# EasyPlayer #
+﻿# EasyPlayer #
 
-EasyPlayer是由EasyDarwin开源团队成员(SwordTwelve & John)开发和维护的一个RTSP播放器项目，目前支持Windows(支持多窗口、包含ActiveX Web插件)、Android平台，后续将支持IOS平台，是一套极佳的RTSP播放组件！
+EasyPlayer是由EasyDarwin开源团队成员(SwordTwelve & John)开发和维护的一个RTSP播放器项目，目前支持Windows(支持多窗口、包含ActiveX，npAPI Web插件)、Android平台，后续将支持IOS平台，是一套极佳的RTSP播放组件！
 
 ![EasyPlayer Win](http://www.easydarwin.org/skin/easydarwin/images/easyplayer_win_1.0.png)
 
@@ -11,6 +11,12 @@ EasyPlayer是由EasyDarwin开源团队成员(SwordTwelve & John)开发和维护�
 ### next version ###
 
 * EasyPlayer IOS版本；
+
+### Windows v1.2.16.0414 (2016-04-14) ###
+
+* 增加EasyPlayer npAPI通用浏览器插件EasyPlayerPlugin工程FireBreath框架开发，支持Windows平台除了Google Chrome以外的几乎所有浏览器;
+* 关于EasyPlayerPlugin的编译，在win32目录下有个text文件“EasyPlayerPlugin 编译说明.txt"专门进行说明;
+* 关于FireBreath框架以及EasyPlayerPlugin工程编译的任何问题，请咨询SwordTwelve;
 
 ### Windows v1.1.16.0405 (2016-04-05) ###
 

@@ -1,0 +1,9 @@
+;
+.Set DiskDirectoryTemplate=%OUTDIR%/
+.Set CabinetNameTemplate=%NAME%
+.Set Cabinet=on
+.Set Compress=on
+.Set MaxDiskSize=0
+%OUTDIR%/${PROJECT_NAME}.exe
+${CMAKE_CURRENT_BINARY_DIR}/EasyPlayerPlugin.inf
+;

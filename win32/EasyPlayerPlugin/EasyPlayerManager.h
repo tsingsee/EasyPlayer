@@ -9,13 +9,14 @@
 
 #pragma once
 
-#include "./libEasyPlayer/libEasyPlayerAPI.h"
+#include "./Win/libEasyPlayer/EasyRTSPClient/EasyTypes.h"
+#include "./Win/libEasyPlayer/libEasyPlayerAPI.h"
 
 //Gavin's Source Struct流信息结构
 typedef struct __EASY_LOCAL_SOURCE_T
 {	
 	int		rtspSourceId;
-	void*	pusherHandle;
+	Easy_Pusher_Handle	pusherHandle;
 
 	char	pushServerAddr[128];
 	int		pushServerPort;
@@ -55,6 +56,5 @@ public:
 private:
 	//接收的流信息
 	EASY_LOCAL_SOURCE_T		m_sSourceInfo;
-
 };
 

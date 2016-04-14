@@ -1,0 +1,9 @@
+[version]
+Signature="$CHICAGO$"
+AdvancedINF=2.0
+
+[Setup Hooks]
+hook1=hook1
+
+[hook1]
+run="%EXTRACT_DIR%\${PROJECT_NAME}.exe"
