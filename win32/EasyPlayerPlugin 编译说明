@@ -1,0 +1,18 @@
+14:12 2016/4/14
+
+Add by SwordTwelve
+
+
+1. EasyPlayerPlugin项目是在FireBreath开源平台下采用npAPI开发的windows平台EasyPlayerPlugin跨浏览器插件(Google Chrome除外)，
+由于FireBreath生成的代码过多，以及boost库太庞大，这里就只在项目中存放了EasyPlayerPlugin源码；
+
+2. 你只需要下载FireBreath源码然后按照步骤生成VS2010工程EasyPlayerPlugin，然后将EasyPlayerPlugin的工程文件导入即可；
+
+3. 编译FireBreath之前你必须先安装Phython，CMake,
+以及FireBreath所依赖的boost库（boost在vs2010工程文件生成以后在build目录下生成boost.tar.gz的文件解压，放在该目录boost文件夹下即可）；
+
+4. 网上有很多关于FireBreath的编译和使用教程：
+http://blog.csdn.net/houqd2012/article/details/17307847
+http://blog.csdn.net/luoweifu/article/details/44603943
+http://blog.csdn.net/luoweifu/article/details/44708223
+http://blog.csdn.net/z6482/article/details/7486921
