@@ -38,7 +38,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="org.easydarwin.easyplayer.Splash"
+            android:name="org.easydarwin.easyplayer.SplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_splash"
             android:theme="@style/FullscreenTheme"></activity>

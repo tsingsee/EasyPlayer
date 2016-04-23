@@ -66,7 +66,7 @@ public class PlaylistActivity extends AppCompatActivity implements View.OnClickL
         });
 
         if (savedInstanceState == null){
-            startActivity(new Intent(this, Splash.class));
+            startActivity(new Intent(this, SplashActivity.class));
         }
     }
 
