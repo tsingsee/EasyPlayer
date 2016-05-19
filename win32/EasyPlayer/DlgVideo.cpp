@@ -294,7 +294,7 @@ void CDlgVideo::OnBnClickedButtonPreview()
 
 		HWND hWnd = NULL;
 		if (NULL != pDlgRender)	hWnd = pDlgRender->GetSafeHwnd();
-		m_ChannelId = EasyPlayer_OpenStream(szURL, hWnd, (RENDER_FORMAT)RenderFormat, 0x01, szUsername, szPassword);
+		m_ChannelId = EasyPlayer_OpenStream(szURL, hWnd, (RENDER_FORMAT)RenderFormat, 0x00, szUsername, szPassword);
 
 		if (m_ChannelId > 0)
 		{

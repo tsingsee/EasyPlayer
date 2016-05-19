@@ -45,6 +45,8 @@ typedef struct __MEDIA_FRAME_INFO
 
 	unsigned int	sample_rate;	/* 音频采样率 */
 	unsigned int	channels;		/* 音频声道数 */
+	// 增加音频采样精度 [5/9/2016 SwordTwelve]
+	unsigned int	bits_per_sample;	/* 音频采样精度 */
 
 	unsigned int	length;			/* 音视频帧大小 */
 	unsigned int    timestamp_usec;	/* 时间戳,微妙 */
