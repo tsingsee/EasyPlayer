@@ -37,3 +37,8 @@ ipch/
 /win32/bin/*.lib
 /win32/bin/*.lic
 /win32/bin/*.h
+win32/bin/libEasyPlayer.dll
+win32/bin/libEasyPlayer.dll.manifest
+win32/binWebPlugin/EasyPlayerWebActiveX.lib
+win32/binWebPlugin/EasyPlayerWebActiveX.ocx
+win32/EasyPlayerWebActiveX/EasyPlayerWebActiveXidl.h
