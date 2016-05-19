@@ -149,6 +149,11 @@ void	CDlgVideo::SetWindowId(int _windowId)
 		//if (NULL != pEdtURL)		pEdtURL->SetWindowText(TEXT("rtsp://121.15.129.227"));
 		if (NULL != pEdtURL)		pEdtURL->SetWindowText(TEXT("rtsp://218.204.223.237:554/live/1/66251FC11353191F/e7ooqwcfbqjoo80j.sdp"));
 	}
+	if (m_WindowId == 1)
+	{
+		//if (NULL != pEdtURL)		pEdtURL->SetWindowText(TEXT("rtsp://121.15.129.227"));
+		if (NULL != pEdtURL)		pEdtURL->SetWindowText(TEXT("rtsp://192.168.1.101:554/id=0"));
+	}	
 }
 void	CDlgVideo::SetURL(char *url)
 {
@@ -194,7 +199,7 @@ void	CDlgVideo::CreateComponents()
 
 	if (NULL != pEdtURL)		pEdtURL->SetWindowText(TEXT("rtsp://"));
 	if (NULL != pEdtUsername)	pEdtUsername->SetWindowText(TEXT("admin"));
-	if (NULL != pEdtPassword)	pEdtPassword->SetWindowText(TEXT("12345"));
+	if (NULL != pEdtPassword)	pEdtPassword->SetWindowText(TEXT("admin"));
 	if (NULL != pSliderCache)	pSliderCache->SetRange(1, 10);
 	if (NULL != pSliderCache)	pSliderCache->SetPos(3);
 
@@ -294,7 +299,7 @@ void CDlgVideo::OnBnClickedButtonPreview()
 
 		HWND hWnd = NULL;
 		if (NULL != pDlgRender)	hWnd = pDlgRender->GetSafeHwnd();
-		m_ChannelId = EasyPlayer_OpenStream(szURL, hWnd, (RENDER_FORMAT)RenderFormat, 0x00, szUsername, szPassword);
+		m_ChannelId = EasyPlayer_OpenStream(szURL, hWnd, (RENDER_FORMAT)RenderFormat, 0x01, szUsername, szPassword);
 
 		if (m_ChannelId > 0)
 		{
