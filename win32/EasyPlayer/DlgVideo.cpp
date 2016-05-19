@@ -144,16 +144,16 @@ void	CDlgVideo::SetWindowId(int _windowId)
 {
 	m_WindowId = _windowId;
 
-	if (m_WindowId == 0)
-	{
-		//if (NULL != pEdtURL)		pEdtURL->SetWindowText(TEXT("rtsp://121.15.129.227"));
-		if (NULL != pEdtURL)		pEdtURL->SetWindowText(TEXT("rtsp://218.204.223.237:554/live/1/66251FC11353191F/e7ooqwcfbqjoo80j.sdp"));
-	}
-	if (m_WindowId == 1)
-	{
-		//if (NULL != pEdtURL)		pEdtURL->SetWindowText(TEXT("rtsp://121.15.129.227"));
-		if (NULL != pEdtURL)		pEdtURL->SetWindowText(TEXT("rtsp://192.168.1.101:554/id=0"));
-	}	
+	//if (m_WindowId == 0)
+	//{
+	//	//if (NULL != pEdtURL)		pEdtURL->SetWindowText(TEXT("rtsp://121.15.129.227"));
+	//	if (NULL != pEdtURL)		pEdtURL->SetWindowText(TEXT("rtsp://218.204.223.237:554/live/1/66251FC11353191F/e7ooqwcfbqjoo80j.sdp"));
+	//}
+	//if (m_WindowId == 1)
+	//{
+	//	//if (NULL != pEdtURL)		pEdtURL->SetWindowText(TEXT("rtsp://121.15.129.227"));
+	//	if (NULL != pEdtURL)		pEdtURL->SetWindowText(TEXT("rtsp://192.168.1.101:554/id=0"));
+	//}	
 }
 void	CDlgVideo::SetURL(char *url)
 {
