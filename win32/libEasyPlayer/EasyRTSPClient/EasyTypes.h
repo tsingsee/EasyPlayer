@@ -102,11 +102,11 @@ typedef enum __EASY_ACTIVATE_ERR_CODE_ENUM
 #define EASY_SDK_VIDEO_FRAME_J		0x04		/* JPEG */
 
 /* 连接类型 */
-typedef enum __RTP_CONNECT_TYPE
+typedef enum __EASY_RTP_CONNECT_TYPE
 {
-	RTP_OVER_TCP	=	0x01,		/* RTP Over TCP */
-	RTP_OVER_UDP					/* RTP Over UDP */
-}RTP_CONNECT_TYPE;
+	EASY_RTP_OVER_TCP	=	0x01,		/* RTP Over TCP */
+	EASY_RTP_OVER_UDP					/* RTP Over UDP */
+}EASY_RTP_CONNECT_TYPE;
 
 /* 媒体信息 */
 typedef struct __EASY_MEDIA_INFO_T
