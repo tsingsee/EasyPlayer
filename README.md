@@ -10,7 +10,6 @@ EasyPlayer是由EasyDarwin开源团队成员(SwordTwelve & John)开发和维护�
 ### Android ###
 
 * 增加了多窗口播放功能
-* 安卓部分从本工程中独立，见[EasyPlayer Android](https://github.com/jiaozebo/EasyPlayer).后面新功能都在新的repository中添加，本工程中的安卓部分不再维护。
 
 ### next version ###
 
