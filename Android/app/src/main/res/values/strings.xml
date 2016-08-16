@@ -1,7 +1,0 @@
-<resources>
-    <string name="app_name">EasyPlayer</string>
-    <string name="title_activity_live_play">LivePlayActivity</string>
-    <string name="title_activity_setting">设置</string>
-    <string name="title_activity_add_session">添加直播地址</string>
-    <string name="easydarwin_rights">Copyright © 2012-2016 www.EasyDarwin.org</string>
-</resources>

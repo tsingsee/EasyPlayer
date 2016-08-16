@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/live_video_bar_height"
+        android:layout_gravity="bottom"
+        android:background="#ffffff"
+        android:divider="?android:attr/listDivider"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:showDividers="middle"
+        tools:showIn="@layout/activity_main">
+
+        <TextView
+            android:id="@+id/stream_bps"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="@android:color/holo_green_dark" />
+
+        <ImageButton
+            android:id="@+id/live_video_bar_enable_audio"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:gravity="center_horizontal"
+            android:onClick="onEnableOrDisablePlayAudio"
+            android:src="@drawable/live_video_bar_btn_audio" />
+
+        <ImageButton
+            android:id="@+id/live_video_bar_take_picture"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:gravity="center_horizontal"
+            android:onClick="onTakePicture"
+            android:src="@drawable/live_video_bar_btn_snapshot" />
+
+        <ImageButton
+            android:id="@+id/live_video_bar_record"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:gravity="center_horizontal"
+            android:onClick="onRecordOrStop"
+            android:src="@drawable/live_video_bar_btn_record" />
+        <TextView
+            android:id="@+id/file_directory"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="onOpenFileDirectory"
+            android:gravity="center"
+            android:text="文件夹"/>
+    </LinearLayout>
+</layout>

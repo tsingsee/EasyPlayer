@@ -1,1 +1,1 @@
-include ':app', ':okhttplibrary'
+include ':EasyPlayer'

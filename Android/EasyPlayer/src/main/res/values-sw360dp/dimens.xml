@@ -1,0 +1,19 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_horizontal_margin_half">8dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="dlg_vertical_margin">16dp</dimen>
+    <dimen name="dlg_horizontal_margin">16dp</dimen>
+    <dimen name="render_wnd_height">280dp</dimen>
+    <dimen name="live_video_bar_height">45dp</dimen>
+
+
+    <dimen name="pager_item_ptz_panel_width">120dp</dimen>
+    <dimen name="pager_item_ptz_panel_height">120dp</dimen>
+    <dimen name="live_video_view_pager_landscape_width">400dp</dimen>
+    <dimen name="live_video_view_pager_landscape_height">220dp</dimen>
+
+    <dimen name="live_video_bar_container_left_margin">100dp</dimen>
+</resources>

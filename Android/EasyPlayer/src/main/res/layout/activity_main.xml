@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="org.easydarwin.easyplayer.PlayActivity">
+
+        <FrameLayout
+            android:id="@+id/render_holder"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/render_wnd_height"></FrameLayout>
+
+        <include
+            android:id="@+id/live_video_bar"
+            layout="@layout/live_video_bar_ref"></include>
+
+        <LinearLayout
+            android:id="@+id/player_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="?android:attr/listDivider"
+            android:orientation="vertical"
+            android:showDividers="middle" />
+    </LinearLayout>
+</layout>

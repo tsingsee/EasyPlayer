@@ -1,0 +1,59 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="#000000"
+    android:layout_height="match_parent"
+    android:layout_gravity="center">
+
+    <TextureView
+        android:id="@+id/surface_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ImageView
+        android:id="@+id/surface_cover"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000000"
+        android:scaleType="centerCrop"
+        android:transitionName="video_animation" />
+
+    <ProgressBar
+        android:id="@android:id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+    <org.easydarwin.easyplayer.views.AngleView
+        android:id="@+id/render_angle_view"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp"
+        android:visibility="invisible"
+        app:anchorRadio="5dp"
+        app:arcColor="#ffffffff"
+        app:arcWidth="2.5dp"
+        app:currentSweepAngle="45"
+        app:startAngle="225"
+        app:sweepAngle="90"
+        app:textSize="24sp" />
+
+    <ImageView
+        android:id="@+id/live_video_snap_thumb"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="right|bottom"
+        android:layout_margin="3dp"
+        android:clickable="true"
+        android:gravity="center"
+        android:onClick="onTakePictureThumbClicked"
+        android:padding="3dp"
+        android:scaleType="centerCrop"
+        android:visibility="invisible" />
+
+</FrameLayout>

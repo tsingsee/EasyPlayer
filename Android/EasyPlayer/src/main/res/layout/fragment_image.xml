@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:background="@color/black_overlay"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/gallery_image_view"
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:transitionName="gallery_image_view" />
+    </FrameLayout>
+</layout>
+
