@@ -4,7 +4,7 @@ EasyPlayer是由EasyDarwin开源团队成员(SwordTwelve & John)开发和维护�
 
 ![EasyPlayer Win](http://www.easydarwin.org/skin/easydarwin/images/easyplayer_win_1.0.png)
 
-![EasyPlayer Android](EasyPlayer/Android/EasyPlayer/screenshot/single_video.jpg)
+![EasyPlayer Android](https://raw.githubusercontent.com/EasyDarwin/EasyPlayer/Android/EasyPlayer/screenshot/single_video.jpg?raw=true)
 
 ##更新记录##
 ### Android ###
