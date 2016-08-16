@@ -4,9 +4,15 @@ EasyPlayer是由EasyDarwin开源团队成员(SwordTwelve & John)开发和维护�
 
 ![EasyPlayer Win](http://www.easydarwin.org/skin/easydarwin/images/easyplayer_win_1.0.png)
 
-![EasyPlayer Android](http://www.easydarwin.org/skin/easydarwin/images/easyplayer_android_1.0.png)
+![EasyPlayer Android](https://raw.githubusercontent.com/jiaozebo/EasyPlayer/master/EasyPlayer/screenshot/single_video.jpg?raw=true))
 
 ##更新记录##
+### Android ###
+
+* 增加了保存视频快照功能
+* 支持抓拍、录像、实时码率展示
+* 支持视频窗口拖拽、放大（参考360小水滴）
+* 支持手动输入视频源和获取（EasyDarwin服务器）直播视频源
 ### Android ###
 
 * 增加了多窗口播放功能
