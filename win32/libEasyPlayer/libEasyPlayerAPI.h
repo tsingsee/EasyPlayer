@@ -6,8 +6,6 @@
 	Author: Gavin@easydarwin.org
 */
 
-
-
 #ifndef __LIB_EASY_PLAYER_API_H__
 #define __LIB_EASY_PLAYER_API_H__
 
@@ -32,14 +30,10 @@ typedef enum __RENDER_FORMAT
 	DISPLAY_FORMAT_RGB24_GDI=		26
 }RENDER_FORMAT;
 
-
-
 typedef int (CALLBACK *MediaSourceCallBack)( int _channelId, int *_channelPtr, int _frameType, char *pBuf, RTSP_FRAME_INFO* _frameInfo);
-
 
 LIB_EASYPLAYER_API int EasyPlayer_Init();
 LIB_EASYPLAYER_API void EasyPlayer_Release();
-
 
 LIB_EASYPLAYER_API int EasyPlayer_OpenStream(const char *url, HWND hWnd, RENDER_FORMAT renderFormat, int rtpovertcp, const char *username, const char *password, MediaSourceCallBack callback=NULL, void *userPtr=NULL);
 LIB_EASYPLAYER_API void EasyPlayer_CloseStream(int channelId);
@@ -58,8 +52,5 @@ LIB_EASYPLAYER_API int EasyPlayer_StopManuRecording(int channelId);
 
 LIB_EASYPLAYER_API int EasyPlayer_PlaySound(int channelId);
 LIB_EASYPLAYER_API int EasyPlayer_StopSound();
-
-
-
 
 #endif

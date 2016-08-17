@@ -220,7 +220,7 @@ void	CDlgVideo::UpdateComponents()
 	if (NULL != pDlgRender)		pDlgRender->Invalidate();
 
 	CRect	rcURL;
-	rcURL.SetRect(rcClient.left, rcRender.bottom+2, rcClient.right-232, rcClient.bottom);
+	rcURL.SetRect(rcClient.left, rcRender.bottom+2, rcClient.right-272, rcClient.bottom);
 	__MOVE_WINDOW(pEdtURL, rcURL);
 	if (NULL != pEdtURL)		pEdtURL->Invalidate();
 
@@ -236,12 +236,12 @@ void	CDlgVideo::UpdateComponents()
 
 	// RTP OVER TCP/UDP [8/17/2016 SwordTwelve]
 	CRect	rcRTPMode;
-	rcRTPMode.SetRect(rcURL.right+10, rcURL.top, rcURL.right+2+48, rcURL.bottom);
+	rcRTPMode.SetRect(rcURL.right+10, rcURL.top, rcURL.right+2+68, rcURL.bottom);
 	__MOVE_WINDOW(pChkRTPTransMode, rcRTPMode);
 	if (NULL != pChkRTPTransMode)		pChkRTPTransMode->Invalidate();	
 
 	CRect	rcOSD;
-	rcOSD.SetRect(rcRTPMode.right+10, rcRTPMode.top, rcRTPMode.right+2+48, rcRTPMode.bottom);
+	rcOSD.SetRect(rcRTPMode.right+10, rcRTPMode.top, rcRTPMode.right+2+68, rcRTPMode.bottom);
 	__MOVE_WINDOW(pChkOSD, rcOSD);
 	if (NULL != pChkOSD)		pChkOSD->Invalidate();
 

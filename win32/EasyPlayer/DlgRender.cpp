@@ -69,10 +69,6 @@ void CDlgRender::OnRButtonUp(UINT nFlags, CPoint point)
 	if (NULL != hMenu)
 	{
 		AppendMenu(hMenu, MF_STRING|(channelStatus.recording==0x01?MF_CHECKED:MF_UNCHECKED), POP_MENU_RECORDING, TEXT("Recording"));
-
-
-		
-
 		CPoint	pMousePosition;
 		GetCursorPos(&pMousePosition);
 		SetForegroundWindow();
@@ -103,7 +99,6 @@ BOOL CDlgRender::OnCommand(WPARAM wParam, LPARAM lParam)
 	default:
 		break;
 	}
-
 
 	return CDialogEx::OnCommand(wParam, lParam);
 }
