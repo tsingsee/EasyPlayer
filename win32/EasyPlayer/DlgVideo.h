@@ -29,7 +29,7 @@ public:
 // 	CEdit	*pEdtUsername;	//IDC_EDIT_USERNAME
 // 	CEdit	*pEdtPassword;	//IDC_EDIT_PASSWORD
 	CButton	*pChkOSD;		//IDC_CHECK_OSD
-	CComboBox	*pCombRTPTransMode;		//IDC_COMBO_RTPTRANSMODE
+	CButton	*pChkRTPTransMode;		//IDC_CHECK_RTPTRANSMODE
 
 	CSliderCtrl	*pSliderCache;	//IDC_SLIDER_CACHE
 	CButton	*pBtnPreview;	//IDC_BUTTON_PREVIEW
@@ -62,4 +62,5 @@ public:
 
 public:
 	afx_msg void OnPaint();
+	afx_msg void OnBnClickedCheckRtptransmode();
 };

@@ -43,6 +43,7 @@ BEGIN_MESSAGE_MAP(CDlgVideo, CDialogEx)
 	ON_WM_HSCROLL()
 	ON_WM_RBUTTONUP()
 	ON_WM_PAINT()
+	ON_BN_CLICKED(IDC_CHECK_RTPTRANSMODE, &CDlgVideo::OnBnClickedCheckRtptransmode)
 END_MESSAGE_MAP()
 
 
@@ -173,7 +174,7 @@ void	CDlgVideo::InitialComponents()
 	pChkOSD		=	NULL;
 	pSliderCache=	NULL;
 	pBtnPreview	=	NULL;
-	pCombRTPTransMode = NULL;
+	pChkRTPTransMode = NULL;
 
 }
 
@@ -192,7 +193,7 @@ void	CDlgVideo::CreateComponents()
 	__CREATE_WINDOW(pChkOSD,		CButton,	IDC_CHECK_OSD);
 	__CREATE_WINDOW(pSliderCache,	CSliderCtrl,IDC_SLIDER_CACHE);
 	__CREATE_WINDOW(pBtnPreview,	CButton,	IDC_BUTTON_PREVIEW);
-	__CREATE_WINDOW(pCombRTPTransMode	,	CComboBox,	IDC_COMBO_RTPTRANSMODE);
+	__CREATE_WINDOW(pChkRTPTransMode	,	CButton,	IDC_CHECK_RTPTRANSMODE);
 
 	if (NULL != pEdtURL)		pEdtURL->SetWindowText(TEXT("rtsp://"));
 // 	if (NULL != pEdtUsername)	pEdtUsername->SetWindowText(TEXT("admin"));
@@ -202,11 +203,9 @@ void	CDlgVideo::CreateComponents()
 
 	if (NULL != pBtnPreview)		pBtnPreview->SetWindowText(TEXT("Play"));
 
-	if (pCombRTPTransMode)
+	if (pChkRTPTransMode)
 	{
-		pCombRTPTransMode->AddString(TEXT("UDP"));
-		pCombRTPTransMode->AddString(TEXT("TCP"));
-		pCombRTPTransMode->SetCurSel(1);
+		pChkRTPTransMode->SetCheck(1);
 	}
 }
 void	CDlgVideo::UpdateComponents()
@@ -221,7 +220,7 @@ void	CDlgVideo::UpdateComponents()
 	if (NULL != pDlgRender)		pDlgRender->Invalidate();
 
 	CRect	rcURL;
-	rcURL.SetRect(rcClient.left, rcRender.bottom+2, rcClient.right-280, rcClient.bottom);
+	rcURL.SetRect(rcClient.left, rcRender.bottom+2, rcClient.right-232, rcClient.bottom);
 	__MOVE_WINDOW(pEdtURL, rcURL);
 	if (NULL != pEdtURL)		pEdtURL->Invalidate();
 
@@ -235,24 +234,25 @@ void	CDlgVideo::UpdateComponents()
 // 	__MOVE_WINDOW(pEdtPassword, rcPassword);
 // 	if (NULL != pEdtPassword)		pEdtPassword->Invalidate();
 
+	// RTP OVER TCP/UDP [8/17/2016 SwordTwelve]
+	CRect	rcRTPMode;
+	rcRTPMode.SetRect(rcURL.right+10, rcURL.top, rcURL.right+2+48, rcURL.bottom);
+	__MOVE_WINDOW(pChkRTPTransMode, rcRTPMode);
+	if (NULL != pChkRTPTransMode)		pChkRTPTransMode->Invalidate();	
+
 	CRect	rcOSD;
-	rcOSD.SetRect(rcURL.right+2, rcURL.top, rcURL.right+2+48, rcURL.bottom);
+	rcOSD.SetRect(rcRTPMode.right+10, rcRTPMode.top, rcRTPMode.right+2+48, rcRTPMode.bottom);
 	__MOVE_WINDOW(pChkOSD, rcOSD);
 	if (NULL != pChkOSD)		pChkOSD->Invalidate();
 
-	// RTP OVER TCP/UDP [8/17/2016 SwordTwelve]
-	CRect	rcRTPMode;
-	rcRTPMode.SetRect(rcOSD.right+2, rcOSD.top, rcOSD.right+2+86, rcOSD.bottom);
-	__MOVE_WINDOW(pCombRTPTransMode, rcRTPMode);
-	if (NULL != pCombRTPTransMode)		pCombRTPTransMode->Invalidate();	
 
 	CRect	rcCache;
-	rcCache.SetRect(rcRTPMode.right+2, rcRTPMode.top, rcRTPMode.right+2+60, rcRTPMode.bottom);
+	rcCache.SetRect(rcOSD.right+2, rcOSD.top, rcOSD.right+2+60, rcOSD.bottom);
 	__MOVE_WINDOW(pSliderCache, rcCache);
 	if (NULL != pSliderCache)		pSliderCache->Invalidate();
 
 	CRect	rcPreview;
-	rcPreview.SetRect(rcCache.right+2, rcURL.top, rcClient.right, rcURL.bottom);
+	rcPreview.SetRect(rcCache.right+2, rcURL.top-2, rcClient.right, rcURL.bottom);
 	__MOVE_WINDOW(pBtnPreview, rcPreview);
 	if (NULL != pBtnPreview)		pBtnPreview->Invalidate();
 }
@@ -309,9 +309,9 @@ void CDlgVideo::OnBnClickedButtonPreview()
 // 		__WCharToMByte(wszPassword, szPassword, sizeof(szPassword)/sizeof(szPassword[0]));
 
 		int nRtpOverTcp = 1;
-		if (pCombRTPTransMode)
+		if (NULL != pChkRTPTransMode)
 		{
-			nRtpOverTcp = pCombRTPTransMode->GetCurSel();
+			nRtpOverTcp= pChkRTPTransMode->GetCheck();
 		}
 		
 		HWND hWnd = NULL;
@@ -369,5 +369,12 @@ void CDlgVideo::OnPaint()
 	CPaintDC dc(this); // device context for painting
 	// TODO: Add your message handler code here
 	// Do not call CDialogEx::OnPaint() for painting messages
+
+}
+
+
+void CDlgVideo::OnBnClickedCheckRtptransmode()
+{
+	// TODO: Add your control notification handler code here
 
 }
