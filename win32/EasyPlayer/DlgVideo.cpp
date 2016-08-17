@@ -84,15 +84,12 @@ BOOL CDlgVideo::OnInitDialog()
 	// 异常: OCX 属性页应返回 FALSE
 }
 
-
 BOOL CDlgVideo::DestroyWindow()
 {
 	DeleteComponents();
 
 	return CDialogEx::DestroyWindow();
 }
-
-
 
 void CDlgVideo::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
@@ -103,7 +100,6 @@ void CDlgVideo::OnLButtonDblClk(UINT nFlags, CPoint point)
 
 	CDialogEx::OnLButtonDblClk(nFlags, point);
 }
-
 
 void CDlgVideo::OnLButtonDown(UINT nFlags, CPoint point)
 {
@@ -120,7 +116,6 @@ void CDlgVideo::OnLButtonUp(UINT nFlags, CPoint point)
 	CDialogEx::OnLButtonUp(nFlags, point);
 }
 
-
 void CDlgVideo::OnMouseMove(UINT nFlags, CPoint point)
 {
 	if (bDrag)
@@ -135,7 +130,6 @@ void CDlgVideo::OnMouseMove(UINT nFlags, CPoint point)
 			TRACE("X: %d\tY: %d\n", nX, nY);
 		}
 	}
-
 
 	CDialogEx::OnMouseMove(nFlags, point);
 }
@@ -174,8 +168,8 @@ void	CDlgVideo::InitialComponents()
 {
 	pDlgRender	=	NULL;
 	pEdtURL		=	NULL;
-	pEdtUsername=	NULL;
-	pEdtPassword=	NULL;
+// 	pEdtUsername=	NULL;
+// 	pEdtPassword=	NULL;
 	pChkOSD		=	NULL;
 	pSliderCache=	NULL;
 	pBtnPreview	=	NULL;
@@ -193,16 +187,16 @@ void	CDlgVideo::CreateComponents()
 	}
 
 	__CREATE_WINDOW(pEdtURL,		CEdit,		IDC_EDIT_RTSP_URL);
-	__CREATE_WINDOW(pEdtUsername,	CEdit,		IDC_EDIT_USERNAME);
-	__CREATE_WINDOW(pEdtPassword,	CEdit,		IDC_EDIT_PASSWORD);
+// 	__CREATE_WINDOW(pEdtUsername,	CEdit,		IDC_EDIT_USERNAME);
+// 	__CREATE_WINDOW(pEdtPassword,	CEdit,		IDC_EDIT_PASSWORD);
 	__CREATE_WINDOW(pChkOSD,		CButton,	IDC_CHECK_OSD);
 	__CREATE_WINDOW(pSliderCache,	CSliderCtrl,IDC_SLIDER_CACHE);
 	__CREATE_WINDOW(pBtnPreview,	CButton,	IDC_BUTTON_PREVIEW);
 	__CREATE_WINDOW(pCombRTPTransMode	,	CComboBox,	IDC_COMBO_RTPTRANSMODE);
 
 	if (NULL != pEdtURL)		pEdtURL->SetWindowText(TEXT("rtsp://"));
-	if (NULL != pEdtUsername)	pEdtUsername->SetWindowText(TEXT("admin"));
-	if (NULL != pEdtPassword)	pEdtPassword->SetWindowText(TEXT("admin"));
+// 	if (NULL != pEdtUsername)	pEdtUsername->SetWindowText(TEXT("admin"));
+// 	if (NULL != pEdtPassword)	pEdtPassword->SetWindowText(TEXT("admin"));
 	if (NULL != pSliderCache)	pSliderCache->SetRange(1, 10);
 	if (NULL != pSliderCache)	pSliderCache->SetPos(3);
 
@@ -210,10 +204,9 @@ void	CDlgVideo::CreateComponents()
 
 	if (pCombRTPTransMode)
 	{
-		pCombRTPTransMode->AddString(TEXT("RTP OVER UDP"));
-		pCombRTPTransMode->AddString(TEXT("RTP OVER TCP"));
+		pCombRTPTransMode->AddString(TEXT("UDP"));
+		pCombRTPTransMode->AddString(TEXT("TCP"));
 		pCombRTPTransMode->SetCurSel(1);
-
 	}
 }
 void	CDlgVideo::UpdateComponents()
@@ -228,28 +221,28 @@ void	CDlgVideo::UpdateComponents()
 	if (NULL != pDlgRender)		pDlgRender->Invalidate();
 
 	CRect	rcURL;
-	rcURL.SetRect(rcClient.left, rcRender.bottom+2, rcClient.right-380, rcClient.bottom);
+	rcURL.SetRect(rcClient.left, rcRender.bottom+2, rcClient.right-280, rcClient.bottom);
 	__MOVE_WINDOW(pEdtURL, rcURL);
 	if (NULL != pEdtURL)		pEdtURL->Invalidate();
 
-	CRect	rcUsername;
-	rcUsername.SetRect(rcURL.right+2, rcURL.top, rcURL.right+2+50, rcURL.bottom);
-	__MOVE_WINDOW(pEdtUsername, rcUsername);
-	if (NULL != pEdtUsername)		pEdtUsername->Invalidate();
-
-	CRect	rcPassword;
-	rcPassword.SetRect(rcUsername.right+2, rcUsername.top, rcUsername.right+2+rcUsername.Width(), rcUsername.bottom);
-	__MOVE_WINDOW(pEdtPassword, rcPassword);
-	if (NULL != pEdtPassword)		pEdtPassword->Invalidate();
+// 	CRect	rcUsername;
+// 	rcUsername.SetRect(rcURL.right+2, rcURL.top, rcURL.right+2+50, rcURL.bottom);
+// 	__MOVE_WINDOW(pEdtUsername, rcUsername);
+// 	if (NULL != pEdtUsername)		pEdtUsername->Invalidate();
+// 
+// 	CRect	rcPassword;
+// 	rcPassword.SetRect(rcUsername.right+2, rcUsername.top, rcUsername.right+2+rcUsername.Width(), rcUsername.bottom);
+// 	__MOVE_WINDOW(pEdtPassword, rcPassword);
+// 	if (NULL != pEdtPassword)		pEdtPassword->Invalidate();
 
 	CRect	rcOSD;
-	rcOSD.SetRect(rcPassword.right+2, rcPassword.top, rcPassword.right+2+38, rcPassword.bottom);
+	rcOSD.SetRect(rcURL.right+2, rcURL.top, rcURL.right+2+48, rcURL.bottom);
 	__MOVE_WINDOW(pChkOSD, rcOSD);
 	if (NULL != pChkOSD)		pChkOSD->Invalidate();
 
 	// RTP OVER TCP/UDP [8/17/2016 SwordTwelve]
 	CRect	rcRTPMode;
-	rcRTPMode.SetRect(rcOSD.right+2, rcOSD.top, rcOSD.right+2+96, rcOSD.bottom);
+	rcRTPMode.SetRect(rcOSD.right+2, rcOSD.top, rcOSD.right+2+86, rcOSD.bottom);
 	__MOVE_WINDOW(pCombRTPTransMode, rcRTPMode);
 	if (NULL != pCombRTPTransMode)		pCombRTPTransMode->Invalidate();	
 
@@ -303,17 +296,17 @@ void CDlgVideo::OnBnClickedButtonPreview()
 		if (NULL != pEdtURL)	pEdtURL->GetWindowTextW(wszURL, sizeof(wszURL));
 		if (wcslen(wszURL) < 1)		return;
 
-		wchar_t wszUsername[32] = {0,};
-		wchar_t wszPassword[32] = {0,};
-		if (NULL != pEdtUsername)	pEdtUsername->GetWindowText(wszUsername, sizeof(wszUsername));
-		if (NULL != pEdtPassword)	pEdtPassword->GetWindowText(wszPassword, sizeof(wszPassword));
+// 		wchar_t wszUsername[32] = {0,};
+// 		wchar_t wszPassword[32] = {0,};
+// 		if (NULL != pEdtUsername)	pEdtUsername->GetWindowText(wszUsername, sizeof(wszUsername));
+// 		if (NULL != pEdtPassword)	pEdtPassword->GetWindowText(wszPassword, sizeof(wszPassword));
 
 		char szURL[128] = {0,};
 		__WCharToMByte(wszURL, szURL, sizeof(szURL)/sizeof(szURL[0]));
 		char szUsername[32] = {0,};
 		char szPassword[32] = {0,};
-		__WCharToMByte(wszUsername, szUsername, sizeof(szUsername)/sizeof(szUsername[0]));
-		__WCharToMByte(wszPassword, szPassword, sizeof(szPassword)/sizeof(szPassword[0]));
+// 		__WCharToMByte(wszUsername, szUsername, sizeof(szUsername)/sizeof(szUsername[0]));
+// 		__WCharToMByte(wszPassword, szPassword, sizeof(szPassword)/sizeof(szPassword[0]));
 
 		int nRtpOverTcp = 1;
 		if (pCombRTPTransMode)
@@ -349,8 +342,6 @@ void CDlgVideo::OnBnClickedCheckOsd()
 	}
 }
 
-
-
 void CDlgVideo::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 {
 	if( NULL != pScrollBar && NULL != pSliderCache &&
@@ -367,12 +358,8 @@ void CDlgVideo::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 	CDialogEx::OnHScroll(nSBCode, nPos, pScrollBar);
 }
 
-
-
 void CDlgVideo::OnRButtonUp(UINT nFlags, CPoint point)
 {
-
-
 	CDialogEx::OnRButtonUp(nFlags, point);
 }
 

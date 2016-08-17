@@ -26,8 +26,8 @@ public:
 	int		m_ChannelId;
 	CDlgRender	*pDlgRender;
 	CEdit	*pEdtURL;		//IDC_EDIT_RTSP_URL
-	CEdit	*pEdtUsername;	//IDC_EDIT_USERNAME
-	CEdit	*pEdtPassword;	//IDC_EDIT_PASSWORD
+// 	CEdit	*pEdtUsername;	//IDC_EDIT_USERNAME
+// 	CEdit	*pEdtPassword;	//IDC_EDIT_PASSWORD
 	CButton	*pChkOSD;		//IDC_CHECK_OSD
 	CComboBox	*pCombRTPTransMode;		//IDC_COMBO_RTPTRANSMODE
 
