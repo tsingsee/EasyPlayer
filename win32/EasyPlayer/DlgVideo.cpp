@@ -179,6 +179,8 @@ void	CDlgVideo::InitialComponents()
 	pChkOSD		=	NULL;
 	pSliderCache=	NULL;
 	pBtnPreview	=	NULL;
+	pCombRTPTransMode = NULL;
+
 }
 
 void	CDlgVideo::CreateComponents()
@@ -196,6 +198,7 @@ void	CDlgVideo::CreateComponents()
 	__CREATE_WINDOW(pChkOSD,		CButton,	IDC_CHECK_OSD);
 	__CREATE_WINDOW(pSliderCache,	CSliderCtrl,IDC_SLIDER_CACHE);
 	__CREATE_WINDOW(pBtnPreview,	CButton,	IDC_BUTTON_PREVIEW);
+	__CREATE_WINDOW(pCombRTPTransMode	,	CComboBox,	IDC_COMBO_RTPTRANSMODE);
 
 	if (NULL != pEdtURL)		pEdtURL->SetWindowText(TEXT("rtsp://"));
 	if (NULL != pEdtUsername)	pEdtUsername->SetWindowText(TEXT("admin"));
@@ -204,6 +207,14 @@ void	CDlgVideo::CreateComponents()
 	if (NULL != pSliderCache)	pSliderCache->SetPos(3);
 
 	if (NULL != pBtnPreview)		pBtnPreview->SetWindowText(TEXT("Play"));
+
+	if (pCombRTPTransMode)
+	{
+		pCombRTPTransMode->AddString(TEXT("RTP OVER UDP"));
+		pCombRTPTransMode->AddString(TEXT("RTP OVER TCP"));
+		pCombRTPTransMode->SetCurSel(1);
+
+	}
 }
 void	CDlgVideo::UpdateComponents()
 {
@@ -217,7 +228,7 @@ void	CDlgVideo::UpdateComponents()
 	if (NULL != pDlgRender)		pDlgRender->Invalidate();
 
 	CRect	rcURL;
-	rcURL.SetRect(rcClient.left, rcRender.bottom+2, rcClient.right-280, rcClient.bottom);
+	rcURL.SetRect(rcClient.left, rcRender.bottom+2, rcClient.right-380, rcClient.bottom);
 	__MOVE_WINDOW(pEdtURL, rcURL);
 	if (NULL != pEdtURL)		pEdtURL->Invalidate();
 
@@ -235,8 +246,15 @@ void	CDlgVideo::UpdateComponents()
 	rcOSD.SetRect(rcPassword.right+2, rcPassword.top, rcPassword.right+2+38, rcPassword.bottom);
 	__MOVE_WINDOW(pChkOSD, rcOSD);
 	if (NULL != pChkOSD)		pChkOSD->Invalidate();
+
+	// RTP OVER TCP/UDP [8/17/2016 SwordTwelve]
+	CRect	rcRTPMode;
+	rcRTPMode.SetRect(rcOSD.right+2, rcOSD.top, rcOSD.right+2+96, rcOSD.bottom);
+	__MOVE_WINDOW(pCombRTPTransMode, rcRTPMode);
+	if (NULL != pCombRTPTransMode)		pCombRTPTransMode->Invalidate();	
+
 	CRect	rcCache;
-	rcCache.SetRect(rcOSD.right+2, rcOSD.top, rcOSD.right+2+60, rcOSD.bottom);
+	rcCache.SetRect(rcRTPMode.right+2, rcRTPMode.top, rcRTPMode.right+2+60, rcRTPMode.bottom);
 	__MOVE_WINDOW(pSliderCache, rcCache);
 	if (NULL != pSliderCache)		pSliderCache->Invalidate();
 
@@ -297,9 +315,15 @@ void CDlgVideo::OnBnClickedButtonPreview()
 		__WCharToMByte(wszUsername, szUsername, sizeof(szUsername)/sizeof(szUsername[0]));
 		__WCharToMByte(wszPassword, szPassword, sizeof(szPassword)/sizeof(szPassword[0]));
 
+		int nRtpOverTcp = 1;
+		if (pCombRTPTransMode)
+		{
+			nRtpOverTcp = pCombRTPTransMode->GetCurSel();
+		}
+		
 		HWND hWnd = NULL;
 		if (NULL != pDlgRender)	hWnd = pDlgRender->GetSafeHwnd();
-		m_ChannelId = EasyPlayer_OpenStream(szURL, hWnd, (RENDER_FORMAT)RenderFormat, 0x01, szUsername, szPassword);
+		m_ChannelId = EasyPlayer_OpenStream(szURL, hWnd, (RENDER_FORMAT)RenderFormat, nRtpOverTcp, szUsername, szPassword);
 
 		if (m_ChannelId > 0)
 		{

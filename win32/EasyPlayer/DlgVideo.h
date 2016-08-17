@@ -29,6 +29,8 @@ public:
 	CEdit	*pEdtUsername;	//IDC_EDIT_USERNAME
 	CEdit	*pEdtPassword;	//IDC_EDIT_PASSWORD
 	CButton	*pChkOSD;		//IDC_CHECK_OSD
+	CComboBox	*pCombRTPTransMode;		//IDC_COMBO_RTPTRANSMODE
+
 	CSliderCtrl	*pSliderCache;	//IDC_SLIDER_CACHE
 	CButton	*pBtnPreview;	//IDC_BUTTON_PREVIEW
 	void	InitialComponents();
