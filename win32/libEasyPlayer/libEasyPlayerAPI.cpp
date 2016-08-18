@@ -63,11 +63,11 @@ LIB_EASYPLAYER_API void EasyPlayer_Release()
 }
 
 
-LIB_EASYPLAYER_API int EasyPlayer_OpenStream(const char *url, HWND hWnd, RENDER_FORMAT renderFormat, int rtpovertcp,const char *username, const char *password, MediaSourceCallBack callback, void *userPtr)
+LIB_EASYPLAYER_API int EasyPlayer_OpenStream(const char *url, HWND hWnd, RENDER_FORMAT renderFormat, int rtpovertcp,const char *username, const char *password, MediaSourceCallBack callback, void *userPtr, bool bHardDecode)
 {
 	if (NULL == g_pChannelManager)		return -1;
 
-	return g_pChannelManager->OpenStream(url, hWnd, renderFormat, rtpovertcp, username, password, callback, userPtr);
+	return g_pChannelManager->OpenStream(url, hWnd, renderFormat, rtpovertcp, username, password, callback, userPtr, bHardDecode);
 }
 
 LIB_EASYPLAYER_API void EasyPlayer_CloseStream(int channelId)

@@ -41,7 +41,7 @@ LIB_EASYPLAYER_API int EasyPlayer_Init();
 LIB_EASYPLAYER_API void EasyPlayer_Release();
 
 
-LIB_EASYPLAYER_API int EasyPlayer_OpenStream(const char *url, HWND hWnd, RENDER_FORMAT renderFormat, int rtpovertcp, const char *username, const char *password, MediaSourceCallBack callback=NULL, void *userPtr=NULL);
+LIB_EASYPLAYER_API int EasyPlayer_OpenStream(const char *url, HWND hWnd, RENDER_FORMAT renderFormat, int rtpovertcp, const char *username, const char *password, MediaSourceCallBack callback=NULL, void *userPtr=NULL, bool bHardDecode=true);
 LIB_EASYPLAYER_API void EasyPlayer_CloseStream(int channelId);
 LIB_EASYPLAYER_API int EasyPlayer_SetFrameCache(int channelId, int cache);
 LIB_EASYPLAYER_API int EasyPlayer_SetShownToScale(int channelId, int shownToScale);

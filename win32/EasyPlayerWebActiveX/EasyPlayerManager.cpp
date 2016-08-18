@@ -35,7 +35,7 @@ int EasyPlayerManager::Start(char* szURL, HWND hShowWnd,
 		return -1;
 	}
 
-	m_sSourceInfo.rtspSourceId = EasyPlayer_OpenStream(szURL, hShowWnd, eRenderFormat, rtpovertcp, username, password, callback, userPtr);
+	m_sSourceInfo.rtspSourceId = EasyPlayer_OpenStream(szURL, hShowWnd, eRenderFormat, rtpovertcp, username, password, callback, userPtr, true);
 	return	m_sSourceInfo.rtspSourceId ;
 }
  

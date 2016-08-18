@@ -30,7 +30,7 @@ public:
 // 	CEdit	*pEdtPassword;	//IDC_EDIT_PASSWORD
 	CButton	*pChkOSD;		//IDC_CHECK_OSD
 	CButton	*pChkRTPTransMode;		//IDC_CHECK_RTPTRANSMODE
-
+	CButton* pChkDecodeMode;
 	CSliderCtrl	*pSliderCache;	//IDC_SLIDER_CACHE
 	CButton	*pBtnPreview;	//IDC_BUTTON_PREVIEW
 	void	InitialComponents();
