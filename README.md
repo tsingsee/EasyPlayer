@@ -2,25 +2,25 @@
 
 EasyPlayer是由EasyDarwin开源团队成员(SwordTwelve & John)开发和维护的一个RTSP播放器项目，目前支持Windows(支持多窗口、包含ActiveX，npAPI Web插件)、Android平台，后续将支持IOS平台，是一套极佳的RTSP播放组件！
 
-![EasyPlayer Win](http://www.easydarwin.org/skin/easydarwin/images/easyplayer_win_1.0.png)
+![EasyPlayer Win](http://www.easydarwin.org/skin/easydarwin/images/easyplayer20160818.png)
 
 ![EasyPlayer Android](https://raw.githubusercontent.com/EasyDarwin/EasyPlayer/master/Android/EasyPlayer/screenshot/single_video.jpg?raw=true)
 
 ##更新记录##
-### Android ###
+### next version ###
+
+* EasyPlayer IOS版本；
+
+### Android v1.0.16.0818 (2016-08-18) ###
 
 * 增加了保存视频快照功能
 * 支持抓拍、录像、实时码率展示
 * 支持视频窗口拖拽、放大（参考360小水滴）
 * 支持手动输入视频源和获取（EasyDarwin服务器）直播视频源
 
-### Android ###
+### Android v1.0.16.0801 (2016-08-01) ###
 
 * 增加了多窗口播放功能
-
-### next version ###
-
-* EasyPlayer IOS版本；
 
 ### Windows v1.0.16.0519 (2016-05-19) ###
 
