@@ -68,7 +68,7 @@ public class UpdateMgr {
                             PackageInfo packageInfo=packageManager.getPackageInfo(mContext.getPackageName(),0);
                             int localVersionCode=packageInfo.versionCode;
                             int remoteVersionCode= Integer.valueOf(versionInfo.getVersionCode());
-                            Log.d(TAG, "kim localVersionCode="+localVersionCode+", remoteVersionCode="+remoteVersionCode);
+                            Log.d(TAG, "localVersionCode="+localVersionCode+", remoteVersionCode="+remoteVersionCode);
                             if(localVersionCode<remoteVersionCode){
                                 mApkUrl = versionInfo.getUrl();
                                 mHandler.post(mShowDlg);
@@ -89,9 +89,8 @@ public class UpdateMgr {
      */
     private void showUpdateDialog(){
         final String apkUrl=mApkUrl;
-        Log.d(TAG, "kim showUpdateDialog. apkUrl="+apkUrl);
         new AlertDialog.Builder(mContext)
-                .setMessage("EasyIPCamera可以升级到更高的版本，是否升级")
+                .setMessage("EasyPlayer可以升级到更高的版本，是否升级")
                 .setTitle("升级提示")
                 .setIcon(R.drawable.img_qrcode)
                 .setPositiveButton("升级", new DialogInterface.OnClickListener() {
