@@ -46,6 +46,13 @@
         <activity
             android:name="org.easydarwin.easyplayer.MediaFilesActivity"
             android:label="文件夹"></activity>
+
+        <receiver android:name="org.easydarwin.easyplayer.updatemgr.CompleteReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
+                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

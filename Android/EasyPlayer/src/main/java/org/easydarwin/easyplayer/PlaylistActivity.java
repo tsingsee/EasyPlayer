@@ -33,6 +33,7 @@ import com.bumptech.glide.signature.StringSignature;
 import com.umeng.analytics.MobclickAgent;
 
 import org.easydarwin.easyplayer.data.VideoSource;
+import org.easydarwin.easyplayer.updatemgr.UpdateMgr;
 import org.esaydarwin.rtsp.player.R;
 import org.esaydarwin.rtsp.player.databinding.ContentPlaylistBinding;
 import org.esaydarwin.rtsp.player.databinding.VideoSourceItemBinding;
@@ -117,6 +118,9 @@ public class PlaylistActivity extends AppCompatActivity implements View.OnClickL
             }
         });
         doLoadData(false);
+
+        UpdateMgr update = new UpdateMgr(this);
+        update.checkUpdate();
     }
 
     private void doLoadData(final boolean refresh) {
