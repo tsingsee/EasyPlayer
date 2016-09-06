@@ -7,6 +7,7 @@ EasyPlayer是由EasyDarwin开源团队成员(SwordTwelve & John)开发和维护�
 - Windows：[https://github.com/EasyDarwin/EasyPlayer/releases/tag/v1.0.16.0818](https://github.com/EasyDarwin/EasyPlayer/releases/tag/v1.0.16.0818 "EasyPlayer Win") 
 
 - Android：http://fir.im/EasyPlayer
+
 ![EasyPlayer Android](http://www.easydarwin.org/github/images/firimeasyplayerandroid.png)
 
 
