@@ -25,7 +25,7 @@ extern "C"
 {
 #endif
 	/* 获取最后一次错误的错误码 */
-	Easy_API int Easy_APICALL EasyRTSP_GetErrCode();
+	Easy_API int Easy_APICALL EasyRTSP_GetErrCode(Easy_RTSP_Handle handle);
 
 	/* 激活 */
 	Easy_API int Easy_APICALL EasyRTSP_Activate(char *license);

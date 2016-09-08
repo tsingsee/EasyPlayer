@@ -62,14 +62,14 @@ typedef int Easy_Error;
 
 typedef enum __EASY_ACTIVATE_ERR_CODE_ENUM
 {
-	EASY_ACTIVATE_INVALID_KEY		=		-1,			//无效Key
-	EASY_ACTIVATE_TIME_ERR			=		-2,			//时间错误
-	EASY_ACTIVATE_PROCESS_NAME_LEN_ERR	=	-3,			//进程名称长度不匹配
-	EASY_ACTIVATE_PROCESS_NAME_ERR	=		-4,			//进程名称不匹配
-	EASY_ACTIVATE_VALIDITY_PERIOD_ERR=		-5,			//有效期校验不一致
-	EASY_ACTIVATE_PLATFORM_ERR		=		-6,			//平台不匹配
-	EASY_ACTIVATE_COMPANY_ID_LEN_ERR=		-7,			//授权使用商不匹配
-	EASY_ACTIVATE_SUCCESS			=		0,			//激活成功
+	EASY_ACTIVATE_INVALID_KEY		=		-1,			/* 无效Key */
+	EASY_ACTIVATE_TIME_ERR			=		-2,			/* 时间错误 */
+	EASY_ACTIVATE_PROCESS_NAME_LEN_ERR	=	-3,			/* 进程名称长度不匹配 */
+	EASY_ACTIVATE_PROCESS_NAME_ERR	=		-4,			/* 进程名称不匹配 */
+	EASY_ACTIVATE_VALIDITY_PERIOD_ERR=		-5,			/* 有效期校验不一致 */
+	EASY_ACTIVATE_PLATFORM_ERR		=		-6,			/* 平台不匹配 */
+	EASY_ACTIVATE_COMPANY_ID_LEN_ERR=		-7,			/* 授权使用商不匹配 */
+	EASY_ACTIVATE_SUCCESS			=		0,			/* 激活成功 */
 
 }EASY_ACTIVATE_ERR_CODE_ENUM;
 
@@ -86,6 +86,8 @@ typedef enum __EASY_ACTIVATE_ERR_CODE_ENUM
 #define EASY_SDK_AUDIO_CODEC_G711A	0x10007		/* G711 alaw*/
 #define EASY_SDK_AUDIO_CODEC_G726	0x1100B		/* G726 */
 
+#define EASY_SDK_EVENT_CODEC_ERROR	0x63657272	/* ERROR */
+#define EASY_SDK_EVENT_CODEC_EXIT	0x65786974	/* EXIT */
 
 /* 音视频帧标识 */
 #define EASY_SDK_VIDEO_FRAME_FLAG	0x00000001		/* 视频帧标志 */

@@ -47,7 +47,6 @@ EasyPlayerWnd::~EasyPlayerWnd(void)
 		m_windowMap.erase(it);
 
 	Gdiplus::GdiplusShutdown(m_gdiplusStartupToken);
-	FB::PluginWindowWin::~PluginWindowWin();
 }
 
 void EasyPlayerWnd::DrawClientArea(HDC hdc, int nWidth, int nHeight)
