@@ -20,6 +20,9 @@
 #include "IntelHardCodec/IntelHardCodec_Interface.h"
 #pragma comment(lib, "IntelHardCodec/IntelHardCodec.lib")
 
+#include "libEasyAACEncoder/EasyAACEncoderAPI.h"
+#pragma comment(lib, "libEasyAACEncoder/libEasyAACEncoder.lib")
+
 extern "C"
 {
 #include "mp4creator\libmp4creator.h"

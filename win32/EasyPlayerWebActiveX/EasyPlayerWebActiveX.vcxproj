@@ -42,12 +42,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <TargetExt>.ocx</TargetExt>
-    <OutDir>..\binWebPlugin\</OutDir>
+    <OutDir>..\bin\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <TargetExt>.ocx</TargetExt>
-    <OutDir>..\binWebPlugin\</OutDir>
+    <OutDir>..\bin\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -60,7 +60,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ModuleDefinitionFile>.\EasyPlayerWebActiveX.def</ModuleDefinitionFile>
-      <OutputFile>..\binWebPlugin\$(ProjectName).ocx</OutputFile>
+      <OutputFile>..\bin\$(ProjectName).ocx</OutputFile>
       <RegisterOutput>true</RegisterOutput>
     </Link>
     <Midl>
@@ -95,7 +95,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <ModuleDefinitionFile>.\EasyPlayerWebActiveX.def</ModuleDefinitionFile>
-      <OutputFile>..\binWebPlugin\$(ProjectName).ocx</OutputFile>
+      <OutputFile>..\bin\$(ProjectName).ocx</OutputFile>
       <RegisterOutput>true</RegisterOutput>
     </Link>
     <Midl>

@@ -764,6 +764,10 @@ LPTHREAD_START_ROUTINE CChannelManager::_lpDecodeThread( LPVOID _pParam )
 	}
 	memset(pbuf, 0x00, buf_size);
 
+	EasyAACEncoder_Handle m_pAACEncoderHandle = NULL;
+	char* m_pAACEncBufer = new char[buf_size];
+	memset(m_pAACEncBufer, 0x00, buf_size);
+
 	pThread->decodeYuvIdx	=	0;
 	memset(&frameinfo, 0x00, sizeof(MEDIA_FRAME_INFO));
 
@@ -980,6 +984,40 @@ LPTHREAD_START_ROUTINE CChannelManager::_lpDecodeThread( LPVOID _pParam )
 			{
 				if (NULL != pChannelManager->pAudioPlayThread && pChannelManager->pAudioPlayThread->channelId == pThread->channelId)
 				{
+					char* pDecBuffer = pbuf;
+					unsigned int nDecBufLen = frameinfo.length;
+					if (frameinfo.codec == EASY_SDK_AUDIO_CODEC_G711U || EASY_SDK_AUDIO_CODEC_G726 == frameinfo.codec)
+					{
+						if (!m_pAACEncoderHandle)
+						{
+							InitParam initParam;
+							initParam.u32AudioSamplerate=frameinfo.sample_rate;
+							initParam.ucAudioChannel=frameinfo.channels;
+							initParam.u32PCMBitSize=frameinfo.bits_per_sample;
+							if (frameinfo.codec == EASY_SDK_AUDIO_CODEC_G711U)
+							{
+								initParam.ucAudioCodec = Law_ULaw;
+							} 
+							else if (frameinfo.codec == EASY_SDK_AUDIO_CODEC_G726)
+							{
+								initParam.ucAudioCodec = Law_G726;
+							}
+							m_pAACEncoderHandle = Easy_AACEncoder_Init( initParam);;
+						}
+						unsigned int out_len = 0;
+						int nRet = Easy_AACEncoder_Encode(m_pAACEncoderHandle, (unsigned char*)/*m_pG711EncBufer*/pbuf, /*m_nG711BufferLen*/frameinfo.length, (unsigned char*)m_pAACEncBufer, &out_len) ;
+						if (nRet>0&&out_len>0)
+						{
+							pDecBuffer = m_pAACEncBufer;
+							nDecBufLen = out_len;
+							frameinfo.codec = EASY_SDK_AUDIO_CODEC_AAC;
+						} 
+						else
+						{
+							continue;
+						}
+					}
+
 					DECODER_OBJ *pDecoderObj = GetDecoder(pThread, MEDIA_TYPE_AUDIO, &frameinfo);
 					if (NULL == pDecoderObj)
 					{
@@ -991,7 +1029,7 @@ LPTHREAD_START_ROUTINE CChannelManager::_lpDecodeThread( LPVOID _pParam )
 
 					memset(audio_buf, 0x00, audbuf_len);
 					int pcm_data_size = 0;
-					int ret = FFD_DecodeAudio(pDecoderObj->ffDecoder, (char*)pbuf, frameinfo.length, (char *)audio_buf, &pcm_data_size);	//音频解码(支持g711(ulaw)和AAC)
+					int ret = FFD_DecodeAudio(pDecoderObj->ffDecoder, (char*)pDecBuffer, nDecBufLen, (char *)audio_buf, &pcm_data_size);	//音频解码(支持g711(ulaw)和AAC)
 					if (ret == 0)
 					{
 						//播放
@@ -1044,6 +1082,18 @@ LPTHREAD_START_ROUTINE CChannelManager::_lpDecodeThread( LPVOID _pParam )
 		MP4C_Deinit(&pThread->mp4cHandle);
 		pThread->mp4cHandle = NULL;
 		pThread->vidFrameNum = 0;
+	}
+
+	if (m_pAACEncoderHandle)
+	{
+		Easy_AACEncoder_Release(m_pAACEncoderHandle);
+		m_pAACEncoderHandle = NULL;
+	}
+
+	if (m_pAACEncBufer)
+	{
+		delete[] m_pAACEncBufer ;
+		m_pAACEncBufer = NULL;
 	}
 
 	delete []audio_buf;
