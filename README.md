@@ -75,8 +75,6 @@ EasyPlayer是一款非常稳定的RTSP播放器，各平台版本需要经过授
 
 WEB：[www.EasyDarwin.org](http://www.easydarwin.org)
 
-Author：SwordTwevle & John
-
 QQ交流群：[544917793](http://jq.qq.com/?_wv=1027&k=2IDkJId "EasyPlayer")
 
 Copyright &copy; EasyDarwin.org 2012-2016
