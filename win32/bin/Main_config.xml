@@ -4,13 +4,13 @@
 	<Font name="微软雅黑" size="15" italic="true"/>
 	
 	<String text="EasyPlayer" font="1" color="#FFFFFF" pos="0,0,40,7,300,42" id="1"/>
-	<String text="Version: 1.0.16.0818 Powered by SwordTwelve/Gavin QQ交流群：544917793" font="2" color="#FFFFFF" pos="3,3,810,25,0,0" id="2"/>
+	<String text="Version: 1.1.16.0913 Powered by SwordTwelve/Gavin QQ交流群：544917793" font="2" color="#FFFFFF" pos="3,3,810,25,0,0" id="2"/>
 	<Image path="Res\Skin\header.png" pos="0,3,0,0,0,0" id="1"/>
 	<Image path="Res\EasyTeam\Easy_32.png" pos="0,0,4,2,36,34" id="2" />
 
 	<Button pos="1,1,35,0,8,22" type="push" id="5000" normalimage="Res\Button\close_normal.png" hotimage="Res\Button\close_hover.png" pushedimage="Res\Button\close_pressed.png" focusedimage="Res\Button\close_normal.png" size="27,22" trans="true"/>
 	<Button pos="1,1,62,0,35,22" type="push" id="5001" normalimage="Res\Button\min_normal.png" hotimage="Res\Button\min_hover.png" pushedimage="Res\Button\min_pressed.png" focusedimage="Res\Button\min_normal.png" size="27,22" trans="true"/>
-	<Button pos="3,3,240,25,120,0" type="push" id="5045" fontnormalcolor="#FFFFFF" fontselcolor="#FF00FF" trans="true" text="©EasyDarwin.org" url="http://www.easydarwin.org/"/>
+	<Button pos="3,3,240,25,120,0" type="push" id="5045" fontnormalcolor="#FFFFFF" fontselcolor="#FF00FF" trans="true" text="©EasyDarwin" url="http://www.easydarwin.org/"/>
 	<Button pos="3,3,120,25,0,0" type="push" id="5046" fontnormalcolor="#FFFFFF" fontselcolor="#FF00FF" trans="true" text="Follow Github" url="https://github.com/EasyDarwin/EasyPlayer"/>
 
 </Window>	
