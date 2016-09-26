@@ -37,8 +37,7 @@ public:
 	void	CreateComponents();
 	void	UpdateComponents();
 	void	DeleteComponents();
-
-
+	void LogErr(CString strLog);
 
 // 对话框数据
 	enum { IDD = IDD_DIALOG_VIDEO };
@@ -59,8 +58,10 @@ public:
 	afx_msg void OnBnClickedCheckOsd();
 	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
-
-public:
 	afx_msg void OnPaint();
 	afx_msg void OnBnClickedCheckRtptransmode();
+
+public:
+	static int CALLBACK EasyPlayerCallBack( int _channelId, int *_channelPtr, int _frameType, char *pBuf, RTSP_FRAME_INFO* _frameInfo);
+
 };

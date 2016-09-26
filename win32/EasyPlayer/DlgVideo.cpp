@@ -4,9 +4,7 @@
 #include "stdafx.h"
 #include "DlgVideo.h"
 #include "afxdialogex.h"
-
-
-
+#include "EasyPlayerDlg.h"
 
 // CDlgVideo ¶Ô»°¿ò
 
@@ -338,7 +336,7 @@ void CDlgVideo::OnBnClickedButtonPreview()
 		
 		HWND hWnd = NULL;
 		if (NULL != pDlgRender)	hWnd = pDlgRender->GetSafeHwnd();
-		m_ChannelId = EasyPlayer_OpenStream(szURL, hWnd, (RENDER_FORMAT)RenderFormat, nRtpOverTcp, szUsername, szPassword, 0,0,bHardDecode);
+		m_ChannelId = EasyPlayer_OpenStream(szURL, hWnd, (RENDER_FORMAT)RenderFormat, nRtpOverTcp, szUsername, szPassword, &CDlgVideo::EasyPlayerCallBack, this ,bHardDecode);
 
 		if (m_ChannelId > 0)
 		{
@@ -351,6 +349,36 @@ void CDlgVideo::OnBnClickedButtonPreview()
 		}
 	}
 }
+
+void CDlgVideo::LogErr(CString strLog)
+{
+	if(!strLog.IsEmpty())
+	{
+		TCHAR* szLog = new TCHAR[strLog.GetLength()+1];
+		StrCpy(szLog, strLog);
+		CWnd* m_pMainDlg = GetParent();
+		if(m_pMainDlg)
+			m_pMainDlg->PostMessage(MSG_LOG, 0, (LPARAM)szLog);
+// 		delete[] szLog;
+// 		szLog = NULL;
+	}
+}
+
+int CDlgVideo::EasyPlayerCallBack( int _channelId, int *_channelPtr, int _frameType, char *pBuf, RTSP_FRAME_INFO* _frameInfo)
+{
+	if (_frameType == EASY_SDK_EVENT_FRAME_FLAG)
+	{
+		TRACE( "%s", pBuf  );
+		CDlgVideo* pMaster = (CDlgVideo*)_channelPtr;
+		if (pMaster)
+		{
+			CString str = (CString)pBuf;
+			pMaster->LogErr(str);
+		}
+	}
+	return 0;
+}
+
 
 void CDlgVideo::OnBnClickedCheckOsd()
 {

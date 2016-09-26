@@ -157,3 +157,28 @@ LIB_EASYPLAYER_API int EasyPlayer_StopManuRecording(int channelId)
 	return g_pChannelManager->StopManuRecording(channelId);
 }
 
+LIB_EASYPLAYER_API int		EasyPlayer_SetManuRecordPath(int channelId, const char* recordPath)
+{
+	if (NULL == g_pChannelManager)		return -1;
+
+	return g_pChannelManager->SetManuRecordPath(channelId, recordPath);
+}
+
+LIB_EASYPLAYER_API int		EasyPlayer_SetManuPicShotPath(int channelId, const char* shotPath)
+{
+	if (NULL == g_pChannelManager)		return -1;
+
+	return g_pChannelManager->SetManuPicShotPath(channelId, shotPath);
+}
+
+LIB_EASYPLAYER_API int		EasyPlayer_StartManuPicShot(int channelId)
+{
+	if (NULL == g_pChannelManager)		return -1;
+	return g_pChannelManager->StartManuPicShot(channelId);
+}
+
+LIB_EASYPLAYER_API int		EasyPlayer_StopManuPicShot(int channelId)
+{
+	if (NULL == g_pChannelManager)		return -1;
+	return g_pChannelManager->StopManuPicShot(channelId);
+}

@@ -9,6 +9,7 @@
 
 
 #define	_SURV_MAX_WINDOW_NUM		16
+#define MSG_LOG WM_USER +0x1001
 
 typedef struct __VIDEO_NODE_T
 {
@@ -58,6 +59,8 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 	LRESULT OnWindowMaximized(WPARAM wParam, LPARAM lParam);
+	LRESULT OnLog(WPARAM wParam, LPARAM lParam);
+
 public:
 	virtual BOOL DestroyWindow();
 	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);

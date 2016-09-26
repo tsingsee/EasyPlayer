@@ -87,6 +87,8 @@ BEGIN_MESSAGE_MAP(CEasyPlayerDlg, CSkinDialog)
 	ON_CBN_SELCHANGE(IDC_COMBO_RENDER_FORMAT, &CEasyPlayerDlg::OnCbnSelchangeComboRenderFormat)
 	ON_BN_CLICKED(IDC_CHECK_SHOWNTOSCALE, &CEasyPlayerDlg::OnBnClickedCheckShowntoscale)
 	ON_WM_LBUTTONDOWN()
+	ON_MESSAGE(MSG_LOG, &CEasyPlayerDlg::OnLog)
+
 END_MESSAGE_MAP()
 
 
@@ -122,8 +124,6 @@ BOOL CEasyPlayerDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
-
-	MoveWindow(0, 0, 1200, 640);
 
 	CreateComponents();
 
@@ -295,7 +295,7 @@ void	CEasyPlayerDlg::UpdateComponents()
 	if (rcClient.IsRectEmpty())		return;
 
 	CRect	rcVideo;
-	rcVideo.SetRect(rcClient.left+2, rcClient.top+36, rcClient.right-2, rcClient.bottom-40);
+	rcVideo.SetRect(rcClient.left+2, rcClient.top+36, rcClient.right-2, rcClient.bottom-140);
 	UpdateVideoPosition(&rcVideo);
 
 	CRect	rcSplitScreen;
@@ -528,8 +528,6 @@ void	CEasyPlayerDlg::UpdateVideoPosition(LPRECT lpRect)
 	}
 }
 
-
-
 LRESULT CEasyPlayerDlg::OnWindowMaximized(WPARAM wParam, LPARAM lParam)
 {
 	int nCh = (int)wParam;
@@ -546,9 +544,6 @@ LRESULT CEasyPlayerDlg::OnWindowMaximized(WPARAM wParam, LPARAM lParam)
 
 	return 0;
 }
-
-
-
 
 void CEasyPlayerDlg::OnCbnSelchangeComboSplitScreen()
 {
@@ -593,11 +588,33 @@ void CEasyPlayerDlg::OnBnClickedCheckShowntoscale()
 	}
 }
 
-
 void CEasyPlayerDlg::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
 	PostMessage(WM_NCLBUTTONDOWN,HTCAPTION,MAKELPARAM(point.x,point.y));
 
 	CSkinDialog::OnLButtonDown(nFlags, point);
+}
+
+LRESULT CEasyPlayerDlg::OnLog(WPARAM wParam, LPARAM lParam)
+{
+	CSkinEdit* pLog = (CSkinEdit*)GetDlgItem(5100);
+	if (pLog)
+	{
+		CString strLog = (TCHAR*)lParam;
+		CString strTime = _T("");
+		CTime CurrentTime=CTime::GetCurrentTime(); 
+		strTime.Format(_T("%04d/%02d/%02d %02d:%02d:%02d   "),CurrentTime.GetYear(),CurrentTime.GetMonth(),
+			CurrentTime.GetDay(),CurrentTime.GetHour(),  CurrentTime.GetMinute(),
+			CurrentTime.GetSecond());
+		strLog = strTime + strLog + _T("\r\n");
+		int nLength  =  pLog->SendMessage(WM_GETTEXTLENGTH);  
+		pLog->SetSel(nLength,  nLength);  
+		pLog->ReplaceSel(strLog); 
+		pLog->SetFocus();
+
+		delete[] (TCHAR*)lParam;
+	}
+
+	return 0;
 }

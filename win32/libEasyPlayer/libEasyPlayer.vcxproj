@@ -54,10 +54,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>./EasyMP4Writer</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>./EasyMP4Writer</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -69,8 +71,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./EasyMP4Writer</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -78,12 +79,15 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>./EasyMP4Writer</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ChannelManager.h" />
+    <ClInclude Include="EasyMP4Writer\EasyMP4Writer.h" />
     <ClInclude Include="libEasyPlayerAPI.h" />
     <ClInclude Include="mp4creator\libmp4creator.h" />
+    <ClInclude Include="SaveJPGDll\SaveJpg_Interface.h" />
     <ClInclude Include="SoundPlayer.h" />
     <ClInclude Include="ssqueue.h" />
     <ClInclude Include="trace.h" />
@@ -91,6 +95,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChannelManager.cpp" />
+    <ClCompile Include="EasyMP4Writer\EasyMP4Writer.cpp" />
     <ClCompile Include="libEasyPlayerAPI.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SoundPlayer.cpp" />

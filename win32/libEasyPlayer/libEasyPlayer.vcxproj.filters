@@ -16,6 +16,12 @@
     <Filter Include="libmp4creator">
       <UniqueIdentifier>{c5a98cc0-04ef-4583-8f70-3e706c4ed5a2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="EasyMP4Writer">
+      <UniqueIdentifier>{211a98d0-7056-42e0-9ed4-d5c9ff897daf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SaveJPGDll">
+      <UniqueIdentifier>{8cf7fd6f-74a1-4c35-9649-27fb4d43b978}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ChannelManager.h">
@@ -39,6 +45,12 @@
     <ClInclude Include="mp4creator\libmp4creator.h">
       <Filter>libmp4creator</Filter>
     </ClInclude>
+    <ClInclude Include="EasyMP4Writer\EasyMP4Writer.h">
+      <Filter>EasyMP4Writer</Filter>
+    </ClInclude>
+    <ClInclude Include="SaveJPGDll\SaveJpg_Interface.h">
+      <Filter>SaveJPGDll</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChannelManager.cpp">
@@ -61,6 +73,9 @@
     </ClCompile>
     <ClCompile Include="libEasyPlayerAPI.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EasyMP4Writer\EasyMP4Writer.cpp">
+      <Filter>EasyMP4Writer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

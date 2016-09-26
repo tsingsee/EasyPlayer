@@ -61,6 +61,8 @@ void CDlgRender::OnLButtonDblClk(UINT nFlags, CPoint point)
 }
 
 #define	POP_MENU_RECORDING	10010
+#define	POP_MENU_SHOT				10011
+
 void CDlgRender::OnRButtonUp(UINT nFlags, CPoint point)
 {
 	ClosePopupMenu();
@@ -69,6 +71,8 @@ void CDlgRender::OnRButtonUp(UINT nFlags, CPoint point)
 	if (NULL != hMenu)
 	{
 		AppendMenu(hMenu, MF_STRING|(channelStatus.recording==0x01?MF_CHECKED:MF_UNCHECKED), POP_MENU_RECORDING, TEXT("Recording"));
+		AppendMenu(hMenu, MF_STRING, POP_MENU_SHOT, TEXT("ScreenShot"));
+
 		CPoint	pMousePosition;
 		GetCursorPos(&pMousePosition);
 		SetForegroundWindow();
@@ -93,6 +97,18 @@ BOOL CDlgRender::OnCommand(WPARAM wParam, LPARAM lParam)
 
 				if (channelStatus.recording == 0x01)			EasyPlayer_StartManuRecording(mChannelId);
 				else											EasyPlayer_StopManuRecording(mChannelId);
+			}
+		}
+		break;
+	case POP_MENU_SHOT:
+		{
+			if (mChannelId > 0)
+			{
+				EasyPlayer_StartManuPicShot(mChannelId);
+				// 				channelStatus.shoting = (channelStatus.shoting==0x00?0x01:0x00);
+				// 
+				// 				if (channelStatus.shoting == 0x01)			EasyPlayer_StartManuPicShot(mChannelId);
+				// 				else											EasyPlayer_StopManuPicShot(mChannelId);
 			}
 		}
 		break;

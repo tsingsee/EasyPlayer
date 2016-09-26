@@ -13,7 +13,6 @@
 
 #define		CHANNEL_ID_GAIN			1000
 
-
 #define	__DELETE_ARRAY(x)	{if (NULL!=x) {delete []x;x=NULL;}}
 
 int CALLBACK __RTSPSourceCallBack( int _channelId, void *_channelPtr, int _frameType, char *pBuf, RTSP_FRAME_INFO* _frameInfo);
@@ -119,13 +118,17 @@ int	CChannelManager::OpenStream(const char *url, HWND hWnd, RENDER_FORMAT render
 
 		EasyRTSP_Init(&pRealtimePlayThread[iNvsIdx].nvsHandle);
 		if (NULL == pRealtimePlayThread[iNvsIdx].nvsHandle)		break;	//退出while循环
+		
+		memcpy(pRealtimePlayThread[iNvsIdx].url, url, strlen(url)+1);
+		pRealtimePlayThread[iNvsIdx].pCallback = callback;
+		pRealtimePlayThread[iNvsIdx].pUserPtr = userPtr;
 
 		unsigned int mediaType = MEDIA_TYPE_VIDEO | MEDIA_TYPE_AUDIO;
 		EasyRTSP_SetCallback(pRealtimePlayThread[iNvsIdx].nvsHandle, __RTSPSourceCallBack);
-		EasyRTSP_OpenStream(pRealtimePlayThread[iNvsIdx].nvsHandle, iNvsIdx, (char*)url, _rtpovertcp==0x01?EASY_RTP_OVER_TCP:EASY_RTP_OVER_UDP, mediaType, (char*)username, (char*)password, (int*)&pRealtimePlayThread[iNvsIdx], 1000, 0, 0x01, 3);
+		EasyRTSP_OpenStream(pRealtimePlayThread[iNvsIdx].nvsHandle, iNvsIdx, (char*)url, 
+			_rtpovertcp==0x01?EASY_RTP_OVER_TCP:EASY_RTP_OVER_UDP, mediaType, 
+			(char*)username, (char*)password, (int*)&pRealtimePlayThread[iNvsIdx], 1000, 0, 0, 0);
 
-		pRealtimePlayThread[iNvsIdx].pCallback = callback;
-		pRealtimePlayThread[iNvsIdx].pUserPtr = userPtr;
 		for (int nI=0; nI<MAX_DECODER_NUM; nI++)
 		{
 			pRealtimePlayThread[iNvsIdx].decoderObj[nI].bHardDecode = bHardDecode;
@@ -361,6 +364,7 @@ void CChannelManager::CreatePlayThread(PLAY_THREAD_OBJ	*_pPlayThread)
 	{
 		//_pPlayThread->ch_tally = 0;
 		_pPlayThread->decodeThread.flag = 0x01;
+
 		_pPlayThread->decodeThread.hThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)_lpDecodeThread, _pPlayThread, 0, NULL);
 		while (_pPlayThread->decodeThread.flag!=0x02 && _pPlayThread->decodeThread.flag!=0x00)	{Sleep(100);}
 		if (NULL != _pPlayThread->decodeThread.hThread)
@@ -727,15 +731,12 @@ DECODER_OBJ	*GetDecoder(PLAY_THREAD_OBJ	*_pPlayThread, unsigned int mediaType, M
 	return NULL;
 }
 
-
-
 LPTHREAD_START_ROUTINE CChannelManager::_lpDecodeThread( LPVOID _pParam )
 {
 	PLAY_THREAD_OBJ *pThread = (PLAY_THREAD_OBJ*)_pParam;
 	if (NULL == pThread)			return 0;
 
 	pThread->decodeThread.flag	=	0x02;
-
 
 #ifdef _DEBUG
 	_TRACE("解码线程[%d]已启动. ThreadId:%d ...\n", pThread->channelId, GetCurrentThreadId());
@@ -880,7 +881,57 @@ LPTHREAD_START_ROUTINE CChannelManager::_lpDecodeThread( LPVOID _pParam )
 			}
 			if (pThread->decodeThread.flag == 0x03)		break;
 
+			//录像
+			if (pThread->manuRecording == 0x01 && NULL==pThread->m_pMP4Writer && frameinfo.type==EASY_SDK_VIDEO_FRAME_I)//开启录制
+			{
+				if (!pThread->m_pMP4Writer)
+				{
+					pThread->m_pMP4Writer = new EasyMP4Writer();
+				}
 
+				unsigned int timestamp = (unsigned int)time(NULL);
+				time_t tt = timestamp;
+				struct tm *_time = localtime(&tt);
+				char szTime[64] = {0,};
+				strftime(szTime, 32, "%Y%m%d%H%M%S", _time);
+
+				int nRecordPathLen = strlen(pThread->manuRecordingPath);
+				if (nRecordPathLen==0 || (pThread->manuRecordingPath[nRecordPathLen-1] != '/' && pThread->manuRecordingPath[nRecordPathLen-1] != '\\') )
+				{
+					pThread->manuRecordingPath[nRecordPathLen] = '/';
+				}
+				
+				char sFileName[512] = {0,};
+				sprintf(sFileName, "%sch%d_%s.mp4", pThread->manuRecordingPath, pThread->channelId, szTime);
+				 
+				if (!pThread->m_pMP4Writer->CreateMP4File(sFileName, ZOUTFILE_FLAG_FULL))
+				{
+					delete pThread->m_pMP4Writer;
+					pThread->m_pMP4Writer = NULL;
+					//return -1;
+				}		
+				else
+				{
+				}
+			}
+			if ( NULL != pThread->m_pMP4Writer)//录制
+			{
+				if (pThread->manuRecording == 0x00 )//停止录制
+				{
+					pThread->m_pMP4Writer->SaveFile();
+					delete pThread->m_pMP4Writer;
+					pThread->m_pMP4Writer=NULL;
+				} 
+				else//继续MP4写数据
+				{
+					pThread->m_pMP4Writer->WriteMp4File((unsigned char*)pbuf, frameinfo.length, 
+						(frameinfo.type==EASY_SDK_VIDEO_FRAME_I)?true:false, 
+						frameinfo.timestamp_sec*1000+frameinfo.timestamp_usec/1000, frameinfo.width, frameinfo.height);
+				}
+			}
+
+			// 不再支持MP4Creator录制mp4（这个库容易出现崩溃） [9/20/2016 dingshuai]
+#if 0
 			//手动录像
 			if (NULL != pThread->mp4cHandle)
 			{
@@ -915,6 +966,7 @@ LPTHREAD_START_ROUTINE CChannelManager::_lpDecodeThread( LPVOID _pParam )
 				MP4C_SetMp4AudioInfo(pThread->mp4cHandle, AUDIO_CODEC_AAC, 8000, 1);
 				MP4C_CreateMp4File(pThread->mp4cHandle, pThread->manuRecordingFile, 1024*1024*2);
 			}
+#endif
 
 			if (pThread->decodeKeyFrameOnly == 0x01)
 			{
@@ -972,6 +1024,31 @@ LPTHREAD_START_ROUTINE CChannelManager::_lpDecodeThread( LPVOID _pParam )
 
 					pThread->decodeYuvIdx ++;
 					if (pThread->decodeYuvIdx >= MAX_YUV_FRAME_NUM)		pThread->decodeYuvIdx = 0;
+
+					//抓图
+					if (pThread->manuScreenshot == 0x01 && pThread->renderFormat == D3D_FORMAT_YUY2)//Just support YUY2->jpg
+					{
+						unsigned int timestamp = (unsigned int)time(NULL);
+						time_t tt = timestamp;
+						struct tm *_time = localtime(&tt);
+						char szTime[64] = {0,};
+						strftime(szTime, 32, "%Y%m%d-%H%M%S", _time);
+	
+// 						char strPath[512] = {0,};
+// 						sprintf(strPath , "%sch%d_%s.jpg", pThread->strScreenCapturePath, pThread->channelId, szTime) ;
+
+						PhotoShotThreadInfo* pShotThreadInfo = new PhotoShotThreadInfo;
+						sprintf(pShotThreadInfo->strPath , "%sch%d_%s.jpg", pThread->strScreenCapturePath, pThread->channelId, szTime) ;
+
+						int nYuvBufLen = frameinfo.width*frameinfo.height<<1;
+						pShotThreadInfo->pYuvBuf = new unsigned char[nYuvBufLen];
+						pShotThreadInfo->width = frameinfo.width;
+						pShotThreadInfo->height = frameinfo.height;
+
+						memcpy(pShotThreadInfo->pYuvBuf, pThread->yuvFrame[pThread->decodeYuvIdx].pYuvBuf, nYuvBufLen);
+						CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)_lpPhotoShotThread, pShotThreadInfo, 0, NULL);
+						pThread->manuScreenshot = 0;
+					}
 				}
 			}
 
@@ -986,7 +1063,7 @@ LPTHREAD_START_ROUTINE CChannelManager::_lpDecodeThread( LPVOID _pParam )
 				{
 					char* pDecBuffer = pbuf;
 					unsigned int nDecBufLen = frameinfo.length;
-					if (frameinfo.codec == EASY_SDK_AUDIO_CODEC_G711U || EASY_SDK_AUDIO_CODEC_G726 == frameinfo.codec)
+					if (frameinfo.codec == EASY_SDK_AUDIO_CODEC_G711U || EASY_SDK_AUDIO_CODEC_G726 == frameinfo.codec || frameinfo.codec == EASY_SDK_AUDIO_CODEC_G711A) 
 					{
 						if (!m_pAACEncoderHandle)
 						{
@@ -1002,7 +1079,11 @@ LPTHREAD_START_ROUTINE CChannelManager::_lpDecodeThread( LPVOID _pParam )
 							{
 								initParam.ucAudioCodec = Law_G726;
 							}
-							m_pAACEncoderHandle = Easy_AACEncoder_Init( initParam);;
+							else if (frameinfo.codec == EASY_SDK_AUDIO_CODEC_G711A)
+							{
+								initParam.ucAudioCodec = Law_ALaw;
+							}
+							m_pAACEncoderHandle = Easy_AACEncoder_Init( initParam);
 						}
 						unsigned int out_len = 0;
 						int nRet = Easy_AACEncoder_Encode(m_pAACEncoderHandle, (unsigned char*)/*m_pG711EncBufer*/pbuf, /*m_nG711BufferLen*/frameinfo.length, (unsigned char*)m_pAACEncBufer, &out_len) ;
@@ -1015,6 +1096,15 @@ LPTHREAD_START_ROUTINE CChannelManager::_lpDecodeThread( LPVOID _pParam )
 						else
 						{
 							continue;
+						}
+					}
+
+					if (pThread&&pThread->m_pMP4Writer && frameinfo.codec == EASY_SDK_AUDIO_CODEC_AAC)//音频写入MP4文件(now we just support AAC)
+					{
+						if (pThread->m_pMP4Writer->CanWrite())
+						{
+							pThread->m_pMP4Writer->WriteAACToMp4File((unsigned char*)pbuf, 
+								frameinfo.length, frameinfo.timestamp_sec*1000+frameinfo.timestamp_usec/1000, frameinfo.sample_rate, frameinfo.channels, frameinfo.bits_per_sample);
 						}
 					}
 
@@ -1075,7 +1165,6 @@ LPTHREAD_START_ROUTINE CChannelManager::_lpDecodeThread( LPVOID _pParam )
 		pChannelManager->pAudioPlayThread->audiochannels = 0;
 	}
 
-
 	if (NULL != pThread->mp4cHandle)
 	{
 		MP4C_CloseMp4File(pThread->mp4cHandle);
@@ -1111,6 +1200,25 @@ LPTHREAD_START_ROUTINE CChannelManager::_lpDecodeThread( LPVOID _pParam )
 	return 0;
 }
 
+LPTHREAD_START_ROUTINE CChannelManager::_lpPhotoShotThread( LPVOID _pParam )
+{
+	if (_pParam)
+	{
+		PhotoShotThreadInfo* pThreadInfo = (PhotoShotThreadInfo*)_pParam;
+		LPSaveJpg	  pSaveImage=Create_SaveJpgDll();
+		if(pSaveImage)
+		{
+			//YUV -> JPG
+			pSaveImage->SaveBufferToJpg((BYTE*)pThreadInfo->pYuvBuf, pThreadInfo->width, pThreadInfo->height, pThreadInfo->strPath,-1,-1);
+
+			Release_SaveJpgDll(pSaveImage);
+			pSaveImage=NULL;
+		}
+		delete[] pThreadInfo->pYuvBuf;
+		delete pThreadInfo;
+	}
+	return 0;
+}
 
 
 LPTHREAD_START_ROUTINE CChannelManager::_lpDisplayThread( LPVOID _pParam )
@@ -1616,32 +1724,146 @@ int	CChannelManager::ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAM
 			SSQ_AddData(pRealtimePlayThread[_chid].pAVQueue, _chid, MEDIA_TYPE_AUDIO, (MEDIA_FRAME_INFO*)frameinfo, pbuf);
 		}
 	}
-	else if (mediatype == EASY_SDK_EVENT_FRAME_FLAG)
+// 	else if (mediatype == EASY_SDK_EVENT_FRAME_FLAG)
+// 	{
+// 		if (NULL == pbuf && NULL == frameinfo)
+// 		{
+// 			_TRACE("[ch%d]连接中...\n", _chid);
+// 
+// 			MEDIA_FRAME_INFO	frameinfo;
+// 			memset(&frameinfo, 0x00, sizeof(MEDIA_FRAME_INFO));
+// 			frameinfo.length = 1;
+// 			frameinfo.type   = 0xFF;
+// 			SSQ_AddData(pRealtimePlayThread[_chid].pAVQueue, _chid, MEDIA_TYPE_EVENT, (MEDIA_FRAME_INFO*)&frameinfo, "1");
+// 		}
+// 		else if (NULL!=frameinfo && frameinfo->type==0xF1)
+// 		{
+// 			_TRACE("[ch%d]掉包[%.2f]...\n", _chid, frameinfo->losspacket);
+// 
+// 			frameinfo->length = 1;
+// 			SSQ_AddData(pRealtimePlayThread[_chid].pAVQueue, _chid, MEDIA_TYPE_EVENT, (MEDIA_FRAME_INFO*)frameinfo, "1");
+// 		}
+// 	}
+	else if (mediatype == EASY_SDK_EVENT_FRAME_FLAG)//回调连接状态事件
 	{
+		// EasyRTSPClient开始进行连接，建立EasyRTSPClient连接线程
+		char*  fRTSPURL = pRealtimePlayThread[_chid].url;
+		char sErrorString[512];
 		if (NULL == pbuf && NULL == frameinfo)
 		{
-			_TRACE("[ch%d]连接中...\n", _chid);
+			sprintf(sErrorString, "Connecting: %s ...\n", fRTSPURL);
 
-			MEDIA_FRAME_INFO	frameinfo;
-			memset(&frameinfo, 0x00, sizeof(MEDIA_FRAME_INFO));
-			frameinfo.length = 1;
-			frameinfo.type   = 0xFF;
-			SSQ_AddData(pRealtimePlayThread[_chid].pAVQueue, _chid, MEDIA_TYPE_EVENT, (MEDIA_FRAME_INFO*)&frameinfo, "1");
+			MEDIA_FRAME_INFO	tmpFrameinfo;
+			memset(&tmpFrameinfo, 0x00, sizeof(MEDIA_FRAME_INFO));
+			tmpFrameinfo.length = 1;
+			tmpFrameinfo.type   = 0xFF;
+			SSQ_AddData(pRealtimePlayThread[_chid].pAVQueue, _chid, MEDIA_TYPE_EVENT, (MEDIA_FRAME_INFO*)&tmpFrameinfo, sErrorString);
+			if (pMediaCallback)
+				pMediaCallback(_chid, (int*)pRealtimePlayThread[_chid].pUserPtr, mediatype, sErrorString,  (RTSP_FRAME_INFO*)&tmpFrameinfo);
 		}
 		else if (NULL!=frameinfo && frameinfo->type==0xF1)
 		{
-			_TRACE("[ch%d]掉包[%.2f]...\n", _chid, frameinfo->losspacket);
+			sprintf(sErrorString, "Error:%s：[ch%d]掉包[%.2f]...\n",  fRTSPURL, _chid, frameinfo->losspacket);
 
 			frameinfo->length = 1;
-			SSQ_AddData(pRealtimePlayThread[_chid].pAVQueue, _chid, MEDIA_TYPE_EVENT, (MEDIA_FRAME_INFO*)frameinfo, "1");
+			SSQ_AddData(pRealtimePlayThread[_chid].pAVQueue, _chid, MEDIA_TYPE_EVENT, (MEDIA_FRAME_INFO*)frameinfo, sErrorString);
+			if (pMediaCallback)
+				pMediaCallback(_chid, (int*)pRealtimePlayThread[_chid].pUserPtr, mediatype, sErrorString, frameinfo);
+	}
+
+		// EasyRTSPClient RTSPClient连接错误，错误码通过EasyRTSP_GetErrCode()接口获取，比如404
+		else if (NULL != frameinfo && frameinfo->codec == EASY_SDK_EVENT_CODEC_ERROR)
+		{
+			sprintf(sErrorString, "Error:%s： EasyRTSP_GetErrCode：%d :%s ...\n", fRTSPURL, EasyRTSP_GetErrCode(pRealtimePlayThread[_chid].nvsHandle), pbuf?pbuf:"null" );
+			SSQ_AddData(pRealtimePlayThread[_chid].pAVQueue, _chid, MEDIA_TYPE_EVENT, (MEDIA_FRAME_INFO*)frameinfo, sErrorString);
+			if (pMediaCallback)
+				pMediaCallback(_chid, (int*)pRealtimePlayThread[_chid].pUserPtr, mediatype, sErrorString, frameinfo);
+		}
+
+		// EasyRTSPClient连接线程退出，此时上层应该停止相关调用，复位连接按钮等状态
+		else if (NULL != frameinfo && frameinfo->codec == EASY_SDK_EVENT_CODEC_EXIT)
+		{
+			sprintf(sErrorString, "Exit:%s,Error:%d ...\n", fRTSPURL, EasyRTSP_GetErrCode(pRealtimePlayThread[_chid].nvsHandle));
+			SSQ_AddData(pRealtimePlayThread[_chid].pAVQueue, _chid, MEDIA_TYPE_EVENT, (MEDIA_FRAME_INFO*)frameinfo, sErrorString);
+			if (pMediaCallback)
+				pMediaCallback(_chid, (int*)pRealtimePlayThread[_chid].pUserPtr, mediatype, sErrorString, frameinfo);
 		}
 	}
 
 	return 0;
 }
 
+int	CChannelManager::SetManuRecordPath(int channelId, const char* recordPath)
+{
+	if (NULL == pRealtimePlayThread)			return -1;
+	int iNvsIdx = channelId - CHANNEL_ID_GAIN;
+	if (iNvsIdx < 0 || iNvsIdx>= MAX_CHANNEL_NUM)	return -1;
 
-int		CChannelManager::StartManuRecording(int channelId)
+	if (recordPath)
+	{
+		int nPathLen = strlen(recordPath);
+		if (nPathLen<=0)
+		{
+			return -1;
+		}
+		if (nPathLen>MAX_PATH)
+		{
+			nPathLen = MAX_PATH;
+		}
+		memcpy(pRealtimePlayThread[iNvsIdx].manuRecordingPath, recordPath, nPathLen);
+	}
+	return 1;
+}
+
+int	CChannelManager::SetManuPicShotPath(int channelId, const char* shotPath)
+{
+	if (NULL == pRealtimePlayThread)			return -1;
+	int iNvsIdx = channelId - CHANNEL_ID_GAIN;
+	if (iNvsIdx < 0 || iNvsIdx>= MAX_CHANNEL_NUM)	return -1;
+	if (shotPath)
+	{
+		int nPathLen = strlen(shotPath);
+		if (nPathLen<=0)
+		{
+			return -1;
+		}
+		if (nPathLen>MAX_PATH)
+		{
+			nPathLen = MAX_PATH;
+		}
+		memcpy(pRealtimePlayThread[iNvsIdx].strScreenCapturePath, shotPath, nPathLen);
+	}
+	return 1;
+}
+
+int	CChannelManager::StartManuPicShot(int channelId)	
+{
+	//pThread->manuScreenshot
+	if (NULL == pRealtimePlayThread)			return -1;
+
+	int iNvsIdx = channelId - CHANNEL_ID_GAIN;
+	if (iNvsIdx < 0 || iNvsIdx>= MAX_CHANNEL_NUM)	return -1;
+
+	//if (NULL == pRealtimePlayThread[iNvsIdx].m_pSaveImage)
+	{
+		pRealtimePlayThread[iNvsIdx].manuScreenshot = 0x01;
+	}
+	return 1;
+}
+
+int	CChannelManager::StopManuPicShot(int channelId)
+{
+	if (NULL == pRealtimePlayThread)			return -1;
+
+	int iNvsIdx = channelId - CHANNEL_ID_GAIN;
+	if (iNvsIdx < 0 || iNvsIdx>= MAX_CHANNEL_NUM)	return -1;
+
+	pRealtimePlayThread[iNvsIdx].manuScreenshot = 0x00;
+	return 1;
+}
+
+
+int	CChannelManager::StartManuRecording(int channelId)
 {
 	if (NULL == pRealtimePlayThread)			return -1;
 
@@ -1653,9 +1875,9 @@ int		CChannelManager::StartManuRecording(int channelId)
 		pRealtimePlayThread[iNvsIdx].manuRecording = 0x01;
 	}
 
-	return 0;
+	return 1;
 }
-int		CChannelManager::StopManuRecording(int channelId)
+int	CChannelManager::StopManuRecording(int channelId)
 {
 	if (NULL == pRealtimePlayThread)			return -1;
 
@@ -1667,5 +1889,5 @@ int		CChannelManager::StopManuRecording(int channelId)
 		pRealtimePlayThread[iNvsIdx].manuRecording = 0x00;
 	}
 
-	return 0;
+	return 1;
 }

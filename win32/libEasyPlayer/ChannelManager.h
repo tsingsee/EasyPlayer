@@ -23,6 +23,13 @@
 #include "libEasyAACEncoder/EasyAACEncoderAPI.h"
 #pragma comment(lib, "libEasyAACEncoder/libEasyAACEncoder.lib")
 
+// 增加MP4box和SaveJPG库的支持 [9/20/2016 dingshuai]
+// JPGSave
+#include "SaveJPGDll/SaveJpg_Interface.h"
+#pragma comment(lib, "SaveJPGDll/SaveJpgDll.lib")
+//gpac write mp4 file
+#include "EasyMP4Writer/EasyMP4Writer.h"
+
 extern "C"
 {
 #include "mp4creator\libmp4creator.h"
@@ -33,8 +40,8 @@ extern "C"
 #define		MAX_DECODER_NUM		5		//一个播放线程中最大解码器个数
 #define		MAX_YUV_FRAME_NUM	3		//解码后的最大YUV帧数
 #define		MAX_CACHE_FRAME		30		//最大帧缓存,超过该值将只播放I帧
-//#define		MAX_AVQUEUE_SIZE	(1024*1024)	//队列大小
-#define		MAX_AVQUEUE_SIZE	(1920*1080*2)	//队列大小
+#define		MAX_AVQUEUE_SIZE	(1024*1024)	//队列大小
+//#define		MAX_AVQUEUE_SIZE	(1920*1080*2)	//队列大小
 
 typedef struct __CODEC_T
 {
@@ -109,14 +116,23 @@ typedef struct __PLAY_THREAD_OBJ
 	bool			resetD3d;		//是否需要重建d3dRender
 	RECT			rcSrcRender;
 	D3D9_LINE		d3d9Line;
-
-	char			manuRecordingFile[MAX_PATH];
-	int				manuRecording;
+	
+	char			url[MAX_PATH];//播放的URL路径
+	char			manuRecordingPath[MAX_PATH];//录像存放路径
+	char			strScreenCapturePath[MAX_PATH];//抓图存放路径
+	//char			manuRecordingFile[MAX_PATH];
+	int				manuRecording;	//=1 开启录制
+	int				manuScreenshot;//=1 开启抓图
+	//MP4Creator写MP4
 	MP4C_Handler	mp4cHandle;
+	//存储JPG库
+	LPSaveJpg	   m_pSaveImage;
+	//MP4Box Writer
+	EasyMP4Writer* m_pMP4Writer;
 	int				vidFrameNum;
-
 	MediaSourceCallBack pCallback;
 	void			*pUserPtr;
+
 }PLAY_THREAD_OBJ;
 
 
@@ -133,6 +149,14 @@ typedef struct __AUDIO_PLAY_THREAD_OBJ
 	CSoundPlayer	*pSoundPlayer;
 }AUDIO_PLAY_THREAD_OBJ;
 
+//抓图线程结构体
+typedef struct tagPhotoShotThreadInfo
+{
+	unsigned char* pYuvBuf;
+	int width;
+	int height;
+	char strPath[512];
+}PhotoShotThreadInfo;
 
 class CChannelManager
 {
@@ -159,31 +183,34 @@ public:
 	int		PlaySound(int channelId);
 	int		StopSound();
 
-
 	int		StartManuRecording(int channelId);
 	int		StopManuRecording(int channelId);
 
+	int		SetManuRecordPath(int channelId, const char* recordPath);
+	int		SetManuPicShotPath(int channelId, const char* shotPath);
+
+	int		StartManuPicShot(int channelId);//pThread->manuScreenshot
+	int		StopManuPicShot(int channelId);
 
 	static LPTHREAD_START_ROUTINE __stdcall _lpDecodeThread( LPVOID _pParam );
 	static LPTHREAD_START_ROUTINE __stdcall _lpDisplayThread( LPVOID _pParam );
-
-
+	static LPTHREAD_START_ROUTINE __stdcall _lpPhotoShotThread( LPVOID _pParam );
 
 	int		ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo);
+
 protected:
-	PLAY_THREAD_OBJ			*pRealtimePlayThread;		//实时播放线程
-	AUDIO_PLAY_THREAD_OBJ	*pAudioPlayThread;			//音频播放线程
-	CRITICAL_SECTION		crit;
-
-	D3D_ADAPTER_T		d3dAdapter;
 	bool				GetD3DSupportFormat();			//获取D3D支持的格式
-
 	void	CreatePlayThread(PLAY_THREAD_OBJ	*_pPlayThread);
 	void	ClosePlayThread(PLAY_THREAD_OBJ		*_pPlayThread);
 
 	int		SetAudioParams(unsigned int _channel, unsigned int _samplerate, unsigned int _bitpersample);
 	void	ClearAllSoundData();
-
-	void	Release();
+	void	Release();	
+	
+private:
+	PLAY_THREAD_OBJ			*pRealtimePlayThread;		//实时播放线程
+	AUDIO_PLAY_THREAD_OBJ	*pAudioPlayThread;			//音频播放线程
+	CRITICAL_SECTION		crit;
+	D3D_ADAPTER_T		d3dAdapter;
 };
 extern CChannelManager	*pChannelManager;
