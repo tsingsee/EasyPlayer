@@ -35,7 +35,8 @@ public:
 	CString						m_sKeyName;
 	//标示该控件的资源ID
 	int							m_nId;
-
+	CPoint						m_tfPosition;
+	CString						m_strTextBase;
 public:
 	ISkinControl(void);
 	virtual ~ISkinControl(void);
@@ -54,8 +55,7 @@ public:
 	//绘制背景
 	void DrawParentWndBg(HWND hWnd,HDC hDC);
 	//设置背景
-	void SetParentBack(HDC hDC){ m_bTransparent = true; m_hParentDC = hDC;}
-	
+	void SetParentBack(HDC hDC){ m_bTransparent = true; m_hParentDC = hDC;}	
 	BOOL TrackMouseLeave(HWND hWnd);
 
 	//字体设置

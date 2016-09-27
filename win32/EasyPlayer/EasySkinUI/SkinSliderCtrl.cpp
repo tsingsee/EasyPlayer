@@ -5,7 +5,6 @@
 #include "SkinUI.h"
 #include "SkinSliderCtrl.h"
 
-
 // CSkinSliderCtrl
 
 IMPLEMENT_DYNAMIC(CSkinSliderCtrl, CSliderCtrl)
@@ -13,10 +12,16 @@ IMPLEMENT_DYNAMIC(CSkinSliderCtrl, CSliderCtrl)
 CSkinSliderCtrl::CSkinSliderCtrl()
 {
 	m_pBackImg = m_pThumImg = m_pDisImg = m_pBtImg = m_pTraceImg = NULL;
+	m_pAImg = NULL; 
+	m_pBImg = NULL;
+
 	m_bPress = m_bHover = m_bMouseTracking = FALSE;
 	m_bDragging = false;
 	m_rcThumRect.SetRect(0,0,0,0);
 	m_szThum.SetSize(0,0);
+	m_bLoopArrow = FALSE;
+	m_nArrowLeftPos = -1;
+	m_nArrowRightPos = -1;
 }
 
 CSkinSliderCtrl::~CSkinSliderCtrl()
@@ -32,6 +37,8 @@ BEGIN_MESSAGE_MAP(CSkinSliderCtrl, CSliderCtrl)
 	ON_WM_LBUTTONUP()
 	ON_WM_ERASEBKGND()
 	ON_MESSAGE(WM_MOUSELEAVE,OnMouseLeave)
+	ON_WM_SIZE()
+
 END_MESSAGE_MAP()
 
 BOOL CSkinSliderCtrl::SetBackImage( LPCTSTR lpszFileName,bool bFixed/* = true*/ )
@@ -64,6 +71,34 @@ BOOL CSkinSliderCtrl::SetThumImage( LPCTSTR lpszFileName )
 		m_rcThumRect.SetRect(0,0,m_szThum.cx,m_szThum.cy);
 		SetThumbRect();
 		SetChannelRect();
+		return TRUE;
+	}
+}
+
+BOOL CSkinSliderCtrl::SetArrowAImage( LPCTSTR lpszFileName )
+{
+	UIRenderEngine->RemoveImage(m_pAImg);
+
+	m_pAImg = UIRenderEngine->GetImage(lpszFileName);
+
+	if (NULL == m_pAImg)
+		return FALSE;
+	else
+	{
+		return TRUE;
+	}
+}
+
+BOOL CSkinSliderCtrl::SetArrowBImage( LPCTSTR lpszFileName )
+{
+	UIRenderEngine->RemoveImage(m_pBImg);
+
+	m_pBImg = UIRenderEngine->GetImage(lpszFileName);
+
+	if (NULL == m_pBImg)
+		return FALSE;
+	else
+	{
 		return TRUE;
 	}
 }
@@ -136,6 +171,12 @@ void CSkinSliderCtrl::OnPaint()
 
 	//绘制背景
 	DrawParentWndBg(GetSafeHwnd(),MemDC->GetSafeHdc());
+	
+	//  [3/9/2016 Dingshuai]
+	if (m_pBackImg != NULL && !m_pBackImg->IsNull())
+	{
+		m_pBackImg->DrawImage(&MemDC,0,0,rcClient.Width(),rcClient.Height());
+	}
 
 	//绘制轨迹
 	if ( !IsWindowEnabled() )
@@ -156,7 +197,20 @@ void CSkinSliderCtrl::OnPaint()
 	//绘制痕迹
 	if (m_pTraceImg != NULL && !m_pTraceImg->IsNull())
 	{
-		m_pTraceImg->Draw(&MemDC,CRect(0, 0,m_rcThumRect.left,m_pTraceImg->GetHeight()));
+		m_pTraceImg->DrawImage/*DrawExtrude*/(&MemDC,CRect(0, 0,m_rcThumRect.left,m_pTraceImg->GetHeight()));
+	}
+
+	if (m_bLoopArrow)
+	{
+		//绘制A,B点
+		if (m_pAImg != NULL && !m_pAImg->IsNull())
+		{
+			m_pAImg->DrawImage(&MemDC,m_nArrowLeftPos , -1);
+		}							  
+		if (m_pBImg != NULL && !m_pBImg->IsNull())
+		{
+			m_pBImg->DrawImage(&MemDC,m_nArrowRightPos, 0);
+		}
 	}
 
 	//绘制滑块
@@ -194,6 +248,12 @@ void CSkinSliderCtrl::OnMouseMove(UINT nFlags, CPoint point)
 		SetPos(nPos);
 
 		RedrawWindow(NULL,NULL,RDW_FRAME|RDW_INVALIDATE|RDW_ERASE|RDW_ERASENOW);
+
+		if (GetParent() && ::IsWindow(GetParent()->m_hWnd))
+		{
+			GetParent()->SendMessage(WM_HSCROLL, MAKELONG(SB_THUMBTRACK, GetPos()), 
+				(LPARAM)m_hWnd);
+		}
 	}
 
 	//按钮事件
@@ -231,7 +291,9 @@ void CSkinSliderCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 	}
  	else
  	{
- 		if ( PtInRect(&m_rcChannelRect,point) )
+		CRect rcClient;
+		GetClientRect(&rcClient);
+ 		if ( PtInRect(&rcClient,point) )
  		{
  			int nMax = 0;  
  			int nMin = 0;  
@@ -248,6 +310,13 @@ void CSkinSliderCtrl::OnLButtonDown(UINT nFlags, CPoint point)
  			nPos += nMin;
  			SetPos(nPos); 
  			RedrawWindow(NULL,NULL,RDW_FRAME|RDW_INVALIDATE|RDW_ERASE|RDW_ERASENOW);
+
+			if (GetParent() && ::IsWindow(GetParent()->m_hWnd))
+			{
+				GetParent()->SendMessage(WM_HSCROLL, MAKELONG(SB_THUMBTRACK, GetPos()), 
+					(LPARAM)m_hWnd);
+			}
+
  			return;
  		}
  	}
@@ -354,6 +423,14 @@ void CSkinSliderCtrl::SetAttribute( LPCTSTR pstrName, LPCTSTR pstrValue )
 	{
 		SetDisImage(pstrValue);
 	}
+	else if( _tcscmp(pstrName, _T("arrowAimage")) == 0 ) 
+	{
+		SetArrowAImage(pstrValue);
+	}	
+	else if( _tcscmp(pstrName, _T("arrowBimage")) == 0 ) 
+	{
+		SetArrowBImage(pstrValue);
+	}	
 	else if( _tcscmp(pstrName, _T("range")) == 0 ) 
 	{
 		LPTSTR pstr = NULL;
@@ -388,4 +465,90 @@ BOOL CSkinSliderCtrl::CreateControl( CWnd* pParentWnd )
 	m_pOwnWnd = this;
 
 	return TRUE;
+}
+
+void CSkinSliderCtrl::OnSize(UINT nType, int cx, int cy)
+{
+	__super::OnSize(nType, cx, cy);
+	SetChannelRect();
+	SetPos(GetPos());
+}
+
+void CSkinSliderCtrl::SetLeftArrowPos()
+{	
+	double dPixels, dMax, dInterval, dPos;
+
+	int nMax = 0;
+	int nMin = 0;
+	GetRange(nMin,nMax);
+	dMax = nMax-nMin;
+	dPos = GetPos();
+	CRect rcClient;
+	GetClientRect(&rcClient);
+
+	if (! (GetStyle() & TBS_VERT ))
+	{
+		// if 没有ARROW
+		dPixels   = m_rcChannelRect.Width();
+		dInterval = dPixels / dMax;
+		double dThumbLeft = dPos * dInterval + 0.5;
+		m_nArrowLeftPos =  (int)dThumbLeft ;// if no arrow (+ m_nBitmapWidth)
+		if (m_nArrowRightPos==-1)
+		{
+			m_nArrowRightPos = rcClient.Width();
+		}
+		if (m_nArrowLeftPos>m_nArrowRightPos)
+		{
+			m_nArrowLeftPos = m_nArrowRightPos;//*+m_nBitmapWidth
+			m_nArrowRightPos = (int)dThumbLeft + m_szThum.cx;
+		}
+		m_bLoopArrow = TRUE;
+	}
+	Invalidate();
+}
+
+void CSkinSliderCtrl::SetRightArrowPos()
+{
+	double dPixels, dMax, dInterval, dPos;
+
+	int nMax = 0;
+	int nMin = 0;
+	GetRange(nMin,nMax);
+	dMax = nMax-nMin;
+	dPos = GetPos();
+	CRect rcClient;
+	GetClientRect(&rcClient);
+
+	if ( ! (GetStyle() & TBS_VERT ) )
+	{
+		// if 没有ARROW
+		dPixels   = m_rcChannelRect.Width();
+		dInterval = dPixels / dMax;
+		double dThumbLeft = dPos * dInterval + 0.5;
+		m_nArrowRightPos =  (int)dThumbLeft + m_szThum.cx/2;// if no arrow (+ m_nBitmapWidth)
+		if (m_nArrowLeftPos==-1)
+		{
+			m_nArrowLeftPos = rcClient.left;
+		}
+		if (m_nArrowRightPos<m_nArrowLeftPos)
+		{
+			//判断不准确
+			m_nArrowRightPos = m_nArrowLeftPos + m_szThum.cx;
+			m_nArrowLeftPos = (int)dThumbLeft;
+		}
+		m_bLoopArrow = TRUE;
+	}
+	Invalidate();
+}
+
+void CSkinSliderCtrl::StopLoopArrow()
+{
+	m_bLoopArrow = FALSE;
+	Invalidate();
+}
+
+void CSkinSliderCtrl::StartLoopArrow()
+{
+	m_bLoopArrow = TRUE;
+	Invalidate();
 }

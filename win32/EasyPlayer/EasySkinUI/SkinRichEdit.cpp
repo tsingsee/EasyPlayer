@@ -242,6 +242,7 @@ CSkinRichEdit::CSkinRichEdit()
 {
 	//设置变量
 	m_pIRichEditOLE=NULL;
+	m_bCanClickMove = FALSE;
 
 	return;
 }
@@ -268,6 +269,16 @@ VOID CSkinRichEdit::PreSubclassWindow()
 	m_pIRichEditOLE=GetIRichEditOle();
 
 	return;
+}
+
+BOOL CSkinRichEdit::PreTranslateMessage(MSG* pMsg) 
+{
+	// TODO: Add your specialized code here and/or call the base class
+	if(pMsg->message==WM_LBUTTONUP)//pMsg->message==WM_LBUTTONDBLCLK)//pMsg->message==WM_LBUTTONDOWN||||pMsg->message==WM_LBUTTONUP
+	{	
+
+	}
+	return CRichEditCtrl::PreTranslateMessage(pMsg);
 }
 
 //创建消息
@@ -826,5 +837,68 @@ void CSkinRichEdit::SetAttribute( LPCTSTR pstrName, LPCTSTR pstrValue )
 
 
 
-//////////////////////////////////////////////////////////////////////////////////
 
+void CSkinRichEdit::SetCanClickMove(BOOL bCanClickMove)
+{
+	m_bCanClickMove=bCanClickMove;
+}
+
+void CSkinRichEdit::HandleHighLightTextMsg(DWORD pos, DWORD len,DWORD curSel)
+{
+
+	CHARFORMAT cf;
+	HideSelection(TRUE,FALSE);
+	GetSelectionCharFormat(cf);
+	SetSel(0,GetTextLength());
+	cf.dwEffects &= ~CFE_AUTOCOLOR;
+	cf.crTextColor=RGB(0,0,0);
+	SetSelectionCharFormat(cf);
+	
+	SetSel(static_cast<long>(pos),static_cast<long>(pos+len));
+	cf.crTextColor=RGB(0,0,255);
+	SetSelectionCharFormat(cf);
+
+	SetSel(static_cast<long>(pos),static_cast<long>(pos));
+	HideSelection(FALSE,FALSE);
+	
+	if(curSel>=0)
+		SetSel(static_cast<long>(curSel),static_cast<long>(curSel));
+	else
+		SetSel(static_cast<long>(pos),static_cast<long>(pos));
+
+/*	int x=GetFirstVisibleLine();
+	int i= GetLineCount();
+	int p= min(i,x+26-1);
+	int t = LineIndex(p);
+	if (t<pos+len) 
+	{
+		LineScroll(26);
+		HideSelection(FALSE,FALSE);
+		SetSel(static_cast<long>(pos),static_cast<long>(pos));
+		
+	}*/
+}
+
+void CSkinRichEdit::SetRichEditColorAuto()
+{
+	CHARFORMAT cf;
+	GetSelectionCharFormat(cf);
+	SetSel(0,this->GetTextLength());
+	cf.dwEffects &= ~CFE_AUTOCOLOR;
+	cf.crTextColor=RGB(0,0,0);
+	SetSelectionCharFormat(cf);
+	//SetSel(0,0);
+}
+
+void CSkinRichEdit::SetRichEditDefaultFont()
+{
+	CHARFORMAT cf;
+	cf.cbSize=sizeof(CHARFORMAT);
+	cf.dwMask=CFM_FACE|CFM_SIZE;
+	cf.dwEffects=CFE_ITALIC;//CFE_BOLD|CFM_BOLD|CFM_COLOR|CFM_ITALIC|CFE_BOLD|
+	cf.yHeight=14*20;
+	lstrcpy(cf.szFaceName, _T("宋体"));
+	cf.bCharSet=0;
+	cf.bPitchAndFamily=1;
+	SendMessage(EM_SETCHARFORMAT,SCF_ALL|SCF_DEFAULT,(LPARAM)&cf);
+}

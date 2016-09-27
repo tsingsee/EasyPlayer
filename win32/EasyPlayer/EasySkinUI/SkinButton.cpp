@@ -50,9 +50,14 @@ END_MESSAGE_MAP()
 void CSkinButton::SetButtonType( UI_BUTTON_TYPE type )
 {
 	m_nBtnType = type;
-
 	if ( type == en_CheckButton ) ModifyStyle(0,BS_AUTOCHECKBOX);
 	else if ( type == en_RadioButton ) ModifyStyle(0,BS_AUTORADIOBUTTON);
+	// 取消radio的互斥 [3/11/2016 Dingshuai]
+// 	if ( type == en_CheckButton ) ModifyStyle(0,BS_AUTOCHECKBOX);
+// 	else if ( type == en_RadioButton ) 
+// 	{
+// 		ModifyStyle(0,BS_AUTOCHECKBOX);
+// 	}
 }
 
 //鼠标移动消息
@@ -82,14 +87,14 @@ LRESULT CSkinButton::OnMouseLeave(WPARAM wparam, LPARAM lparam)
 
 void CSkinButton::RelayEventCamMove(int nType)
 {
-// 	HWND hParentHwnd,hThisHwnd;
-// 	hParentHwnd = GetParent()->GetSafeHwnd();
-// 	hThisHwnd=GetSafeHwnd();
-// 	int nThisID=GetDlgCtrlID();
-// 	if(hParentHwnd && hThisHwnd)
-// 	{
-// 		::PostMessage(hParentHwnd,WM_BUSEDDOWNUP_BUTTON,(int)nThisID,nType);
-// 	}
+	HWND hParentHwnd,hThisHwnd;
+	hParentHwnd = GetParent()->GetSafeHwnd();
+	hThisHwnd=GetSafeHwnd();
+	int nThisID=GetDlgCtrlID();
+	if(hParentHwnd && hThisHwnd)
+	{
+		::PostMessage(hParentHwnd,WM_BUSEDDOWNUP_BUTTON,(int)nThisID,nType);
+	}
 }
 
 //鼠标按下消息
@@ -442,6 +447,11 @@ void CSkinButton::DrawPushButton(CDC* pDC,RECT &rcClient)
 		
 		if ( m_bHover ) pDC->SetTextColor(m_colSelectText);
 		else  pDC->SetTextColor(IsWindowEnabled()?m_colNormalText:m_colDisableText);
+		if(m_tfPosition.x!=0||m_tfPosition.y!=0)
+		{
+			rcClient.left+=m_tfPosition.x;
+			rcClient.top+=m_tfPosition.y;
+		}
 		pDC->DrawText(strText, &rcClient, nFormat);
 		pDC->SetBkMode(nMode);
 	}
@@ -749,6 +759,7 @@ void CSkinButton::SetBtnText(CString strBtnText)
 // 	}
 
 	SetWindowText(strBtnText);
+	Invalidate();
 }
 
 CString CSkinButton::GetBtnText()

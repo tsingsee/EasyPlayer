@@ -6,6 +6,7 @@
 #include <RichOle.h>
 #include "SkinUI.h"
 #include "ISkinControl.h"
+
 //////////////////////////////////////////////////////////////////////////////////
 
 //图像对象
@@ -92,6 +93,8 @@ public:
 protected:
 	//控件绑定
 	virtual VOID PreSubclassWindow();
+	//消息预处理
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	//设置属性
 	virtual void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
 	//创建控件
@@ -159,6 +162,16 @@ protected:
 	void OnURLClick(NMHDR *pNmhdr, LRESULT *pResult);
 
 	DECLARE_MESSAGE_MAP()
+
+	//其他功能扩展
+public:
+	void SetCanClickMove(BOOL bCanClickMove);
+	void HandleHighLightTextMsg(DWORD pos, DWORD len,DWORD curSel);
+	void SetRichEditColorAuto();
+	void SetRichEditDefaultFont();
+
+private:
+	BOOL m_bCanClickMove;
 };
 
 //////////////////////////////////////////////////////////////////////////////////

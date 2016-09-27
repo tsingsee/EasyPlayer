@@ -11,6 +11,7 @@ struct tagString
 	CString				strText;
 	UINT				uFormat;
 	bool				bVisible;
+	CString				strTextBase;
 };
 
 struct tagImage
@@ -41,6 +42,7 @@ public:
 	vector<ISkinControl*>		m_ControlArray;//控件
 	vector<tagString*>			m_StringArray; //文本
 	vector<tagImage*>			m_ImageArray;  //图像
+	vector<CBuildDialog*>		m_DialogArray;//子窗口指针
 
 	//窗口变量
 public:
@@ -69,7 +71,6 @@ public:
 	bool ParseControl(CWnd* pParentWnd);
 	//解析图形
 	bool ParseGraphics();
-
 	//默认皮肤
 	void SetDefaultSkin(bool bDefault){ m_bDefaultSkin = bDefault; }
 
@@ -78,6 +79,8 @@ public:
 	int AddString(LPCTSTR lpszText,UINT uFontIndex,UINT uFormat,COLORREF col,bool bVisible,tagPositionData *pPositionData,UINT uID);
 	tagPositionData *GetStringRect(UINT uID);
 	tagString *GetString(UINT uID);
+	// 增加配置字串可编辑编辑 [3/4/2016 Dingshuai]
+	void SetString( UINT uID, CString strText);
 
 	//Image函数
 public:
@@ -95,4 +98,6 @@ public:
 public:
 	//用户自定义控件
 	virtual bool CreateUserControl(){ return false; }
+	void AddDialog(CBuildDialog *pDialog);
+	void DeleteDialog(CBuildDialog *pDialog);
 };

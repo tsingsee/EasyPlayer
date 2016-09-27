@@ -294,7 +294,7 @@ CSkinListCtrl::CSkinListCtrl()
 	m_pCheckImg = m_pUnCheckImg = NULL;
 
 	m_colBack=RGB(255,255,255);
-
+	m_iNumColumns = 0;
 	return;
 }
 
@@ -431,17 +431,30 @@ BOOL CSkinListCtrl::OnEraseBkgnd( CDC* pDC )
 	int nWidth = 0;
 	int nHeight = 0;
 
-	CRect rcHead;
-	for (int i=0;i<m_SkinHeaderCtrl.GetItemCount();i++)
+	DWORD dwStyle = GetWindowLong(this->m_hWnd, GWL_STYLE);
+	DWORD dwSytleRE=(dwStyle&LVS_REPORT);
+	DWORD dwSytleLI=(dwStyle&LVS_LIST);
+	if(dwSytleRE==LVS_REPORT&&dwSytleLI!=LVS_LIST)	
 	{
-		m_SkinHeaderCtrl.GetItemRect(i,&rcHead);
+		int nCount = 0;
+		if(m_SkinHeaderCtrl.GetSafeHwnd())
+		{
+			nCount= m_SkinHeaderCtrl.GetItemCount();
+		}
+		CRect rcHead;
+		for (int i=0;i<nCount;i++)
+		{
+			m_SkinHeaderCtrl.GetItemRect(i,&rcHead);
 
-		nWidth+= rcHead.Width();
-		nHeight = rcHead.Height();
+			nWidth+= rcHead.Width();
+			nHeight = rcHead.Height();
+		}
 	}
 
-	rcClient.left = nWidth;
+	rcClient.left = 0;
 	rcClient.top = nHeight;
+	
+	SetBkColor(RGB(/*40,40,40*/24,36,44));//m_colorBK(RGB(/*40,40,40*/24,36,44))
 
 	pDC->FillSolidRect(&rcClient,m_colBack);
 
@@ -629,7 +642,6 @@ void CSkinListCtrl::OnLButtonDown( UINT nFlags, CPoint point )
 		}
 	}
 
-
 	__super::OnLButtonDown(nFlags, point);
 }
 
@@ -793,6 +805,14 @@ void CSkinListCtrl::ParseItem( CXmlNode *root )
 				m_pUnCheckImg = UIRenderEngine->GetImage(pstrValue);
 			}
 		}
+		else if( _tcscmp(pstrClass, _T("headstring")) == 0 ) 	
+		{
+			if( _tcscmp(pstrName, _T("value")) == 0 )
+			{
+				SetHeadings(pstrValue);
+			}
+
+		}
 	}
 }
 
@@ -808,5 +828,37 @@ BOOL CSkinListCtrl::CreateControl( CWnd* pParentWnd )
 	return TRUE;
 }
 
+BOOL CSkinListCtrl::SetHeadings(const CString& strHeadings)
+{
+	int iStart = 0;
+
+	if(strHeadings.IsEmpty())
+		return false;
+	for( ;; )
+	{
+		const int iComma = strHeadings.Find( _T(','), iStart );
+
+		if( iComma == -1 )
+			break;
+
+		const CString strHeading = strHeadings.Mid( iStart, iComma - iStart );
+
+		iStart = iComma + 1;
+
+		int iSemiColon = strHeadings.Find( _T(';'), iStart );
+
+		if( iSemiColon == -1 )
+			iSemiColon = strHeadings.GetLength();
+
+		const int iWidth = _ttoi( strHeadings.Mid( iStart, iSemiColon - iStart ) );
+
+		iStart = iSemiColon + 1;
+
+		if( InsertColumn( m_iNumColumns++, strHeading, LVCFMT_CENTER, iWidth ) == -1 )
+			return FALSE;
+	}
+
+	return TRUE;
+}
 
 //////////////////////////////////////////////////////////////////////////////////

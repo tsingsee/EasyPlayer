@@ -131,6 +131,7 @@
     <ClInclude Include="EasySkinUI\SkinProgressCtrl.h" />
     <ClInclude Include="EasySkinUI\SkinRichEdit.h" />
     <ClInclude Include="EasySkinUI\SkinSliderCtrl.h" />
+    <ClInclude Include="EasySkinUI\SkinStatic.h" />
     <ClInclude Include="EasySkinUI\SkinTabCtrl.h" />
     <ClInclude Include="EasySkinUI\SkinToolBar.h" />
     <ClInclude Include="EasySkinUI\SkinTreeCtrl.h" />
@@ -167,6 +168,7 @@
     <ClCompile Include="EasySkinUI\SkinProgressCtrl.cpp" />
     <ClCompile Include="EasySkinUI\SkinRichEdit.cpp" />
     <ClCompile Include="EasySkinUI\SkinSliderCtrl.cpp" />
+    <ClCompile Include="EasySkinUI\SkinStatic.cpp" />
     <ClCompile Include="EasySkinUI\SkinTabCtrl.cpp" />
     <ClCompile Include="EasySkinUI\SkinToolBar.cpp" />
     <ClCompile Include="EasySkinUI\SkinTreeCtrl.cpp" />

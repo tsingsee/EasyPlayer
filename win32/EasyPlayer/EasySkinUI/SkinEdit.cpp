@@ -24,6 +24,7 @@ CSkinEdit::CSkinEdit()
 	m_cPwdChar = 0;
 	m_ptClient.SetPoint(0,0);
 	m_colBack=RGB(255,255,255);
+	m_hBrush = CreateSolidBrush(m_colBack) ;
 }
 
 CSkinEdit::~CSkinEdit()
@@ -144,8 +145,8 @@ void CSkinEdit::OnNcPaint()
 		rcIcon.left = rcIcon.right - cxIcon;
 	}
 
-	//pWindowDC->FillSolidRect(&rcWindow,m_colBack);
-	//DrawParentWndBg(GetSafeHwnd(),pWindowDC->GetSafeHdc());
+	pWindowDC->FillSolidRect(&rcWindow,m_colBack);
+	DrawParentWndBg(GetSafeHwnd(),pWindowDC->GetSafeHdc());
 
 	//不要刷新整个客户区，客户区因为有字符串的缘故，当拉伸窗口时，非客户区和客户区两者因为刷新不同步，会造成客户区文字闪烁
 	UIRenderEngine->DrawRect(pWindowDC->GetSafeHdc(),rcWindow,3,m_colBack);
@@ -182,6 +183,7 @@ void CSkinEdit::OnNcPaint()
 
 BOOL CSkinEdit::OnEraseBkgnd(CDC* pDC)
 {
+	CEdit::OnEraseBkgnd(pDC);
 	return TRUE;
 }
 
@@ -364,6 +366,10 @@ HBRUSH CSkinEdit::CtlColor(CDC* pDC, UINT /*nCtlColor*/)
 	else
 		pDC->SetTextColor(m_colNormalText);
 
+	if (m_hBrush)
+	{
+		return m_hBrush ;
+	}
 	return (HBRUSH)NULL_BRUSH;
 }
 

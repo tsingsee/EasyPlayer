@@ -42,8 +42,11 @@
 // EasySkinUI的支持
 //图片控件
 #import "ImageOle.dll" named_guids
+
 //头文件
-//#include "./EasySkinUI/detours.h"
+#include "./EasySkinUI/detours.h"
+#pragma comment (lib,"./EasySkinUI/Lib/Detours.lib")
+
 #include "./EasySkinUI/SkinUI_ScrollBar.h"
 #pragma comment(lib,"Gdiplus.lib")
 #include "./EasySkinUI/SkinUI.h"
@@ -59,6 +62,8 @@
 
 
 extern int		RenderFormat;
+
+#define _CS
 
 
 #ifdef _UNICODE

@@ -90,6 +90,9 @@ BOOL WINAPI SkinUI_ShowScrollBar(HWND hwnd, int wBar, BOOL fShow);
 //----------------------------------------------------------------
 BOOL WINAPI SkinUI_EnableScrollBar(HWND hwnd, UINT wSBflags, UINT wArrows);
 
+void WINAPI InitHookScrollBar();
+void WINAPI RemoveHookScrollBar();
+
 
 // #ifdef __cplusplus
 // }

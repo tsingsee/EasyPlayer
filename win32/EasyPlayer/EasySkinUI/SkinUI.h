@@ -53,7 +53,8 @@ enum
 	en_RTop,
 	en_LBottom,
 	en_RBottom,
-	en_Center
+	en_ScaleSize,//位置和大小，均按比例缩放
+	en_ScalePos//按比例缩放，只变位置
 };
 
 struct tagPositionData
@@ -90,7 +91,7 @@ struct tagPositionData
 #include "SkinUIMenu.h"
 #include "FlashControl.h"
 #include "SkinToolBar.h"
-
+#include "SkinStatic.h"
 
 //////////////////////////////////////////////////////////////////////////
 

@@ -12,6 +12,7 @@ class SKINUI_CLASS CSkinSliderCtrl : public CSliderCtrl,public ISkinControl
 	//资源定义
 public:
 	CImageEx * m_pBackImg, * m_pThumImg, * m_pDisImg, * m_pBtImg, * m_pTraceImg;
+	CImageEx * m_pAImg, * m_pBImg;
 
 	//变量定义
 protected:
@@ -20,6 +21,9 @@ protected:
 	CRect					m_rcThumRect;			//滑块区域
 	CRect					m_rcChannelRect;		//轨迹区域
 	CSize					m_szThum;				//滑块大小
+	BOOL					m_bLoopArrow;
+	int m_nArrowLeftPos ;
+	int m_nArrowRightPos;
 
 	//函数定义
 public:
@@ -46,7 +50,9 @@ public:
 	BOOL SetButtonImage(LPCTSTR lpszFileName);
 	//设置资源
 	BOOL SetTraceImage(LPCTSTR lpszFileName,CONST LPRECT lprcNinePart=NULL);
-	
+	BOOL SetArrowAImage( LPCTSTR lpszFileName );
+	BOOL SetArrowBImage( LPCTSTR lpszFileName );
+
 	//功能函数
 public:
 	//滑块位置
@@ -55,6 +61,10 @@ public:
 	void SetChannelRect();
 	//设置位置
 	void SetPos(int nPos);
+	void SetLeftArrowPos();
+	void SetRightArrowPos();
+	void StopLoopArrow();
+	void StartLoopArrow();
 
 	//消息映射
 public:
@@ -72,6 +82,8 @@ public:
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 	//背景重绘
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+	//窗口尺寸
+	afx_msg void OnSize(UINT nType, int cx, int cy);
 
 protected:
 	DECLARE_MESSAGE_MAP()

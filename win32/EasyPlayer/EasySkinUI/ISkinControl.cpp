@@ -16,10 +16,12 @@ ISkinControl::ISkinControl(void)
 	m_dwTextAlign = 0;
 	m_pOwnWnd = NULL;
 	m_ptPosition.SetPoint(0,0);
+	m_tfPosition.SetPoint(0,0);
 	m_szSize.SetSize(0,0);
 	m_FixedPostion[0] = m_FixedPostion[1] = en_LTop;
 	m_sKeyName = _T("");
 	m_nId = 0;
+	m_strTextBase=_T("");
 }
 
 ISkinControl::~ISkinControl(void)
@@ -144,7 +146,12 @@ void ISkinControl::SetAttribute( LPCTSTR pstrName, LPCTSTR pstrValue )
 	// 为了程序的兼容性，特地扩展关键字配置项，用以识别各控件 [2/25/2016 Dingshuai]
 	if( _tcscmp(pstrName, _T("keyname")) == 0 ) m_sKeyName = pstrValue;
 
-	if( _tcscmp(pstrName, _T("text")) == 0 ) m_pOwnWnd->SetWindowText(pstrValue);
+	if( _tcscmp(pstrName, _T("text")) == 0 )
+	{
+		m_strTextBase=pstrValue;
+		m_pOwnWnd->SetWindowText(_CS(m_strTextBase));
+		//m_pOwnWnd->SetWindowText(pstrValue);
+	}
 	if( _tcscmp(pstrName, _T("id")) == 0 ) 
 	{
 		m_nId = _ttoi(pstrValue);
@@ -159,8 +166,33 @@ void ISkinControl::SetAttribute( LPCTSTR pstrName, LPCTSTR pstrValue )
 		m_FixedPostion[1] = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);   
 		m_ptPosition.x = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);   
 		m_ptPosition.y = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);   
-		m_szSize.cx = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);   
-		m_szSize.cy = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);  
+		
+// 		m_szSize.cx = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);   
+// 		m_szSize.cy = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);  
+
+		//liuyi 2016-03-03
+		int nWidth=_tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+		int nHeight= _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+		if(m_FixedPostion[0]==0&&m_FixedPostion[1]==0 || m_FixedPostion[1]==4 || m_FixedPostion[1]==5)
+		{
+			
+			if(nWidth-m_ptPosition.x>=0&&nHeight-m_ptPosition.y>=0)
+			{
+				m_szSize.cx=nWidth;
+				m_szSize.cy=nHeight;
+			}
+			else
+			{
+				m_szSize.cx = m_ptPosition.x + nWidth; 
+				m_szSize.cy =m_ptPosition.y + nHeight;
+			}
+
+		}
+		else
+		{
+				m_szSize.cx=nWidth;
+				m_szSize.cy=nHeight;
+		}
 	}
 	else if( _tcscmp(pstrName, _T("trans")) == 0 ){ m_bTransparent = (_tcscmp(pstrValue, _T("true")) == 0) ? TRUE : FALSE; }
 	else if( _tcscmp(pstrName, _T("fontdefaultcolor")) == 0 ) 
@@ -187,5 +219,16 @@ void ISkinControl::SetAttribute( LPCTSTR pstrName, LPCTSTR pstrValue )
 	{
 		if( *pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
 		m_colReadOnlyText = _tcstoul(pstrValue, &pstr, 16);
+	}
+	else if(_tcscmp(pstrName, _T("textalign")) == 0)//liuyi 2016-03-04 add 字的排列位置
+	{
+		if( *pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
+		m_dwTextAlign=_tcstoul(pstrValue, &pstr, 16);
+	}
+	else if(_tcscmp(pstrName, _T("textoffset")) == 0)//字的偏移位置
+	{ 
+		m_tfPosition.x = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr); 
+		m_tfPosition.y = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr); 
+	
 	}
 }

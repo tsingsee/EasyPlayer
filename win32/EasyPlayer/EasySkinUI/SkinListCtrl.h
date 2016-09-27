@@ -116,7 +116,7 @@ public:
 	//变量定义
 public:
 	CSkinHeaderCtrl					m_SkinHeaderCtrl;					//列头控件
-
+	int m_iNumColumns;
 	//函数定义
 public:
 	//构造函数
@@ -160,6 +160,7 @@ public:
 	int InsertItem(UINT nMask, int nItem, LPCTSTR lpszItem, UINT nState,UINT nStateMask, int nImage, LPARAM lParam);
 	//设置风格
 	DWORD SetExtendedStyle(DWORD dwNewStyle);
+	BOOL SetHeadings(const CString& strHeadings);
 
 	//绘画控制
 protected:
@@ -188,7 +189,5 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 };
-
-//////////////////////////////////////////////////////////////////////////////////
 
 #endif

@@ -46,6 +46,11 @@ public:
 	HDC GetBackDC(){ return m_hMemDC; }
 	//剪辑子窗口
 	void SetClipChild(bool bClip);
+	//通过资源ID获取控件关键字(事实上我们都可以通过GetDlgItemById()函数获取)
+	CString  GetItemNameByID(int nItemId ,CSkinButton **pSkinButton);
+	void *  GetItemByName(CString strName);
+	//通过字串ID设置字串(注意：该设置只针对配置项为String有效，对于控件无效，ID为配置String ID)
+	void SetString( UINT uID, CString strText, BOOL bErase = FALSE);
 
 	//消息函数
 public:

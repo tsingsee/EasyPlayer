@@ -20,7 +20,7 @@ protected:
 	BOOL							m_bIsDefText;			//默认状态
 	TCHAR							m_cPwdChar;				//密码字符
 	CPoint							m_ptClient;				//客户区
-
+	HBRUSH							m_hBrush;
 public:
 	CSkinEdit();
 	virtual ~CSkinEdit();

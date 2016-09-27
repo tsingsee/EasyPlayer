@@ -1751,7 +1751,7 @@ int	CChannelManager::ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAM
 		char sErrorString[512];
 		if (NULL == pbuf && NULL == frameinfo)
 		{
-			sprintf(sErrorString, "Connecting: %s ...\n", fRTSPURL);
+			sprintf(sErrorString, "Connecting:	%s ...\n", fRTSPURL);
 
 			MEDIA_FRAME_INFO	tmpFrameinfo;
 			memset(&tmpFrameinfo, 0x00, sizeof(MEDIA_FRAME_INFO));
@@ -1763,7 +1763,7 @@ int	CChannelManager::ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAM
 		}
 		else if (NULL!=frameinfo && frameinfo->type==0xF1)
 		{
-			sprintf(sErrorString, "Error:%s：[ch%d]掉包[%.2f]...\n",  fRTSPURL, _chid, frameinfo->losspacket);
+			sprintf(sErrorString, "Error:	 %s：	[ch%d]掉包[%.2f]...\n",  fRTSPURL, _chid, frameinfo->losspacket);
 
 			frameinfo->length = 1;
 			SSQ_AddData(pRealtimePlayThread[_chid].pAVQueue, _chid, MEDIA_TYPE_EVENT, (MEDIA_FRAME_INFO*)frameinfo, sErrorString);
@@ -1774,7 +1774,7 @@ int	CChannelManager::ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAM
 		// EasyRTSPClient RTSPClient连接错误，错误码通过EasyRTSP_GetErrCode()接口获取，比如404
 		else if (NULL != frameinfo && frameinfo->codec == EASY_SDK_EVENT_CODEC_ERROR)
 		{
-			sprintf(sErrorString, "Error:%s： EasyRTSP_GetErrCode：%d :%s ...\n", fRTSPURL, EasyRTSP_GetErrCode(pRealtimePlayThread[_chid].nvsHandle), pbuf?pbuf:"null" );
+			sprintf(sErrorString, "Error:	  %s： EasyRTSP_GetErrCode：%d :%s ...\n", fRTSPURL, EasyRTSP_GetErrCode(pRealtimePlayThread[_chid].nvsHandle), pbuf?pbuf:"null" );
 			SSQ_AddData(pRealtimePlayThread[_chid].pAVQueue, _chid, MEDIA_TYPE_EVENT, (MEDIA_FRAME_INFO*)frameinfo, sErrorString);
 			if (pMediaCallback)
 				pMediaCallback(_chid, (int*)pRealtimePlayThread[_chid].pUserPtr, mediatype, sErrorString, frameinfo);
@@ -1783,7 +1783,7 @@ int	CChannelManager::ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAM
 		// EasyRTSPClient连接线程退出，此时上层应该停止相关调用，复位连接按钮等状态
 		else if (NULL != frameinfo && frameinfo->codec == EASY_SDK_EVENT_CODEC_EXIT)
 		{
-			sprintf(sErrorString, "Exit:%s,Error:%d ...\n", fRTSPURL, EasyRTSP_GetErrCode(pRealtimePlayThread[_chid].nvsHandle));
+			sprintf(sErrorString, "Exit:	%s,   Error:%d ...\n", fRTSPURL, EasyRTSP_GetErrCode(pRealtimePlayThread[_chid].nvsHandle));
 			SSQ_AddData(pRealtimePlayThread[_chid].pAVQueue, _chid, MEDIA_TYPE_EVENT, (MEDIA_FRAME_INFO*)frameinfo, sErrorString);
 			if (pMediaCallback)
 				pMediaCallback(_chid, (int*)pRealtimePlayThread[_chid].pUserPtr, mediatype, sErrorString, frameinfo);

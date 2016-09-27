@@ -66,6 +66,7 @@ CBuildDialog::~CBuildDialog(void)
 	}
 
 	m_ImageArray.clear();
+	m_DialogArray.clear();
 }
 
 bool CBuildDialog::ParseWindow( LPCTSTR lpszFileName )
@@ -386,7 +387,11 @@ bool CBuildDialog::ParseControl(CWnd* pParentWnd)
 		else if( _tcscmp(pstrClass, _T("TabCtrl")) == 0 ) pControl = new CSkinTabCtrl;
 		else if( _tcscmp(pstrClass, _T("ToolBar")) == 0 ) pControl = new CSkinToolBar;
 		else if( _tcscmp(pstrClass, _T("TreeCtrl")) == 0 ) pControl = new CSkinTreeCtrl;
+		// now we not support this [8/15/2016 SwordTwelve]
+//		else if( _tcscmp(pstrClass, _T("DirTreeCtrl")) == 0 ) pControl = new CDirTreeCtrl;
+
 		else if( _tcscmp(pstrClass, _T("Flash")) == 0 ) pControl = new CFlashControl;
+		else if( _tcscmp(pstrClass, _T("Static")) == 0 ) pControl = new CSkinStatic;
 
 		//用户自己重绘其他控件
 		else if( !CreateUserControl() ) continue;
@@ -461,10 +466,10 @@ int CBuildDialog::AddString(LPCTSTR lpszText, UINT uFontIndex,UINT uFormat,COLOR
 	pStatic->colStatic = col;
 	pStatic->pPositionData = pPositionData;
 	pStatic->uID = uID;
-	pStatic->strText = lpszText;
+	pStatic->strText = _CS(lpszText);
 	pStatic->uFormat = uFormat;
 	pStatic->bVisible = bVisible;
-
+	pStatic->strTextBase=lpszText;
 	m_StringArray.push_back(pStatic);
 
 	return m_StringArray.size() - 1;
@@ -500,6 +505,18 @@ tagString * CBuildDialog::GetString( UINT uID )
 	}
 
 	return NULL;
+}
+
+// 增加配置字串可编辑编辑 [3/4/2016 Dingshuai]
+void CBuildDialog::SetString(UINT nID, CString strText)
+{
+	for (int i=0;i<(int)m_StringArray.size();i++)
+	{
+		if( m_StringArray[i]->uID == nID )
+		{
+			m_StringArray[i]->strText = strText;
+		}
+	}
 }
 
 int CBuildDialog::AddImage( LPCTSTR lpszFileName,BYTE dwAlpha,DWORD dwMask,int nType,int nRotation,bool bGray,bool bVisible,tagPositionData *pPositionData,UINT uID )
@@ -581,4 +598,22 @@ void CBuildDialog::DrawImage( CDC*pDC )
 
 		}
 	}
+}
+void CBuildDialog::AddDialog(CBuildDialog *pDialog)
+{
+	m_DialogArray.push_back(pDialog);
+}
+void CBuildDialog::DeleteDialog(CBuildDialog *pDialog)
+{
+	vector<CBuildDialog*>::iterator iter = m_DialogArray.begin();
+
+ 	for (;iter != m_DialogArray.end(); ++iter )
+ 	{
+		if(*iter==pDialog)
+		{
+			m_DialogArray.erase(iter);
+			break;
+		}
+
+ 	}
 }

@@ -300,6 +300,27 @@ void CSkinDialog::RectifyControl( int cx, int cy )
 				rcPos.left = cx-pControl->m_ptPosition.x;
 				rcPos.top = cy-pControl->m_ptPosition.y;
 			}
+			else if (pControl->m_FixedPostion[0] == en_ScaleSize )//按比例缩放，只变位置
+			{
+				double fxScale=(double)cx/m_szWindowSize.cx;
+				double fyScale=(double)cy/m_szWindowSize.cy;
+				rcPos.left = fxScale*pControl->m_ptPosition.x;
+				rcPos.top = fyScale*pControl->m_ptPosition.y;		
+
+			}
+			else if (pControl->m_FixedPostion[0] ==  en_ScalePos)//位置和大小，均按比例缩放
+			{
+				double fxScale=(double)cx/m_szWindowSize.cx;
+				double fyScale=(double)cy/m_szWindowSize.cy;
+
+				int nDesWidth = pControl->m_szSize.cx-pControl->m_ptPosition.x;
+				int nDesHeight = pControl->m_szSize.cy-pControl->m_ptPosition.y;
+				int nDesCenterX = (nDesWidth/2+pControl->m_ptPosition.x)*fxScale;
+				int nDesCenterY = (nDesHeight/2+pControl->m_ptPosition.y)*fyScale;
+
+				rcPos.left =  nDesCenterX - nDesWidth/2;
+				rcPos.top =  nDesCenterY - nDesHeight/2;
+			}
 
 			///////////////////////////////大小///////////////////////////////////////////
 			if (pControl->m_FixedPostion[1] == en_LTop )
@@ -322,6 +343,25 @@ void CSkinDialog::RectifyControl( int cx, int cy )
 				rcPos.right = cx-pControl->m_szSize.cx;
 				rcPos.bottom = cy-pControl->m_szSize.cy;
 			}
+			else if (pControl->m_FixedPostion[1] == en_ScaleSize )//位置和大小，均按比例缩放
+			{
+				double fxScale=(double)cx/m_szWindowSize.cx;
+				double fyScale=(double)cy/m_szWindowSize.cy;
+				rcPos.right = fxScale*pControl->m_szSize.cx;
+				rcPos.bottom = fyScale*pControl->m_szSize.cy;		
+
+			}
+			else if (pControl->m_FixedPostion[1] == en_ScalePos )//按比例缩放，只变位置
+			{
+
+				int nDesWidth = pControl->m_szSize.cx-pControl->m_ptPosition.x;
+				int nDesHeight = pControl->m_szSize.cy-pControl->m_ptPosition.y;
+
+				rcPos.right = nDesWidth+rcPos.left;
+				rcPos.bottom = nDesHeight+rcPos.top;		
+
+			}
+
 
 			DeferWindowPos(hDwp,pControl->m_pOwnWnd->GetSafeHwnd(),NULL,rcPos.left,rcPos.top,rcPos.Width(),rcPos.Height(),SWP_NOACTIVATE);
 		}
@@ -377,7 +417,6 @@ BOOL CSkinDialog::OnCommand(WPARAM wParam, LPARAM lParam)
 		ShowWindow(SC_MAXIMIZE);
 		break;
 	}
-
 
 	return __super::OnCommand(wParam, lParam);
 }
@@ -460,4 +499,37 @@ void CSkinDialog::SetMaxWindow()
  	rcWork.OffsetRect(-oMonitor.rcMonitor.left, -oMonitor.rcMonitor.top);
 
 	SetWindowPos(NULL,rcWork.left,rcWork.top,rcWork.Width(),rcWork.Height(),SWP_NOACTIVATE);
+}
+
+CString CSkinDialog::GetItemNameByID(int nItemId ,CSkinButton **pSkinButton)
+{
+	for (int i=0;i<(int)m_ControlArray.size();i++)
+	{
+		ISkinControl* pControl = m_ControlArray[i];
+		if ( pControl != NULL && pControl->m_nId == nItemId)
+		{
+			*pSkinButton = (CSkinButton*) GetDlgItem(pControl->m_nId);
+			return pControl->m_sKeyName;
+		}
+	}
+	return _T("");
+}
+
+void* CSkinDialog::GetItemByName(CString strName)
+{
+	for (int i=0;i<(int)m_ControlArray.size();i++)
+	{
+		ISkinControl* pControl = m_ControlArray[i];
+		if ( pControl != NULL && pControl->m_sKeyName == strName)
+		{
+			return GetDlgItem(pControl->m_nId);
+		}
+	}
+	return NULL;
+}
+//通过字串ID设置字串(注意：该设置只针对配置项为String有效，对于控件无效，ID为配置String ID)
+void CSkinDialog::SetString( UINT uID, CString strText, BOOL bErase)
+{
+	CBuildDialog::SetString(uID,strText);
+	Invalidate(bErase);
 }

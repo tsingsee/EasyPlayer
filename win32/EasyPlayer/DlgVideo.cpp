@@ -289,8 +289,9 @@ void CDlgVideo::OnBnClickedButtonPreview()
 {
 	if (m_ChannelId > 0)
 	{
-		EasyPlayer_CloseStream(m_ChannelId);
+		int nChannelId = m_ChannelId;
 		m_ChannelId = -1;
+		EasyPlayer_CloseStream(nChannelId);
 
 		if (NULL != pDlgRender)	pDlgRender->SetChannelId(m_ChannelId);
 
@@ -374,6 +375,21 @@ int CDlgVideo::EasyPlayerCallBack( int _channelId, int *_channelPtr, int _frameT
 		{
 			CString str = (CString)pBuf;
 			pMaster->LogErr(str);
+		}
+		if (_frameInfo&&_frameInfo->codec == EASY_SDK_EVENT_CODEC_EXIT)
+		{
+			//pMaster->OnBnClickedButtonPreview();
+			if (pMaster->m_ChannelId > 0)
+			{
+				//EasyPlayer_CloseStream(pMaster->m_ChannelId);
+				pMaster->m_ChannelId = -1;
+
+				if (NULL != pMaster->pDlgRender)	pMaster->pDlgRender->SetChannelId(pMaster->m_ChannelId);
+
+				if (NULL !=pMaster->pDlgRender)			pMaster->pDlgRender->Invalidate();
+				if (NULL != pMaster->pBtnPreview)		pMaster->pBtnPreview->SetWindowText(TEXT("Play"));
+			}
+
 		}
 	}
 	return 0;

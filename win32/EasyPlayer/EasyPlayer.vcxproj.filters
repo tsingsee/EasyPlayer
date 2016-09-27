@@ -135,6 +135,9 @@
     <ClInclude Include="EasySkinUI\XmlManager.h">
       <Filter>EasySkinUI</Filter>
     </ClInclude>
+    <ClInclude Include="EasySkinUI\SkinStatic.h">
+      <Filter>EasySkinUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EasyPlayer.cpp">
@@ -225,6 +228,9 @@
       <Filter>EasySkinUI</Filter>
     </ClCompile>
     <ClCompile Include="EasySkinUI\XmlManager.cpp">
+      <Filter>EasySkinUI</Filter>
+    </ClCompile>
+    <ClCompile Include="EasySkinUI\SkinStatic.cpp">
       <Filter>EasySkinUI</Filter>
     </ClCompile>
   </ItemGroup>

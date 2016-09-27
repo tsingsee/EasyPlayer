@@ -43,6 +43,7 @@ END_MESSAGE_MAP()
 
 void CSkinTreeCtrl::OnPaint()
 {
+	CTreeCtrl::OnPaint();
 	CPaintDC dc(this); // device context for painting
 	
 	//»ñÈ¡Î»ÖÃ
@@ -231,7 +232,6 @@ void CSkinTreeCtrl::SetCursorStyle(UINT uID)
 {
 	m_uCursorRes = uID;
 }
-
 BOOL CSkinTreeCtrl::SetButtonImage( LPCTSTR lpszFileName )
 {
 	UIRenderEngine->RemoveImage(m_pImageButton);
@@ -321,6 +321,29 @@ BOOL CSkinTreeCtrl::SetPressImage( LPCTSTR lpszFileName,CONST LPRECT lprcNinePar
 void CSkinTreeCtrl::SetAttribute( LPCTSTR pstrName, LPCTSTR pstrValue )
 {
 	ISkinControl::SetAttribute(pstrName,pstrValue);
+	if( _tcscmp(pstrName, _T("scrollimage")) == 0 ) 
+	{
+		SetScrollImage(this,pstrValue);
+	}
+	else if( _tcscmp(pstrName, _T("bkcolor")) == 0 ) 
+	{
+		LPTSTR pstr = NULL;
+		if( *pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
+		SetBackColor(_tcstoul(pstrValue, &pstr, 16)) ;
+	}
+	else if( _tcscmp(pstrName, _T("buttonimage")) == 0 ) 
+	{
+		SetButtonImage(pstrValue) ;
+	}
+	else if( _tcscmp(pstrName, _T("hoverimage")) == 0 ) 
+	{
+		SetHovenImage(pstrValue, CRect(2,2,2,2)) ;
+	}
+	else if( _tcscmp(pstrName, _T("pressimage")) == 0 ) 
+	{
+		SetPressImage(pstrValue, CRect(2,2,2,2)) ;
+	}
+
 }
 
 BOOL CSkinTreeCtrl::CreateControl( CWnd* pParentWnd )
