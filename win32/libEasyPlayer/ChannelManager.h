@@ -40,8 +40,8 @@ extern "C"
 #define		MAX_DECODER_NUM		5		//一个播放线程中最大解码器个数
 #define		MAX_YUV_FRAME_NUM	3		//解码后的最大YUV帧数
 #define		MAX_CACHE_FRAME		30		//最大帧缓存,超过该值将只播放I帧
-#define		MAX_AVQUEUE_SIZE	(1024*1024)	//队列大小
-//#define		MAX_AVQUEUE_SIZE	(1920*1080*2)	//队列大小
+//#define		MAX_AVQUEUE_SIZE	(1024*1024)	//队列大小
+#define		MAX_AVQUEUE_SIZE	(1920*1080*2)	//队列大小
 
 typedef struct __CODEC_T
 {
