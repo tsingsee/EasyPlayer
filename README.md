@@ -8,7 +8,7 @@ EasyPlayer是由EasyDarwin开源团队开发和维护的一个RTSP播放器项�
 
 - Android：http://fir.im/EasyPlayer
 
-![EasyPlayer Android](http://www.easydarwin.org/github/images/firimeasyplayerandroid.png)
+![EasyPlayer Android](http://www.easydarwin.org/github/images/firimeasyplayerdroid.png)
 
 
 ## DEMO效果 ##
