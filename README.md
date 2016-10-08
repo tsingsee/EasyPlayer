@@ -10,12 +10,18 @@ EasyPlayer是由EasyDarwin开源团队开发和维护的一个RTSP播放器项�
 
 ![EasyPlayer Android](http://www.easydarwin.org/github/images/firimeasyplayerdroid.png)
 
+- iOS：https://itunes.apple.com/us/app/easy-player/id1158675416
+
+![EasyPlayer iOS](http://www.easydarwin.org/github/images/firimeasyplayerios.png)
 
 ## DEMO效果 ##
 
 ![EasyPlayer Win](http://www.easydarwin.org/skin/easydarwin/images/easyplayer20160908171027.png)
 
 ![EasyPlayer Android](https://raw.githubusercontent.com/EasyDarwin/EasyPlayer/master/Android/EasyPlayer/screenshot/single_video.jpg?raw=true)
+
+
+
 
 ##更新记录##
 ### next version ###
