@@ -17,6 +17,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorListenerAdapter;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -192,6 +193,8 @@ public class PlayFragment extends Fragment implements TextureView.SurfaceTexture
             protected void onReceiveResult(int resultCode, Bundle resultData) {
                 super.onReceiveResult(resultCode, resultData);
                 if (resultCode == EasyRTSPClient.RESULT_VIDEO_DISPLAYED) {
+
+                    Log.i(TAG, String.format("VIDEO DISPLAYED!!!!%d*%d", mWidth, mHeight));
 //                    Toast.makeText(PlayActivity.this, "视频正在播放了", Toast.LENGTH_SHORT).show();
                     view.findViewById(android.R.id.progress).setVisibility(View.GONE);
                     mSurfaceView.post(new Runnable() {
@@ -211,6 +214,10 @@ public class PlayFragment extends Fragment implements TextureView.SurfaceTexture
                 } else if (resultCode == EasyRTSPClient.RESULT_VIDEO_SIZE) {
                     mWidth = resultData.getInt(EasyRTSPClient.EXTRA_VIDEO_WIDTH);
                     mHeight = resultData.getInt(EasyRTSPClient.EXTRA_VIDEO_HEIGHT);
+
+
+                    Log.i(TAG, String.format("RESULT_VIDEO_SIZE RECEIVED :%d*%d", mWidth, mHeight));
+
                     if (mAttacher != null) {
                         mAttacher.cleanup();
                     }
@@ -228,7 +235,14 @@ public class PlayFragment extends Fragment implements TextureView.SurfaceTexture
                         mAngleView.setVisibility(View.VISIBLE);
                     }
                 } else if (resultCode == EasyRTSPClient.RESULT_TIMEOUT) {
-                    Toast.makeText(getActivity(), "试播时间到", Toast.LENGTH_SHORT).show();
+                    new AlertDialog.Builder(getActivity()).setMessage("试播时间到").setTitle("SORRY").setPositiveButton(android.R.string.ok, null).show();
+                } else if (resultCode == EasyRTSPClient.RESULT_UNSUPPORTED_AUDIO) {
+                    new AlertDialog.Builder(getActivity()).setMessage("音频格式不支持").setTitle("SORRY").setPositiveButton(android.R.string.ok, null).show();
+                } else if (resultCode == EasyRTSPClient.RESULT_UNSUPPORTED_VIDEO) {
+                    new AlertDialog.Builder(getActivity()).setMessage("视频格式不支持").setTitle("SORRY").setPositiveButton(android.R.string.ok, null).show();
+                }else if (resultCode == EasyRTSPClient.RESULT_EVENT){
+                    PlayActivity activity = (PlayActivity) getActivity();
+                    activity.onEvent(PlayFragment.this, resultData.getString("event-msg"));
                 }
             }
         };
@@ -298,7 +312,8 @@ public class PlayFragment extends Fragment implements TextureView.SurfaceTexture
 
     protected void startRending(Surface surface) {
         mStreamRender = new EasyRTSPClient(getContext(), "E2E90B0867DBB86BF1450BCD01664592", surface, mResultReceiver);
-        mStreamRender.start(mUrl, mType, RTSPClient.EASY_SDK_VIDEO_FRAME_FLAG | RTSPClient.EASY_SDK_AUDIO_FRAME_FLAG, "admin", "admin");
+        mStreamRender.start(mUrl, mType, RTSPClient.EASY_SDK_VIDEO_FRAME_FLAG | RTSPClient.EASY_SDK_AUDIO_FRAME_FLAG, "", "");
+//        mStreamRender.start2(mUrl, mType);
         mRR.send(RESULT_REND_STARTED, null);
     }
 
@@ -339,6 +354,9 @@ public class PlayFragment extends Fragment implements TextureView.SurfaceTexture
 
     public void takePicture(final String path) {
         try {
+            if (mWidth <= 0 || mHeight <= 0) {
+                return;
+            }
             Bitmap bitmap = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.ARGB_8888);
             mSurfaceView.getBitmap(bitmap);
             saveBitmapInFile(path, bitmap);

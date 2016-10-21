@@ -329,6 +329,7 @@ public class PlaylistActivity extends AppCompatActivity implements View.OnClickL
         PlayListViewHolder holder = (PlayListViewHolder) view.getTag();
         int pos = holder.getAdapterPosition();
         if (pos != -1) {
+            mCursor.moveToPosition(pos);
             String playUrl = mCursor.getString(mCursor.getColumnIndex(VideoSource.URL));
             if (!TextUtils.isEmpty(playUrl)) {
                 Intent i = new Intent(PlaylistActivity.this, PlayActivity.class);

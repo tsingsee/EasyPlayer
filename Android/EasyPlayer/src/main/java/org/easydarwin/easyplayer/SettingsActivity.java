@@ -41,6 +41,7 @@ public class SettingsActivity extends AppCompatActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_setting);
         mBinding.serverIp.setText(PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.key_ip), "121.40.50.44"));
         mBinding.serverPort.setText(PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.key_port), "8080"));
+        mBinding.transportMode.setChecked(android.preference.PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.key_udp_mode), false));
     }
 
     @Override
@@ -52,6 +53,7 @@ public class SettingsActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
         editor.putString(getString(R.string.key_ip), mBinding.serverIp.getText().toString());
         editor.putString(getString(R.string.key_port), mBinding.serverPort.getText().toString());
+        editor.putBoolean(getString(R.string.key_udp_mode), mBinding.transportMode.isChecked());
         editor.apply();
         finish();
     }

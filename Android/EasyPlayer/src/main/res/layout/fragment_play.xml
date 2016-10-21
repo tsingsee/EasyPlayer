@@ -6,18 +6,18 @@
     android:layout_height="match_parent"
     android:layout_gravity="center">
 
-    <TextureView
-        android:id="@+id/surface_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
     <ImageView
         android:id="@+id/surface_cover"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#000000"
-        android:scaleType="centerCrop"
-        android:transitionName="video_animation" />
+        android:scaleType="centerCrop"/>
+
+    <TextureView
+        android:id="@+id/surface_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 
     <ProgressBar
         android:id="@android:id/progress"

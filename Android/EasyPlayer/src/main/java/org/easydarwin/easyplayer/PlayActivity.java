@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GestureDetectorCompat;
@@ -75,7 +76,7 @@ public class PlayActivity extends AppCompatActivity {
             if (length == 0) {
                 mLastReceivedLength = 0;
             }
-            if (length < mLastReceivedLength){
+            if (length < mLastReceivedLength) {
                 mLastReceivedLength = 0;
             }
             mBinding.liveVideoBar.streamBps.setText((length - mLastReceivedLength) / 1024 + "Kbps");
@@ -298,7 +299,8 @@ public class PlayActivity extends AppCompatActivity {
             item.setId(generateViewId());
         }
         mBinding.playerContainer.addView(item);
-        getSupportFragmentManager().beginTransaction().add(item.getId(), PlayFragment.newInstance(url, RTSPClient.TRANSTYPE_TCP, null)).commit();
+        boolean useUDP = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.key_udp_mode), false);
+        getSupportFragmentManager().beginTransaction().add(item.getId(), PlayFragment.newInstance(url, useUDP ? RTSPClient.TRANSTYPE_UDP : RTSPClient.TRANSTYPE_TCP, null)).commit();
     }
 
     /**
@@ -393,7 +395,10 @@ public class PlayActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         if (savedInstanceState == null) {
-            PlayFragment fragment = PlayFragment.newInstance(url, RTSPClient.TRANSTYPE_TCP, new ResultReceiver(new Handler()) {
+
+
+            boolean useUDP = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.key_udp_mode), false);
+            PlayFragment fragment = PlayFragment.newInstance(url, useUDP ? RTSPClient.TRANSTYPE_UDP : RTSPClient.TRANSTYPE_TCP, new ResultReceiver(new Handler()) {
                 @Override
                 protected void onReceiveResult(int resultCode, Bundle resultData) {
                     super.onReceiveResult(resultCode, resultData);
@@ -524,5 +529,9 @@ public class PlayActivity extends AppCompatActivity {
     public void onOpenFileDirectory(View view) {
         Intent i = new Intent(this, MediaFilesActivity.class);
         startActivity(i);
+    }
+
+    public void onEvent(PlayFragment playFragment, String msg) {
+        mBinding.msgTxt.setText(msg);
     }
 }

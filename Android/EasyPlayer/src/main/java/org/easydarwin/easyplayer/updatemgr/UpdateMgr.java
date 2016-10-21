@@ -7,17 +7,18 @@ import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
-
-import com.google.gson.Gson;
 
 import org.esaydarwin.rtsp.player.R;
 
 import java.io.IOException;
+import android.os.Handler;
+
+import com.google.gson.Gson;
 
 import okhttp3.OkHttpClient;
+
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -68,7 +69,7 @@ public class UpdateMgr {
                             PackageInfo packageInfo=packageManager.getPackageInfo(mContext.getPackageName(),0);
                             int localVersionCode=packageInfo.versionCode;
                             int remoteVersionCode= Integer.valueOf(versionInfo.getVersionCode());
-                            Log.d(TAG, "localVersionCode="+localVersionCode+", remoteVersionCode="+remoteVersionCode);
+                            Log.d(TAG, "kim localVersionCode="+localVersionCode+", remoteVersionCode="+remoteVersionCode);
                             if(localVersionCode<remoteVersionCode){
                                 mApkUrl = versionInfo.getUrl();
                                 mHandler.post(mShowDlg);
@@ -89,6 +90,7 @@ public class UpdateMgr {
      */
     private void showUpdateDialog(){
         final String apkUrl=mApkUrl;
+        Log.d(TAG, "kim showUpdateDialog. apkUrl="+apkUrl);
         new AlertDialog.Builder(mContext)
                 .setMessage("EasyPlayer可以升级到更高的版本，是否升级")
                 .setTitle("升级提示")
