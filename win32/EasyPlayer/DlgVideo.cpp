@@ -344,6 +344,11 @@ void CDlgVideo::OnBnClickedButtonPreview()
 			int iPos = pSliderCache->GetPos();
 			EasyPlayer_SetFrameCache(m_ChannelId, iPos);		//ÉèÖÃ»º´æ
 			EasyPlayer_PlaySound(m_ChannelId);
+			EasyPlayer_StopSound();
+
+			EasyPlayer_SetManuPicShotPath(m_ChannelId, "D:\\tmp\\");
+			EasyPlayer_SetManuRecordPath(m_ChannelId, "D:\\tmp\\");
+
 			if (NULL != pDlgRender)	pDlgRender->SetChannelId(m_ChannelId);
 
 			if (NULL != pBtnPreview)		pBtnPreview->SetWindowText(TEXT("Stop"));

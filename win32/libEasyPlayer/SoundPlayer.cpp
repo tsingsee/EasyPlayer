@@ -92,7 +92,9 @@ int CSoundPlayer::Open(WAVEFORMATEX _tOutWFX)
 	mmhr = waveOutOpen( &soundObj.hWaveOut, WAVE_MAPPER, &_tOutWFX, 
 						//(DWORD)NULL, (DWORD_PTR)0, dwFlag );
 						(DWORD)soundObj.hNotify, (DWORD_PTR)0, dwFlag );
-	if( MMSYSERR_NOERROR != mmhr ) {
+	if( MMSYSERR_NOERROR != mmhr ) 
+	{
+		soundObj.hWaveOut = NULL;
 		_TRACE("waveOutOpen Fail ret:%d \n", mmhr );
 		return -4;
 	}
@@ -154,6 +156,7 @@ void CSoundPlayer::Close()
 
 int	CSoundPlayer::Write(char *pbuf, int bufsize)//, unsigned int _timestamp)
 {
+	if (NULL == soundObj.hWaveOut)	return -1;
 	if (NULL == soundObj.pWaveHdr)	return -1;
 
 	int idx = soundObj.waveHdrWriteIdx;
@@ -165,7 +168,6 @@ int	CSoundPlayer::Write(char *pbuf, int bufsize)//, unsigned int _timestamp)
 		Sleep(2);
 	}
 	if (NULL == soundObj.pWaveHdr)	return -1;
-
 
 	memcpy(soundObj.pWaveHdr[idx].lpData, pbuf, bufsize);
 	soundObj.pWaveHdr[idx].dwBufferLength = bufsize;

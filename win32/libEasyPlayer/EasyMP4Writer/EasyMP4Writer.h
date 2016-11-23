@@ -54,6 +54,8 @@ class EasyMP4Writer
 	int m_spslen;
 	int m_ppslen;
 
+	int m_nCreateFileFlag;
+
 public:
 	EasyMP4Writer();
 	virtual ~EasyMP4Writer();

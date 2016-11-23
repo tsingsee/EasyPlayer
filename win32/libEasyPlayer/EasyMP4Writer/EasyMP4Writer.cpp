@@ -8,96 +8,6 @@
 
 #include "EasyMP4Writer.h"
 
-unsigned char* EasyMP4Writer::FindNal(unsigned char*buff,int inlen,int&outlen,bool& end)
-{
-	unsigned char*tempstart=NULL;
-	unsigned char*search=buff+2;
-	unsigned char*searchper1=buff;
-	unsigned char*searchper2=buff+1;
-	outlen=0;
-	end=false;
-	while((search-buff)<inlen)
-	{
-		if (search[0]==0x01&&searchper1[0]==0x00&&searchper2[0]==0x00)
-		{
-			if (tempstart==NULL)
-			{
-				tempstart=search+1;
-			}
-			else
-			{
-				outlen=search-tempstart-3+1;
-				break;
-			}
-		}
-		searchper2=searchper1;
-		searchper1=search;
-		search++;
-	}
-	if (outlen==0&&tempstart!=NULL)
-	{
-		outlen=search-tempstart;
-		end=true;
-	}
-	if (tempstart==NULL)
-	{
-		end=true;
-	}
-	return tempstart;
-}
-
-//STD Find Nal unit
-/** this function is taken from the h264bitstream library written by Alex Izvorski and Alex Giladi
- Find the beginning and end of a NAL (Network Abstraction Layer) unit in a unsigned char buffer containing H264 bitstream data.
- @param[in]   buf        the buffer
- @param[in]   size       the size of the buffer
- @param[out]  nal_start  the beginning offset of the nal
- @param[out]  nal_end    the end offset of the nal
- @return                 the length of the nal, or 0 if did not find start of nal, or -1 if did not find end of nal
- */
-int EasyMP4Writer::find_nal_unit(unsigned char* buf, int size, int* nal_start, int* nal_end)
-{
-    int i;
-    // find start
-    *nal_start = 0;
-    *nal_end = 0;
-
-    i = 0;
-    while (   //( next_bits( 24 ) != 0x000001 && next_bits( 32 ) != 0x00000001 )
-           (buf[i] != 0 || buf[i+1] != 0 || buf[i+2] != 0x01) &&
-           (buf[i] != 0 || buf[i+1] != 0 || buf[i+2] != 0 || buf[i+3] != 0x01)
-           )
-    {
-        i++; // skip leading zero
-        if (i+4 >= size) { return 0; } // did not find nal start
-    }
-
-    if  (buf[i] != 0 || buf[i+1] != 0 || buf[i+2] != 0x01) // ( next_bits( 24 ) != 0x000001 )
-    {
-        i++;
-    }
-
-    if  (buf[i] != 0 || buf[i+1] != 0 || buf[i+2] != 0x01) { /* error, should never happen */ return 0; }
-    i+= 3;
-    *nal_start = i;
-
-    while (   //( next_bits( 24 ) != 0x000000 && next_bits( 24 ) != 0x000001 )
-           (buf[i] != 0 || buf[i+1] != 0 || buf[i+2] != 0) &&
-           (buf[i] != 0 || buf[i+1] != 0 || buf[i+2] != 0x01)
-           )
-    {
-        i++;
-        // FIXME the next line fails when reading a nal that ends exactly at the end of the data
-        if (i+3 >= size) 
-		{ 
-			*nal_end = size; 
-			 return (*nal_end - *nal_start);
-		} // did not find nal end, stream ended first
-    }
-
-    *nal_end = i;
-    return (*nal_end - *nal_start);
-}
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -121,6 +31,7 @@ EasyMP4Writer::EasyMP4Writer()
 	m_ppslen=0;
 	m_bwritevideoinfo = false;
 	m_bwriteaudioinfo = false;
+	m_nCreateFileFlag = 3;
 }
 
 EasyMP4Writer::~EasyMP4Writer()
@@ -146,22 +57,21 @@ bool EasyMP4Writer::CreateMP4File(char*filename,int flag)
 	}
 
 	gf_isom_set_brand_info(p_file,GF_ISOM_BRAND_MP42,0);
-
-	if(flag&ZOUTFILE_FLAG_VIDEO)
-	{
-		m_videtrackid=gf_isom_new_track(p_file,0,GF_ISOM_MEDIA_VISUAL,1000);
-		gf_isom_set_track_enabled(p_file,m_videtrackid,1);
-	}
-	if(flag&ZOUTFILE_FLAG_AUDIO)
-	{
-		m_audiotrackid=gf_isom_new_track(p_file,0,GF_ISOM_MEDIA_AUDIO,1000);
-		gf_isom_set_track_enabled(p_file,m_audiotrackid,1);
-	}
+	m_nCreateFileFlag  = flag;
 	return true;
 }
 //sps,pps第一个字节为0x67或68,
 bool EasyMP4Writer::WriteH264SPSandPPS(unsigned char*sps,int spslen,unsigned char*pps,int ppslen,int width,int height)
 {	
+	if(m_nCreateFileFlag&ZOUTFILE_FLAG_VIDEO)
+	{
+		m_videtrackid=gf_isom_new_track(p_file,0,GF_ISOM_MEDIA_VISUAL,1000);
+		gf_isom_set_track_enabled(p_file,m_videtrackid,1);
+	}
+	else
+	{
+		return false;
+	}
 
 	p_videosample=gf_isom_sample_new();
 	p_videosample->data=(char*)malloc(1024*1024);
@@ -199,6 +109,16 @@ bool EasyMP4Writer::WriteH264SPSandPPS(unsigned char*sps,int spslen,unsigned cha
 //写入AAC信息
 bool EasyMP4Writer::WriteAACInfo(unsigned char*info,int len, int nSampleRate, int nChannel, int nBitsPerSample)
 {
+	if(m_nCreateFileFlag&ZOUTFILE_FLAG_AUDIO)
+	{
+		m_audiotrackid=gf_isom_new_track(p_file,0,GF_ISOM_MEDIA_AUDIO,1000);
+		gf_isom_set_track_enabled(p_file,m_audiotrackid,1);
+	}
+	else
+	{
+		return false;
+	}
+
 	p_audiosample=gf_isom_sample_new();
 	p_audiosample->data=(char*)malloc(1024*10);
 
@@ -228,12 +148,15 @@ bool EasyMP4Writer::WriteAACInfo(unsigned char*info,int len, int nSampleRate, in
 
 	free(esd->decoderConfig->decoderSpecificInfo->data);
 
-
 	return true;
 }
 //写入一帧，前四字节为该帧NAL长度
 bool EasyMP4Writer::WriteH264Frame(unsigned char*data,int len,bool keyframe,long timestamp)
 {		
+	if (!p_videosample)
+	{
+		return false;
+	}
 	if (m_videostartimestamp==-1&&keyframe)
 	{
 		m_videostartimestamp=timestamp;
@@ -397,6 +320,7 @@ bool EasyMP4Writer::CanWrite()
 
 int EasyMP4Writer::WriteMp4File(unsigned char* pdata, int datasize, bool keyframe, long nTimestamp, int nWidth, int nHeight)
 {
+#if 0
 	static int n = 0;
 	char filename[64] = {0,};
 	sprintf(filename, "videoframe_%d.txt", n);
@@ -407,6 +331,7 @@ int EasyMP4Writer::WriteMp4File(unsigned char* pdata, int datasize, bool keyfram
 		fclose(f);
 	}
 	n++;
+#endif
 	if (nTimestamp==0||(pdata==NULL)||datasize<=0)
 	{
 		return -1;
@@ -644,5 +569,95 @@ int EasyMP4Writer::WriteMp4File(unsigned char* pdata, int datasize, bool keyfram
 
 	return true;
 }
-
 #endif
+
+unsigned char* EasyMP4Writer::FindNal(unsigned char*buff,int inlen,int&outlen,bool& end)
+{
+	unsigned char*tempstart=NULL;
+	unsigned char*search=buff+2;
+	unsigned char*searchper1=buff;
+	unsigned char*searchper2=buff+1;
+	outlen=0;
+	end=false;
+	while((search-buff)<inlen)
+	{
+		if (search[0]==0x01&&searchper1[0]==0x00&&searchper2[0]==0x00)
+		{
+			if (tempstart==NULL)
+			{
+				tempstart=search+1;
+			}
+			else
+			{
+				outlen=search-tempstart-3+1;
+				break;
+			}
+		}
+		searchper2=searchper1;
+		searchper1=search;
+		search++;
+	}
+	if (outlen==0&&tempstart!=NULL)
+	{
+		outlen=search-tempstart;
+		end=true;
+	}
+	if (tempstart==NULL)
+	{
+		end=true;
+	}
+	return tempstart;
+}
+
+//STD Find Nal unit
+/** this function is taken from the h264bitstream library written by Alex Izvorski and Alex Giladi
+ Find the beginning and end of a NAL (Network Abstraction Layer) unit in a unsigned char buffer containing H264 bitstream data.
+ @param[in]   buf        the buffer
+ @param[in]   size       the size of the buffer
+ @param[out]  nal_start  the beginning offset of the nal
+ @param[out]  nal_end    the end offset of the nal
+ @return                 the length of the nal, or 0 if did not find start of nal, or -1 if did not find end of nal
+ */
+int EasyMP4Writer::find_nal_unit(unsigned char* buf, int size, int* nal_start, int* nal_end)
+{
+    int i;
+    // find start
+    *nal_start = 0;
+    *nal_end = 0;
+
+    i = 0;
+    while (   //( next_bits( 24 ) != 0x000001 && next_bits( 32 ) != 0x00000001 )
+           (buf[i] != 0 || buf[i+1] != 0 || buf[i+2] != 0x01) &&
+           (buf[i] != 0 || buf[i+1] != 0 || buf[i+2] != 0 || buf[i+3] != 0x01)
+           )
+    {
+        i++; // skip leading zero
+        if (i+4 >= size) { return 0; } // did not find nal start
+    }
+
+    if  (buf[i] != 0 || buf[i+1] != 0 || buf[i+2] != 0x01) // ( next_bits( 24 ) != 0x000001 )
+    {
+        i++;
+    }
+
+    if  (buf[i] != 0 || buf[i+1] != 0 || buf[i+2] != 0x01) { /* error, should never happen */ return 0; }
+    i+= 3;
+    *nal_start = i;
+
+    while (   //( next_bits( 24 ) != 0x000000 && next_bits( 24 ) != 0x000001 )
+           (buf[i] != 0 || buf[i+1] != 0 || buf[i+2] != 0) &&
+           (buf[i] != 0 || buf[i+1] != 0 || buf[i+2] != 0x01)
+           )
+    {
+        i++;
+        // FIXME the next line fails when reading a nal that ends exactly at the end of the data
+        if (i+3 >= size) 
+		{ 
+			*nal_end = size; 
+			 return (*nal_end - *nal_start);
+		} // did not find nal end, stream ended first
+    }
+
+    *nal_end = i;
+    return (*nal_end - *nal_start);
+}

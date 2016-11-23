@@ -1059,7 +1059,7 @@ LPTHREAD_START_ROUTINE CChannelManager::_lpDecodeThread( LPVOID _pParam )
 #if 1
 			if (NULL != pChannelManager)
 			{
-				if (NULL != pChannelManager->pAudioPlayThread && pChannelManager->pAudioPlayThread->channelId == pThread->channelId)
+				if (NULL != pChannelManager->pAudioPlayThread )
 				{
 					char* pDecBuffer = pbuf;
 					unsigned int nDecBufLen = frameinfo.length;
@@ -1108,36 +1108,39 @@ LPTHREAD_START_ROUTINE CChannelManager::_lpDecodeThread( LPVOID _pParam )
 						}
 					}
 
-					DECODER_OBJ *pDecoderObj = GetDecoder(pThread, MEDIA_TYPE_AUDIO, &frameinfo);
-					if (NULL == pDecoderObj)
+					if ( pChannelManager->pAudioPlayThread->channelId == pThread->channelId)
 					{
+						DECODER_OBJ *pDecoderObj = GetDecoder(pThread, MEDIA_TYPE_AUDIO, &frameinfo);
+						if (NULL == pDecoderObj)
+						{
 #ifdef _DEBUG
-						_TRACE("[ch%d]获取音频解码器失败: %d.\n", pThread->channelId, frameinfo.codec);
+							_TRACE("[ch%d]获取音频解码器失败: %d.\n", pThread->channelId, frameinfo.codec);
 #endif
-						continue;
-					}
+							continue;
+						}
 
-					memset(audio_buf, 0x00, audbuf_len);
-					int pcm_data_size = 0;
-					int ret = FFD_DecodeAudio(pDecoderObj->ffDecoder, (char*)pDecBuffer, nDecBufLen, (char *)audio_buf, &pcm_data_size);	//音频解码(支持g711(ulaw)和AAC)
-					if (ret == 0)
-					{
-						//播放
-						if (pChannelManager->pAudioPlayThread->audiochannels == 0)
+						memset(audio_buf, 0x00, audbuf_len);
+						int pcm_data_size = 0;
+						int ret = FFD_DecodeAudio(pDecoderObj->ffDecoder, (char*)pDecBuffer, nDecBufLen, (char *)audio_buf, &pcm_data_size);	//音频解码(支持g711(ulaw)和AAC)
+						if (ret == 0)
 						{
-							pChannelManager->SetAudioParams(pDecoderObj->codec.channels, pDecoderObj->codec.samplerate, 16);//32);// 16);
+							//播放
+							if (pChannelManager->pAudioPlayThread->audiochannels == 0)
+							{
+								pChannelManager->SetAudioParams(pDecoderObj->codec.channels, pDecoderObj->codec.samplerate, 16);//32);// 16);
+							}
+							if (pChannelManager->pAudioPlayThread->audiochannels != 0 && NULL!=pChannelManager->pAudioPlayThread->pSoundPlayer)
+							{
+								pChannelManager->pAudioPlayThread->pSoundPlayer->Write((char *)audio_buf, pcm_data_size);
+							}
 						}
-						if (pChannelManager->pAudioPlayThread->audiochannels != 0 && NULL!=pChannelManager->pAudioPlayThread->pSoundPlayer)
+						else
 						{
-							pChannelManager->pAudioPlayThread->pSoundPlayer->Write((char *)audio_buf, pcm_data_size);
-						}
-					}
-					else
-					{
 #ifdef _DEBUG
-						_TRACE("[ERROR]解码音频失败....\n");
+							_TRACE("[ERROR]解码音频失败....\n");
 #endif
-					}
+						}
+					}	
 				}
 			}
 #endif
@@ -1810,7 +1813,7 @@ int	CChannelManager::SetManuRecordPath(int channelId, const char* recordPath)
 		{
 			nPathLen = MAX_PATH;
 		}
-		memcpy(pRealtimePlayThread[iNvsIdx].manuRecordingPath, recordPath, nPathLen);
+		memcpy(pRealtimePlayThread[iNvsIdx].manuRecordingPath, recordPath, nPathLen+1);
 	}
 	return 1;
 }
@@ -1831,7 +1834,7 @@ int	CChannelManager::SetManuPicShotPath(int channelId, const char* shotPath)
 		{
 			nPathLen = MAX_PATH;
 		}
-		memcpy(pRealtimePlayThread[iNvsIdx].strScreenCapturePath, shotPath, nPathLen);
+		memcpy(pRealtimePlayThread[iNvsIdx].strScreenCapturePath, shotPath, nPathLen+1);
 	}
 	return 1;
 }

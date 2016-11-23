@@ -88,6 +88,10 @@ typedef enum __EASY_ACTIVATE_ERR_CODE_ENUM
 
 #define EASY_SDK_EVENT_CODEC_ERROR	0x63657272	/* ERROR */
 #define EASY_SDK_EVENT_CODEC_EXIT	0x65786974	/* EXIT */
+#define EASY_SDK_EVENT_CODEC_SHOT_START	    0x12001	/* Screen shot start*/
+#define EASY_SDK_EVENT_CODEC_SLOT_STOP		0x12002	/* Screen shot stop */
+#define EASY_SDK_EVENT_CODEC_RECORD_START	0x12003	/* Record Start */
+#define EASY_SDK_EVENT_CODEC_RECORD_STOP	0x12004	/* Record Stop */
 
 /* 音视频帧标识 */
 #define EASY_SDK_VIDEO_FRAME_FLAG	0x00000001		/* 视频帧标志 */
@@ -95,7 +99,7 @@ typedef enum __EASY_ACTIVATE_ERR_CODE_ENUM
 #define EASY_SDK_EVENT_FRAME_FLAG	0x00000004		/* 事件帧标志 */
 #define EASY_SDK_RTP_FRAME_FLAG		0x00000008		/* RTP帧标志 */
 #define EASY_SDK_SDP_FRAME_FLAG		0x00000010		/* SDP帧标志 */
-#define EASY_SDK_MEDIA_INFO_FLAG	0x00000020		/* 媒体类型标志*/
+#define EASY_SDK_MEDIA_INFO_FLAG		0x00000020		/* 媒体类型标志*/
 
 /* 视频关键字标识 */
 #define EASY_SDK_VIDEO_FRAME_I		0x01		/* I帧 */
