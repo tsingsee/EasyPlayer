@@ -203,12 +203,11 @@ HCURSOR CEasyPlayerDlg::OnQueryDragIcon()
 
 BOOL CEasyPlayerDlg::DestroyWindow()
 {
-	EasyPlayer_Release();
 	DeleteComponents();
+	EasyPlayer_Release();
 
 	return CSkinDialog::DestroyWindow();
 }
-
 
 LRESULT CEasyPlayerDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -250,8 +249,7 @@ void	CEasyPlayerDlg::CreateComponents()
 	pChkShownToScale.SetSize(68,15);
 	//pChkShownToScale.SetCheck(BST_CHECKED);
 
-
-		pChkShownToScale.SetWindowText(TEXT("按比例显示"));
+	pChkShownToScale.SetWindowText(TEXT("按比例显示"));
 
 	if (NULL == pVideoWindow)
 	{
@@ -326,8 +324,12 @@ void	CEasyPlayerDlg::DeleteComponents()
 		{
 			for (int i=0; i<_SURV_MAX_WINDOW_NUM; i++)
 			{
-				pVideoWindow->pDlgVideo[i].DestroyWindow();
+				pVideoWindow->pDlgVideo[i].DeleteComponents();
 			}
+// 			for (int i=0; i<_SURV_MAX_WINDOW_NUM; i++)
+// 			{
+// 				pVideoWindow->pDlgVideo[i].DestroyWindow();
+// 			}
 			delete []pVideoWindow->pDlgVideo;
 			pVideoWindow->pDlgVideo = NULL;
 		}

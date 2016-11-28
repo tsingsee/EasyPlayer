@@ -2,6 +2,7 @@
 //
 
 #include "stdafx.h"
+#include "EasyPlayer.h"
 #include "DlgVideo.h"
 #include "afxdialogex.h"
 #include "EasyPlayerDlg.h"
@@ -16,7 +17,7 @@ CDlgVideo::CDlgVideo(CWnd* pParent /*=NULL*/)
 	m_WindowId	=	-1;
 	m_ChannelId	=	-1;
 	bDrag		=	false;
-
+	m_bDestoryWnd = false;
 	InitialComponents();
 }
 
@@ -265,6 +266,7 @@ void	CDlgVideo::UpdateComponents()
 }
 void	CDlgVideo::DeleteComponents()
 {
+	m_bDestoryWnd = true;
 	if (m_ChannelId > 0)
 	{
 		EasyPlayer_CloseStream(m_ChannelId);
@@ -344,10 +346,14 @@ void CDlgVideo::OnBnClickedButtonPreview()
 			int iPos = pSliderCache->GetPos();
 			EasyPlayer_SetFrameCache(m_ChannelId, iPos);		//设置缓存
 			EasyPlayer_PlaySound(m_ChannelId);
-			EasyPlayer_StopSound();
 
-			EasyPlayer_SetManuPicShotPath(m_ChannelId, "D:\\tmp\\");
-			EasyPlayer_SetManuRecordPath(m_ChannelId, "D:\\tmp\\");
+			CString strFilePath = GET_MODULE_FILE_INFO.strPath;
+			char sFilePath[MAX_PATH];
+			__WCharToMByte(strFilePath.GetBuffer(strFilePath.GetLength()), sFilePath, sizeof(sFilePath)/sizeof(sFilePath[0]));
+
+			// 设置抓图和录制存放路径 [10/10/2016 dingshuai]
+			EasyPlayer_SetManuRecordPath(m_ChannelId, sFilePath);
+			EasyPlayer_SetManuPicShotPath(m_ChannelId, sFilePath);
 
 			if (NULL != pDlgRender)	pDlgRender->SetChannelId(m_ChannelId);
 
@@ -376,6 +382,10 @@ int CDlgVideo::EasyPlayerCallBack( int _channelId, int *_channelPtr, int _frameT
 	{
 		TRACE( "%s", pBuf  );
 		CDlgVideo* pMaster = (CDlgVideo*)_channelPtr;
+		if (pMaster->m_bDestoryWnd)
+		{
+			return 0;
+		}
 		if (pMaster)
 		{
 			CString str = (CString)pBuf;

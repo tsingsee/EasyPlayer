@@ -15,13 +15,13 @@ public:
 	CDlgVideo(CWnd* pParent = NULL);   // 标准构造函数
 	virtual ~CDlgVideo();
 
-
 	void	SetWindowId(int _windowId);
 	void	SetShownToScale(int shownToScale);
 	void	SetURL(char *url);
 
 	bool	bDrag;
 
+	bool m_bDestoryWnd;
 	int		m_WindowId;
 	int		m_ChannelId;
 	CDlgRender	*pDlgRender;

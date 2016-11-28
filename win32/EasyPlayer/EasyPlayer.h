@@ -10,6 +10,20 @@
 
 #include "resource.h"		// 主符号
 
+// get program path for globle use [6/12/2016 SwordTwelve]
+// 通用结构定义 
+struct ModuleFileInfomations
+{
+	CString		strFullPath;
+	CString		strPath;
+	CString		strDrive;
+	CString		strDir;
+	CString		strName;
+	CString		strExt;
+};
+const ModuleFileInfomations&    GetModuleFileInformations();
+
+#define GET_MODULE_FILE_INFO    (GetModuleFileInformations())
 
 // CEasyPlayerApp:
 // 有关此类的实现，请参阅 EasyPlayer.cpp
@@ -28,6 +42,7 @@ public:
 
 	DECLARE_MESSAGE_MAP()
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	virtual int ExitInstance();
 };
 
 extern CEasyPlayerApp theApp;

@@ -53,7 +53,6 @@ BOOL CEasyPlayerApp::InitInstance()
 
 	InitHookScrollBar();
 
-
 	// 创建 shell 管理器，以防对话框包含
 	// 任何 shell 树视图控件或 shell 列表视图控件。
 	CShellManager *pShellManager = new CShellManager;
@@ -100,4 +99,57 @@ BOOL CEasyPlayerApp::PreTranslateMessage(MSG* pMsg)
 	}
 
 	return CWinApp::PreTranslateMessage(pMsg);
+}
+
+int CEasyPlayerApp::ExitInstance()
+{
+	RemoveHookScrollBar();
+	return CWinApp::ExitInstance();
+}
+
+const ModuleFileInfomations& GetModuleFileInformations()
+{
+	static ModuleFileInfomations __s_mi;
+	static BOOL bLoad = FALSE;
+
+	if(!bLoad)
+	{
+		// Get application's full path.
+
+		::GetModuleFileName(NULL, __s_mi.strFullPath.GetBufferSetLength(MAX_PATH + 1), MAX_PATH);
+		__s_mi.strFullPath.ReleaseBuffer();
+
+		// Break full path into seperate components.
+		_tsplitpath_s(
+			__s_mi.strFullPath, 
+			__s_mi.strDrive.GetBufferSetLength(_MAX_DRIVE + 1), _MAX_DRIVE + 1,
+			__s_mi.strDir.GetBufferSetLength(_MAX_DIR + 1), _MAX_DIR + 1,
+			__s_mi.strName.GetBufferSetLength(_MAX_FNAME + 1), _MAX_FNAME + 1,
+			__s_mi.strExt.GetBufferSetLength(_MAX_EXT + 1), _MAX_EXT + 1);
+
+		__s_mi.strDrive.ReleaseBuffer();//盘符
+		__s_mi.strDir.ReleaseBuffer();//目录中间路径
+		__s_mi.strName.ReleaseBuffer();//文件名称
+		__s_mi.strExt.ReleaseBuffer();//文件扩展名(.exe)
+
+		TCHAR   sDrive[_MAX_DRIVE];   
+		TCHAR   sDir[_MAX_DIR];   
+		TCHAR   sFilename[_MAX_FNAME],Filename[_MAX_FNAME];   
+		TCHAR   sExt[_MAX_EXT];   
+
+		GetModuleFileName(AfxGetInstanceHandle(),   Filename,   _MAX_PATH);   
+		_tsplitpath_s(Filename,   sDrive,   sDir,   sFilename,   sExt); 
+
+		CString  homeDir(CString(sDrive) + CString(sDir));   
+		int      nLen = homeDir.GetLength(); 
+
+		if(homeDir.GetAt(nLen-1) != _T('\\'))   
+			homeDir   +=   _T('\\');   
+
+		__s_mi.strPath = homeDir;
+
+		bLoad = TRUE;
+	}
+
+	return __s_mi;
 }
