@@ -2,3 +2,4 @@
 .gradle
 .idea
 *.iml
+local.properties
