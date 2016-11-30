@@ -40,7 +40,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_setting);
         mBinding.serverIp.setText(PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.key_ip), "121.40.50.44"));
-        mBinding.serverPort.setText(PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.key_port), "8080"));
+        mBinding.serverPort.setText(PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.key_port), "10008"));
         mBinding.transportMode.setChecked(android.preference.PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.key_udp_mode), false));
     }
 

@@ -152,12 +152,12 @@ public class PlaylistActivity extends AppCompatActivity implements View.OnClickL
             protected Cursor doInBackground(Void... voids) {
                 try {
                     String ip = PreferenceManager.getDefaultSharedPreferences(PlaylistActivity.this).getString(getString(R.string.key_ip), "121.40.50.44");
-                    int port = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(PlaylistActivity.this).getString(getString(R.string.key_port), "8080"));
+                    int port = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(PlaylistActivity.this).getString(getString(R.string.key_port), "10008"));
 
                     OkHttpClient client = new OkHttpClient();
 
                     Request request = new Request.Builder()
-                            .url(String.format("http://%s:%d/api/getrtsppushsessions", ip, port))
+                            .url(String.format("http://%s:%d/api/v1/getrtsplivesessions", ip, port))
                             .build();
 
                     Response response = client.newCall(request).execute();
