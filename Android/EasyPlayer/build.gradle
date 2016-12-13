@@ -8,8 +8,8 @@ android {
         applicationId "org.easydarwin.easyplayer"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 6
-        versionName "1.1.16.1129"
+        versionCode 7
+        versionName "1.1.16.1213"
     }
     buildTypes {
         release {
