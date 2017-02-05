@@ -97,7 +97,7 @@ iOS：xcode编译；
 
 
 ## 商业授权 ##
-EasyPlayer是一款非常稳定的RTSP播放器，各平台版本需要经过授权才能商业使用，具体授权方案通过邮件咨询：[support@easydarwin.org](mailto:support@easydarwin.org)
+EasyPlayer是一款非常稳定的RTSP播放器，各平台版本需要经过授权才能商业使用，商业授权方案可以邮件发送至[support@easydarwin.org](mailto:support@easydarwin.org "EasyDarwin support mail")或者通过电话Tel：**13718530929** 进行更深入的技术与合作咨询；
 
 ## 获取更多信息 ##
 
