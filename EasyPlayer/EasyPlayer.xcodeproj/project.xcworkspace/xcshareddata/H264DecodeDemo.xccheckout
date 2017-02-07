@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>20A3845F-6960-4AF5-A41C-559A169F122B</string>
+	<key>IDESourceControlProjectName</key>
+	<string>H264DecodeDemo</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>FE08CEBC6019DF8B580694C9FEE9610AECBD952B</key>
+		<string>https://github.com/stevenyao/iOSHardwareDecoder.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>H264DecodeDemo.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>FE08CEBC6019DF8B580694C9FEE9610AECBD952B</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/stevenyao/iOSHardwareDecoder.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>FE08CEBC6019DF8B580694C9FEE9610AECBD952B</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>FE08CEBC6019DF8B580694C9FEE9610AECBD952B</string>
+			<key>IDESourceControlWCCName</key>
+			<string>iOSHardwareDecoder</string>
+		</dict>
+	</array>
+</dict>
+</plist>

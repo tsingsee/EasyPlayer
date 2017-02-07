@@ -1,0 +1,6 @@
+framework module EasyAudioDecode {
+  umbrella header "EasyAudioDecode.h"
+
+  export *
+  module * { export * }
+}
