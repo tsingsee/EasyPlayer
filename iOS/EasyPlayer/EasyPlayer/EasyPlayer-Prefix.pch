@@ -1,0 +1,25 @@
+#ifndef EasyPlayer_pch
+#define EasyPlayer_pch
+
+#import "MJRefresh.h"
+
+#define ScreenHeight [[UIScreen mainScreen] bounds].size.height
+#define ScreenWidth [[UIScreen mainScreen] bounds].size.width
+
+
+#define COLOR(R,G,B,A) [UIColor colorWithRed:R/255.0 green:G/255.0 blue:B/255.0 alpha:A]
+#define MAIN_COLOR COLOR(46, 214, 88, 1)
+
+#define VIDEO_TITLE_HEIGHT 40
+#define TOOLBAR_HEIGHT 50
+
+#if 1
+#define NSLog(FORMAT, ...) fprintf(stderr,"[%s:%d行] %s\n",[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat:FORMAT, ##__VA_ARGS__] UTF8String]);
+#else
+
+#define NSLog(FORMAT, ...) nil
+
+#endif
+
+
+#endif /* EasyPlayer_pch */
