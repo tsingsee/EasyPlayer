@@ -154,7 +154,7 @@ public class PlayFragment2 extends PlayFragment implements SurfaceHolder.Callbac
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        startRending(holder.getSurface());
+//        startRending(holder.getSurface());
     }
 
     @Override

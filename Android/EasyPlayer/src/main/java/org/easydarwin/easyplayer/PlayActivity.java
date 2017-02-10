@@ -85,6 +85,14 @@ public class PlayActivity extends AppCompatActivity {
             mHandler.postDelayed(this, 1000);
         }
     };
+    private Runnable mResetRecordStateRunnable = new Runnable() {
+        @Override
+        public void run() {
+            ImageView mPlayAudio = mBinding.liveVideoBar.liveVideoBarRecord;
+            mPlayAudio.setImageState(new int[]{}, true);
+            mPlayAudio.removeCallbacks(mResetRecordStateRunnable);
+        }
+    };
 
     public void onEnableOrDisablePlayAudio(View view) {
         boolean enable = mRenderFragment.toggleAudioEnable();
@@ -100,7 +108,9 @@ public class PlayActivity extends AppCompatActivity {
             file.mkdirs();
             file = new File(file, new SimpleDateFormat("yy-MM-dd HH:mm:ss").format(new Date()) + ".jpg");
             mRenderFragment.takePicture(file.getPath());
-            mSoundPool.play(mTalkPictureSound, mAudioVolumn, mAudioVolumn, 1, 0, 1.0f);
+            if (mSoundPool != null) {
+                mSoundPool.play(mTalkPictureSound, mAudioVolumn, mAudioVolumn, 1, 0, 1.0f);
+            }
         } else {
             requestWriteStorage(true);
         }
@@ -175,6 +185,8 @@ public class PlayActivity extends AppCompatActivity {
                 boolean recording = mRenderFragment.onRecordOrStop();
                 ImageView mPlayAudio = (ImageView) view;
                 mPlayAudio.setImageState(recording ? new int[]{android.R.attr.state_checked} : new int[]{}, true);
+
+                if (recording) mPlayAudio.postDelayed(mResetRecordStateRunnable, 200);
             }
         } else {
             requestWriteStorage(false);
@@ -182,6 +194,8 @@ public class PlayActivity extends AppCompatActivity {
     }
 
     protected void initSoundPool() {
+        if (true)
+        return;
         AudioManager mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mAudioVolumn = (float) mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         mMaxVolume = (float) mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
@@ -201,8 +215,10 @@ public class PlayActivity extends AppCompatActivity {
     }
 
     protected void releaseSoundPool() {
-        mSoundPool.release();
-        mSoundPool = null;
+        if (mSoundPool != null) {
+            mSoundPool.release();
+            mSoundPool = null;
+        }
     }
 
     public void onTakePictureThumbClicked(View view) {
@@ -396,7 +412,6 @@ public class PlayActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
 
-
             boolean useUDP = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.key_udp_mode), false);
             PlayFragment fragment = PlayFragment.newInstance(url, useUDP ? RTSPClient.TRANSTYPE_UDP : RTSPClient.TRANSTYPE_TCP, new ResultReceiver(new Handler()) {
                 @Override
@@ -533,5 +548,12 @@ public class PlayActivity extends AppCompatActivity {
 
     public void onEvent(PlayFragment playFragment, String msg) {
         mBinding.msgTxt.setText(msg);
+    }
+
+    public void onRecordState(int status) {
+        ImageView mPlayAudio =
+                mBinding.liveVideoBar.liveVideoBarRecord;
+        mPlayAudio.setImageState(status == 1 ? new int[]{android.R.attr.state_checked} : new int[]{}, true);
+        mPlayAudio.removeCallbacks(mResetRecordStateRunnable);
     }
 }

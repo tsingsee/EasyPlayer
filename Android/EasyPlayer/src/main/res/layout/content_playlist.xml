@@ -14,13 +14,27 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-            <!-- Color is Brown 500 -->
-            <ProgressBar
-                android:id="@+id/toolbar_progress_bar"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="end" />
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:src="@drawable/ic_action_about"
+                style="@style/Base.Widget.AppCompat.ActionButton"
+                android:id="@+id/toolbar_about"
+                android:layout_gravity="end"
+                android:layout_height="wrap_content" />
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:src="@drawable/ic_action_setting"
+                android:id="@+id/toolbar_setting"
+                style="@style/Base.Widget.AppCompat.ActionButton"
+                android:layout_gravity="end"
+                android:layout_height="wrap_content" />
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:src="@drawable/ic_action_add"
+                android:id="@+id/toolbar_add"
+                style="@style/Base.Widget.AppCompat.ActionButton"
+                android:layout_gravity="end"
+                android:layout_height="wrap_content" />
         </android.support.v7.widget.Toolbar>
 
         <android.support.v4.widget.SwipeRefreshLayout

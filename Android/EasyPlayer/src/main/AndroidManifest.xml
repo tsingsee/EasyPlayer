@@ -8,20 +8,21 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
+        android:name="org.easydarwin.easyplayer.TheApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:name="org.easydarwin.easyplayer.TheApp"
         android:theme="@style/AppTheme">
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="5700bb7467e58ef3fd000648" />
         <meta-data
-            android:name="jiaozebo@foxmail.com"
-            android:value="channel" />
+            android:name="UMENG_CHANNEL"
+            android:value="@string/app_flavor" />
 
         <activity
             android:name="org.easydarwin.easyplayer.PlayActivity"
@@ -45,14 +46,20 @@
             android:theme="@style/FullscreenTheme" />
         <activity
             android:name="org.easydarwin.easyplayer.MediaFilesActivity"
-            android:label="文件夹"></activity>
+            android:label="文件夹" />
 
-        <receiver android:name="org.easydarwin.easyplayer.updatemgr.CompleteReceiver" >
+        <receiver android:name="org.easydarwin.easyplayer.updatemgr.CompleteReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
                 <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED" />
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name="org.easydarwin.easyplayer.ijk.VideoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/FullscreenTheme" />
+        <activity android:name="org.easydarwin.easyplayer.AboutActivity"></activity>
     </application>
 
 </manifest>

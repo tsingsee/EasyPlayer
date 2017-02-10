@@ -39,9 +39,10 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_setting);
-        mBinding.serverIp.setText(PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.key_ip), "121.40.50.44"));
+        mBinding.serverIp.setText(PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.key_ip), "114.55.107.180"));
         mBinding.serverPort.setText(PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.key_port), "10008"));
         mBinding.transportMode.setChecked(android.preference.PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.key_udp_mode), false));
+        mBinding.autoRecord.setChecked(android.preference.PreferenceManager.getDefaultSharedPreferences(this).getBoolean("auto_record", false));
     }
 
     @Override
@@ -54,6 +55,7 @@ public class SettingsActivity extends AppCompatActivity {
         editor.putString(getString(R.string.key_ip), mBinding.serverIp.getText().toString());
         editor.putString(getString(R.string.key_port), mBinding.serverPort.getText().toString());
         editor.putBoolean(getString(R.string.key_udp_mode), mBinding.transportMode.isChecked());
+        editor.putBoolean("auto_record", mBinding.autoRecord.isChecked());
         editor.apply();
         finish();
     }

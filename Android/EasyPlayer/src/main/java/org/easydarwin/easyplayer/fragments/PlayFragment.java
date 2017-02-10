@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
@@ -27,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -49,6 +51,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import uk.copywitchshame.senab.photoview.gestures.PhotoViewAttacher;
+
 
 public class PlayFragment extends Fragment implements TextureView.SurfaceTextureListener, PhotoViewAttacher.OnMatrixChangedListener {
     // TODO: Rename parameter arguments, choose names that match
@@ -192,48 +195,17 @@ public class PlayFragment extends Fragment implements TextureView.SurfaceTexture
             @Override
             protected void onReceiveResult(int resultCode, Bundle resultData) {
                 super.onReceiveResult(resultCode, resultData);
+                PlayActivity activity = (PlayActivity) getActivity();
+                if (activity == null)return;
                 if (resultCode == EasyRTSPClient.RESULT_VIDEO_DISPLAYED) {
 
-                    Log.i(TAG, String.format("VIDEO DISPLAYED!!!!%d*%d", mWidth, mHeight));
-//                    Toast.makeText(PlayActivity.this, "视频正在播放了", Toast.LENGTH_SHORT).show();
-                    view.findViewById(android.R.id.progress).setVisibility(View.GONE);
-                    mSurfaceView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (mWidth != 0 && mHeight != 0) {
-                                Bitmap e = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.ARGB_8888);
-                                mSurfaceView.getBitmap(e);
-                                File f = PlaylistActivity.url2localPosterFile(mSurfaceView.getContext(), mUrl);
-                                saveBitmapInFile(f.getPath(), e);
-                                e.recycle();
-                            }
-                        }
-                    });
-                    cover.setVisibility(View.GONE);
-                    mRR.send(RESULT_REND_VIDEO_DISPLAYED, null);
+                    onVideoDisplayed();
                 } else if (resultCode == EasyRTSPClient.RESULT_VIDEO_SIZE) {
                     mWidth = resultData.getInt(EasyRTSPClient.EXTRA_VIDEO_WIDTH);
                     mHeight = resultData.getInt(EasyRTSPClient.EXTRA_VIDEO_HEIGHT);
 
 
-                    Log.i(TAG, String.format("RESULT_VIDEO_SIZE RECEIVED :%d*%d", mWidth, mHeight));
-
-                    if (mAttacher != null) {
-                        mAttacher.cleanup();
-                    }
-                    if (!isLandscape()) {
-
-                        ViewGroup parent = (ViewGroup) view.getParent();
-                        parent.addOnLayoutChangeListener(listener);
-                        fixPlayerRatio(view, parent.getWidth(), parent.getHeight());
-
-
-                        mAttacher = new PhotoViewAttacher(mSurfaceView, mWidth, mHeight);
-                        mAttacher.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                        mAttacher.setOnMatrixChangeListener(PlayFragment.this);
-                        mAttacher.update();
-                        mAngleView.setVisibility(View.VISIBLE);
-                    }
+                    onVideoSizeChange();
                 } else if (resultCode == EasyRTSPClient.RESULT_TIMEOUT) {
                     new AlertDialog.Builder(getActivity()).setMessage("试播时间到").setTitle("SORRY").setPositiveButton(android.R.string.ok, null).show();
                 } else if (resultCode == EasyRTSPClient.RESULT_UNSUPPORTED_AUDIO) {
@@ -241,8 +213,12 @@ public class PlayFragment extends Fragment implements TextureView.SurfaceTexture
                 } else if (resultCode == EasyRTSPClient.RESULT_UNSUPPORTED_VIDEO) {
                     new AlertDialog.Builder(getActivity()).setMessage("视频格式不支持").setTitle("SORRY").setPositiveButton(android.R.string.ok, null).show();
                 }else if (resultCode == EasyRTSPClient.RESULT_EVENT){
-                    PlayActivity activity = (PlayActivity) getActivity();
+
                     activity.onEvent(PlayFragment.this, resultData.getString("event-msg"));
+                }else if (resultCode == EasyRTSPClient.RESULT_RECORD_BEGIN){
+                    activity.onRecordState(1);
+                }else if (resultCode == EasyRTSPClient.RESULT_RECORD_END){
+                    activity.onRecordState(-1);
                 }
             }
         };
@@ -269,6 +245,48 @@ public class PlayFragment extends Fragment implements TextureView.SurfaceTexture
         };
         ViewGroup parent = (ViewGroup) view.getParent();
         parent.addOnLayoutChangeListener(listener);
+    }
+
+    private void onVideoSizeChange() {
+        Log.i(TAG, String.format("RESULT_VIDEO_SIZE RECEIVED :%d*%d", mWidth, mHeight));
+
+        if (mAttacher != null) {
+            mAttacher.cleanup();
+        }
+        if (!isLandscape()) {
+
+            ViewGroup parent = (ViewGroup) getView().getParent();
+            parent.addOnLayoutChangeListener(listener);
+            fixPlayerRatio(getView(), parent.getWidth(), parent.getHeight());
+
+
+            mAttacher = new PhotoViewAttacher(mSurfaceView, mWidth, mHeight);
+            mAttacher.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            mAttacher.setOnMatrixChangeListener(PlayFragment.this);
+            mAttacher.update();
+            mAngleView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void onVideoDisplayed() {
+        View view = getView();
+        Log.i(TAG, String.format("VIDEO DISPLAYED!!!!%d*%d", mWidth, mHeight));
+//                    Toast.makeText(PlayActivity.this, "视频正在播放了", Toast.LENGTH_SHORT).show();
+        view.findViewById(android.R.id.progress).setVisibility(View.GONE);
+        mSurfaceView.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mWidth != 0 && mHeight != 0) {
+                    Bitmap e = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.ARGB_8888);
+                    mSurfaceView.getBitmap(e);
+                    File f = PlaylistActivity.url2localPosterFile(mSurfaceView.getContext(), mUrl);
+                    saveBitmapInFile(f.getPath(), e);
+                    e.recycle();
+                }
+            }
+        });
+        cover.setVisibility(View.GONE);
+        mRR.send(RESULT_REND_VIDEO_DISPLAYED, null);
     }
 
     @Override
@@ -310,16 +328,126 @@ public class PlayFragment extends Fragment implements TextureView.SurfaceTexture
 //        fixPlayerRatio(renderView, maxWidth, maxHeight, mWidth, mHeight);
     }
 
-    protected void startRending(Surface surface) {
-        mStreamRender = new EasyRTSPClient(getContext(), "E2E90B0867DBB86BF1450BCD01664592", surface, mResultReceiver);
-        mStreamRender.start(mUrl, mType, RTSPClient.EASY_SDK_VIDEO_FRAME_FLAG | RTSPClient.EASY_SDK_AUDIO_FRAME_FLAG, "", "");
+    protected void startRending(SurfaceTexture surface) {
+
+        if (mUrl.toLowerCase().startsWith("rtmp://")){
+//            Handler mainHandler = new Handler();
+//            DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter(mainHandler, new BandwidthMeter.EventListener() {
+//                @Override
+//                public void onBandwidthSample(int elapsedMs, long bytes, long bitrate) {
+//                    PlayActivity activity = (PlayActivity) getActivity();
+//                    TextView streamBps = (TextView) activity.findViewById(R.id.stream_bps);
+//                    streamBps.setText(bitrate/ 1024 + "Kbps");
+//                }
+//            });
+//            TrackSelection.Factory videoTrackSelectionFactory =
+//                    new AdaptiveVideoTrackSelection.Factory(bandwidthMeter);
+//            TrackSelector trackSelector =
+//                    new DefaultTrackSelector(mainHandler, videoTrackSelectionFactory);
+//
+//// 2. Create a default LoadControl
+//            LoadControl loadControl = new DefaultLoadControl();
+//
+//// 3. Create the player
+//            SimpleExoPlayer player =
+//                    ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, loadControl,null,false,1000);
+//
+//
+//
+////        Allocator allocator = new DefaultAllocator(false, 1024*1024);
+//
+////        DefaultDataSourceFactory defaultDataSourceFactory = new DefaultDataSourceFactory(getContext(), bandwidthMeter,
+////                new DefaultHttpDataSourceFactory("easypalyer", bandwidthMeter));
+//
+//
+//            DataSource.Factory factory = new DataSource.Factory() {
+//                @Override
+//                public DataSource createDataSource() {
+//                    return  new RtmpDataSource();
+//                }
+//            };
+//
+//
+//            player.prepare(new ExtractorMediaSource(Uri.parse(mUrl), factory, new DefaultExtractorsFactory(),
+//                    mainHandler, null));
+//
+//
+//            player.setVideoTextureView(mSurfaceView);
+//            player.setPlayWhenReady(true);
+//
+//
+//            player.setVideoListener(new SimpleExoPlayer.VideoListener() {
+//                @Override
+//                public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
+//                    mWidth = width;
+//                    mHeight = height;
+//                    onVideoSizeChange();
+//                }
+//
+//                @Override
+//                public void onRenderedFirstFrame() {
+//                    onVideoDisplayed();
+//                }
+//
+//                @Override
+//                public void onVideoTracksDisabled() {
+//
+//                }
+//            });
+//            player.setVideoDebugListener(new VideoRendererEventListener() {
+//                @Override
+//                public void onVideoEnabled(DecoderCounters counters) {
+//
+//                }
+//
+//                @Override
+//                public void onVideoDecoderInitialized(String decoderName, long initializedTimestampMs, long initializationDurationMs) {
+//
+//                }
+//
+//                @Override
+//                public void onVideoInputFormatChanged(Format format) {
+//
+//                }
+//
+//                @Override
+//                public void onDroppedFrames(int count, long elapsedMs) {
+//
+//                }
+//
+//                @Override
+//                public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
+//
+//                }
+//
+//                @Override
+//                public void onRenderedFirstFrame(Surface surface) {
+//
+//                }
+//
+//                @Override
+//                public void onVideoDisabled(DecoderCounters counters) {
+//
+//                }
+//            });
+//            mPlayer = player;
+        }else {
+            mStreamRender = new EasyRTSPClient(getContext(), "E2E90B0867DBB86BF1450BCD01664592", surface, mResultReceiver);
+
+            boolean autoRecord = PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("auto_record", false);
+
+            File f = new File(TheApp.sMoviePath);
+            f.mkdirs();
+
+            mStreamRender.start(mUrl, mType, RTSPClient.EASY_SDK_VIDEO_FRAME_FLAG | RTSPClient.EASY_SDK_AUDIO_FRAME_FLAG, "", "", autoRecord ? new File(f, new SimpleDateFormat("yy-MM-dd HH:mm:ss").format(new Date()) + ".mp4").getPath():null);
 //        mStreamRender.start2(mUrl, mType);
-        mRR.send(RESULT_REND_STARTED, null);
+            mRR.send(RESULT_REND_STARTED, null);
+        }
     }
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-        startRending(new Surface(surface));
+        startRending(surface);
     }
 
     @Override
@@ -337,6 +465,20 @@ public class PlayFragment extends Fragment implements TextureView.SurfaceTexture
             mStreamRender = null;
         }
         return true;
+    }
+
+    /**
+     * Called when the fragment is no longer in use.  This is called
+     * after {@link #onStop()} and before {@link #onDetach()}.
+     */
+    @Override
+    public void onDestroy() {
+        if (mStreamRender != null) {
+            mRR.send(RESULT_REND_STOPED, null);
+            mStreamRender.stop();
+            mStreamRender = null;
+        }
+        super.onDestroy();
     }
 
     @Override

@@ -17,8 +17,15 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.InputType;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.text.method.DigitsKeyListener;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +34,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.StringSignature;
@@ -34,6 +42,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import org.easydarwin.easyplayer.data.VideoSource;
 import org.easydarwin.easyplayer.updatemgr.UpdateMgr;
+import org.esaydarwin.rtsp.player.BuildConfig;
 import org.esaydarwin.rtsp.player.R;
 import org.esaydarwin.rtsp.player.databinding.ContentPlaylistBinding;
 import org.esaydarwin.rtsp.player.databinding.VideoSourceItemBinding;
@@ -54,6 +63,7 @@ import okhttp3.Response;
 public class PlaylistActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
 
     private static final int REQUEST_PLAY = 1000;
+    private static final String TAG = "TAG";
     private RecyclerView mRecyclerView;
     private int mPos;
     private ContentPlaylistBinding mBinding;
@@ -65,7 +75,7 @@ public class PlaylistActivity extends AppCompatActivity implements View.OnClickL
         mBinding = DataBindingUtil.setContentView(this, R.layout.content_playlist);
 //        setContentView(R.layout.content_playlist);
         setSupportActionBar(mBinding.toolbar);
-        mBinding.toolbarProgressBar.setVisibility(View.GONE);
+
 
         mCursor = TheApp.sDB.query(VideoSource.TABLE_NAME, null, null, null, null, null, null);
         mRecyclerView = mBinding.recycler;
@@ -111,16 +121,117 @@ public class PlaylistActivity extends AppCompatActivity implements View.OnClickL
         }
 
 
-        mBinding.pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        if (!isPro()) {
+            mBinding.pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    doLoadData(true);
+                }
+            });
+            doLoadData(false);
+            mBinding.toolbarSetting.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(PlaylistActivity.this, SettingsActivity.class));
+                }
+            });
+
+        } else {
+            mBinding.toolbarSetting.setVisibility(View.GONE);
+            mBinding.pullToRefresh.setEnabled(false);
+        }
+
+        mBinding.toolbarAdd.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onRefresh() {
-                doLoadData(true);
+            public void onClick(View v) {
+                final EditText edit = new EditText(PlaylistActivity.this);
+                edit.setHint(isPro() ? "RTSP/RTMP/HTTP/HLS地址" : "RTSP地址(格式为RTSP://...)");
+                final int hori = (int) getResources().getDimension(R.dimen.activity_horizontal_margin);
+                final int verti = (int) getResources().getDimension(R.dimen.activity_vertical_margin);
+                edit.setPadding(hori, verti, hori, verti);
+
+//                edit.setFilters(new InputFilter[]{new InputFilter() {
+//                    @Override
+//                    public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+//                        if (end-start == 0){
+//                            return null;
+//                        }
+//                        Log.d(TAG, String.format("source:%s,start:%d,end:%d;dest:%s,dstart:%d,dend:%d", source, start,end, dest, dstart,dend));
+//                        char[] chs = new char[dest.length()-(dend - dstart) + end-start];
+//                        int i =0;
+//                        int idx = 0;
+//                        for (;i<dstart;i++){
+//                            chs[idx++] = dest.charAt(i);
+//                        }
+//
+//                        for (i = start;i<end;i++){
+//                            chs[idx++] = source.charAt(i);
+//                        }
+//                        for (i=dend;i<dest.length();i++){
+//                            chs[idx++] = dest.charAt(i);
+//                        }
+//
+//                        String dst = new String(chs);
+//                        dst = dst.toLowerCase();
+//                        if ("rtsp://".indexOf(dst) == 0){
+//                            return null;
+//                        }else if (dst.indexOf("rtsp://") == 0){
+//                            return null;
+//                        }else{
+//                            return "";
+//                        }
+//                    }
+//                }});
+                final AlertDialog dlg = new AlertDialog.Builder(PlaylistActivity.this).setView(edit).setTitle("请输入播放地址").setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String mRTSPUrl = String.valueOf(edit.getText());
+                        if (TextUtils.isEmpty(mRTSPUrl)) {
+                            return;
+                        }
+                        if (!isPro()){
+                            if (mRTSPUrl.toLowerCase().indexOf("rtsp://")!=0){
+                                Toast.makeText(PlaylistActivity.this,"不是合法的RTSP地址，请重新添加.",Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        }else{
+//                            if (mRTSPUrl.toLowerCase().indexOf("rtsp://")!=0 && mRTSPUrl.toLowerCase().indexOf("rtmp://")!=0 && mRTSPUrl.toLowerCase().indexOf("http://")!=0 && mRTSPUrl.toLowerCase().indexOf("https://")!=0&& mRTSPUrl.toLowerCase().indexOf("hls://")!=0){
+//                                Toast.makeText(PlaylistActivity.this,"不是合法的地址，请重新添加.",Toast.LENGTH_SHORT).show();
+//                                return;
+//                            }
+                        }
+                        ContentValues cv = new ContentValues();
+                        cv.put(VideoSource.URL, mRTSPUrl);
+                        TheApp.sDB.insert(VideoSource.TABLE_NAME, null, cv);
+
+                        mCursor.close();
+                        mCursor = TheApp.sDB.query(VideoSource.TABLE_NAME, null, null, null, null, null, null);
+                        mRecyclerView.getAdapter().notifyItemInserted(mCursor.getCount() - 1);
+                        showOrHideEmptyView();
+                    }
+                }).setNegativeButton("取消", null).create();
+                dlg.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialogInterface) {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.showSoftInput(edit, InputMethodManager.SHOW_IMPLICIT);
+                    }
+                });
+                dlg.show();
             }
         });
-        doLoadData(false);
-
+        mBinding.toolbarAbout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(PlaylistActivity.this, AboutActivity.class));
+            }
+        });
         UpdateMgr update = new UpdateMgr(this);
         update.checkUpdate();
+    }
+
+    public static boolean isPro() {
+        return BuildConfig.FLAVOR.equals("pro");
     }
 
     private void doLoadData(final boolean refresh) {
@@ -129,7 +240,6 @@ public class PlaylistActivity extends AppCompatActivity implements View.OnClickL
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                mBinding.toolbarProgressBar.setVisibility(View.VISIBLE);
                 if (refresh) {
                     mBinding.pullToRefresh.setRefreshing(true);
                 }
@@ -138,7 +248,6 @@ public class PlaylistActivity extends AppCompatActivity implements View.OnClickL
             @Override
             protected void onPostExecute(Cursor cursor) {
                 super.onPostExecute(cursor);
-                mBinding.toolbarProgressBar.setVisibility(View.GONE);
                 mCursor.close();
                 mCursor = cursor;
                 showOrHideEmptyView();
@@ -151,7 +260,7 @@ public class PlaylistActivity extends AppCompatActivity implements View.OnClickL
             @Override
             protected Cursor doInBackground(Void... voids) {
                 try {
-                    String ip = PreferenceManager.getDefaultSharedPreferences(PlaylistActivity.this).getString(getString(R.string.key_ip), "121.40.50.44");
+                    String ip = PreferenceManager.getDefaultSharedPreferences(PlaylistActivity.this).getString(getString(R.string.key_ip), "114.55.107.180");
                     int port = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(PlaylistActivity.this).getString(getString(R.string.key_port), "10008"));
 
                     OkHttpClient client = new OkHttpClient();
@@ -249,7 +358,9 @@ public class PlaylistActivity extends AppCompatActivity implements View.OnClickL
                     if (i == 0) {
                         mCursor.moveToPosition(pos);
                         String playUrl = mCursor.getString(mCursor.getColumnIndex(VideoSource.URL));
+                        final int idx = mCursor.getInt(mCursor.getColumnIndex(VideoSource.INDEX));
                         final EditText edit = new EditText(PlaylistActivity.this);
+                        edit.setHint(isPro() ? "RTSP/RTMP/HLS地址" : "RTSP地址");
                         final int hori = (int) getResources().getDimension(R.dimen.activity_horizontal_margin);
                         final int verti = (int) getResources().getDimension(R.dimen.activity_vertical_margin);
                         edit.setPadding(hori, verti, hori, verti);
@@ -263,7 +374,7 @@ public class PlaylistActivity extends AppCompatActivity implements View.OnClickL
                                 }
                                 ContentValues cv = new ContentValues();
                                 cv.put(VideoSource.URL, mRTSPUrl);
-                                TheApp.sDB.update(VideoSource.TABLE_NAME, cv, VideoSource.INDEX + "=?", new String[]{VideoSource.INDEX});
+                                TheApp.sDB.update(VideoSource.TABLE_NAME, cv, VideoSource.INDEX + "=?", new String[]{String.valueOf(idx)});
 
                                 mCursor.close();
                                 mCursor = TheApp.sDB.query(VideoSource.TABLE_NAME, null, null, null, null, null, null);
@@ -332,56 +443,13 @@ public class PlaylistActivity extends AppCompatActivity implements View.OnClickL
             mCursor.moveToPosition(pos);
             String playUrl = mCursor.getString(mCursor.getColumnIndex(VideoSource.URL));
             if (!TextUtils.isEmpty(playUrl)) {
+
                 Intent i = new Intent(PlaylistActivity.this, PlayActivity.class);
                 i.putExtra("play_url", playUrl);
                 mPos = pos;
                 ActivityCompat.startActivityForResult(this, i, REQUEST_PLAY, ActivityOptionsCompat.makeSceneTransitionAnimation(this, holder.mImageView, "video_animation").toBundle());
             }
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.add_url, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.add_url) {
-            final EditText edit = new EditText(this);
-            final int hori = (int) getResources().getDimension(R.dimen.activity_horizontal_margin);
-            final int verti = (int) getResources().getDimension(R.dimen.activity_vertical_margin);
-            edit.setPadding(hori, verti, hori, verti);
-            final AlertDialog dlg = new AlertDialog.Builder(this).setView(edit).setTitle("请输入播放地址").setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    String mRTSPUrl = String.valueOf(edit.getText());
-                    if (TextUtils.isEmpty(mRTSPUrl)) {
-                        return;
-                    }
-                    ContentValues cv = new ContentValues();
-                    cv.put(VideoSource.URL, mRTSPUrl);
-                    TheApp.sDB.insert(VideoSource.TABLE_NAME, null, cv);
-
-                    mCursor.close();
-                    mCursor = TheApp.sDB.query(VideoSource.TABLE_NAME, null, null, null, null, null, null);
-                    mRecyclerView.getAdapter().notifyItemInserted(mCursor.getCount() - 1);
-                    showOrHideEmptyView();
-                }
-            }).setNegativeButton("取消", null).create();
-            dlg.setOnShowListener(new DialogInterface.OnShowListener() {
-                @Override
-                public void onShow(DialogInterface dialogInterface) {
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.showSoftInput(edit, InputMethodManager.SHOW_IMPLICIT);
-                }
-            });
-            dlg.show();
-        } else if (item.getItemId() == R.id.setting) {
-            startActivity(new Intent(this, SettingsActivity.class));
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

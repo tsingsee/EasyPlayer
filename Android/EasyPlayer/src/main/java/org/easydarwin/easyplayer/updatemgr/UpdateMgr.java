@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.easydarwin.easyplayer.PlaylistActivity;
 import org.esaydarwin.rtsp.player.R;
 
 import java.io.IOException;
@@ -51,7 +52,12 @@ public class UpdateMgr {
             @Override
             public void run() {
                 try {
-                    String url="http://www.easydarwin.org/versions/easyplayer/version.txt";
+                    String url;
+                    if (PlaylistActivity.isPro()) {
+                        url = "http://www.easydarwin.org/versions/easyplayer/version.txt";
+                    }else{
+                        url = "http://www.easydarwin.org/versions/easyplayer_pro/version.txt";
+                    }
                     OkHttpClient client = new OkHttpClient();
                     Request request = new Request.Builder()
                             .url(url)
