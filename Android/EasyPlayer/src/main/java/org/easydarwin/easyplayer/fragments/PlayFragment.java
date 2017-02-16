@@ -432,7 +432,7 @@ public class PlayFragment extends Fragment implements TextureView.SurfaceTexture
 //            });
 //            mPlayer = player;
         }else {
-            mStreamRender = new EasyRTSPClient(getContext(), "E2E90B0867DBB86BF1450BCD01664592", surface, mResultReceiver);
+            mStreamRender = new EasyRTSPClient(getContext(), "79393674363536526D34324136365259703173554A655A76636D63755A57467A65575268636E64706269356C59584E356347786865575679567778576F502B6C34456468646D6C754A6B4A68596D397A595541794D4445325257467A65555268636E6470626C526C5957316C59584E35", surface, mResultReceiver);
 
             boolean autoRecord = PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("auto_record", false);
 
