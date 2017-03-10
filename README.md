@@ -5,9 +5,9 @@ EasyPlayer是由EasyDarwin开源团队开发和维护的一个RTSP播放器项�
 ## 代码及编译方法 ##
 Android：代码地址：https://github.com/EasyDarwin/EasyPlayer_Android    编译工具：Android Studio；
 
-Windows：vs2010编译；
+iOS：代码地址：https://github.com/EasyDarwin/EasyPlayer_iOS	 编译工具：xcode;
 
-iOS：xcode编译；
+Windows：vs2010编译；
 
 
 ## 最新版本下载 ##
