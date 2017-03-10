@@ -32,7 +32,7 @@ Windows：vs2010编译；
 
 ![EasyPlayer Android](https://raw.githubusercontent.com/EasyDarwin/EasyPlayer_Android/master/EasyPlayer/screenshot/single_video.jpg?raw=true)
 
-![EasyPlayer iOS](http://www.easydarwin.org/github/images/easyplayeriosdemo20161009.jpg)
+![EasyPlayer iOS](http://www.easydarwin.org/github/images/easyplayeriosdemo20170310.jpg)
 
 
 ##更新记录##
