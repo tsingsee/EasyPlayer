@@ -28,7 +28,7 @@ Windows：vs2010编译；
 
 ## DEMO效果 ##
 
-![EasyPlayer Win](http://www.easydarwin.org/skin/easydarwin/images/easyplayer20160908171027.png)
+![EasyPlayer Win](http://www.easydarwin.org/github/images/easyplayer20160908171027.png)
 
 ![EasyPlayer Android](https://raw.githubusercontent.com/EasyDarwin/EasyPlayer_Android/master/EasyPlayer/screenshot/single_video.jpg?raw=true)
 
