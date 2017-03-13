@@ -12,7 +12,7 @@ Windows：vs2010编译；
 
 ## 最新版本下载 ##
 
-- Windows RTSP播放器：[https://github.com/EasyDarwin/EasyPlayer/releases/](https://github.com/EasyDarwin/EasyPlayer/releases"EasyPlayer Win") 
+- Windows RTSP播放器：[https://github.com/EasyDarwin/EasyPlayer/releases](https://github.com/EasyDarwin/EasyPlayer/releases "EasyPlayer_Win")
 
 - Android RTSP版：http://fir.im/EasyPlayer
 
