@@ -12,9 +12,9 @@ Windows：vs2010编译；
 
 ## 最新版本下载 ##
 
-- Windows：[https://github.com/EasyDarwin/EasyPlayer/releases/tag/v1.0.16.0818](https://github.com/EasyDarwin/EasyPlayer/releases/tag/v1.0.16.0818 "EasyPlayer Win") 
+- Windows RTSP播放器：[https://github.com/EasyDarwin/EasyPlayer/releases/](https://github.com/EasyDarwin/EasyPlayer/releases"EasyPlayer Win") 
 
-- Android：http://fir.im/EasyPlayer
+- Android RTSP版：http://fir.im/EasyPlayer
 
 ![EasyPlayer Android](http://www.easydarwin.org/github/images/firimeasyplayerdroid.png)
 
@@ -22,9 +22,13 @@ Windows：vs2010编译；
 
 ![EasyPlayer Pro 版](http://www.easydarwin.org/github/images/easyplayerprofirim20170205.png)
 
-- iOS：https://itunes.apple.com/us/app/easy-player/id1158675416
+- iOS RTSP版：[https://itunes.apple.com/us/app/easy-player/id1158675416?l=zh&ls=1&mt=8](https://itunes.apple.com/us/app/easy-player/id1158675416?l=zh&ls=1&mt=8)
 
-![EasyPlayer iOS](http://www.easydarwin.org/github/images/firimeasyplayerios.png)
+![EasyPlayer](http://www.easydarwin.org/github/images/easyplayer/easyplayerios20170313.png)
+
+- iOS Pro全功能版：[https://itunes.apple.com/us/app/easyplayerpro/id1205087581?l=zh&ls=1&mt=8](https://itunes.apple.com/us/app/easyplayerpro/id1205087581?l=zh&ls=1&mt=8)
+
+![EasyPlayer Pro 版](http://www.easydarwin.org/github/images/easyplayer/easyplayerproios20170313.png)
 
 ## DEMO效果 ##
 
