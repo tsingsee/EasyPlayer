@@ -16,7 +16,7 @@ Windows：vs2010编译；
 
 - Android RTSP版：http://fir.im/EasyPlayer
 
-![EasyPlayer Android](http://www.easydarwin.org/github/images/firimeasyplayerdroid.png)
+![EasyPlayer Android](http://www.easydarwin.org/github/images/easyplayer/firimeasyplayerdroid.png)
 
 - Android Pro全功能版：http://fir.im/EasyPlayerPro
 
