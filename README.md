@@ -1,6 +1,8 @@
 # EasyPlayer #
 
-EasyPlayer是由EasyDarwin开源团队开发和维护的一个RTSP播放器项目，目前支持**Windows**(支持**多窗口**、包含**ActiveX**，**npAPI** Web插件)、**Android**平台，**iOS**平台，视频支持**H.264**，**H.265**，**MPEG4**，**MJPEG**，音频支持**G711A**，**G711U**，**G726**，**AAC**，支持RTSP over TCP/UDP，支持**硬解码**，是一套极佳的RTSP播放组件！
+EasyPlayer是由EasyDarwin开源团队开发和维护的一个流媒体播放器项目，目前有RTSP版和Pro版两个版本，RTSP支持**Windows**(支持**多窗口**、包含**ActiveX**，**npAPI** Web插件)、**Android**平台，**iOS**平台，视频支持**H.264**，**H.265**，**MPEG4**，**MJPEG**，音频支持**G711A**，**G711U**，**G726**，**AAC**，支持RTSP over TCP/UDP，支持**硬解码**，是一套极佳的RTSP流播放组件；
+
+EasyPlayer Pro版支持RTSP、RTMP、HTTP、HLS等各种流媒体协议播放，稳定、高效、可靠，支持Windows、Android、iOS！
 
 ## 代码及编译方法 ##
 Android：代码地址：https://github.com/EasyDarwin/EasyPlayer_Android    编译工具：Android Studio；
