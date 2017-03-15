@@ -16,6 +16,8 @@ Windows：vs2010编译；
 
 - Windows RTSP播放器：[https://github.com/EasyDarwin/EasyPlayer/releases](https://github.com/EasyDarwin/EasyPlayer/releases "EasyPlayer_Win")
 
+- Windows Pro全功能播放器：[https://github.com/EasyDarwin/EasyPlayer/releases/tag/v1.0.17.0315](https://github.com/EasyDarwin/EasyPlayer/releases/tag/v1.0.17.0315 "EasyPlayPro_win_v1.0.17.0315")
+
 - Android RTSP版：http://fir.im/EasyPlayer
 
 ![EasyPlayer Android](http://www.easydarwin.org/github/images/easyplayer/firimeasyplayerdroid.png)
