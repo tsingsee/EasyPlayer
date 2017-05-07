@@ -5,7 +5,7 @@
 	<Font name="微软雅黑" size="15" />
 
 	<String text="EasyPlayer" font="1" color="#FFFFFF" pos="0,0,40,7,300,42" id="1"/>
-	<String text="Version: 1.2.16.1111 Powered by SwordTwelve/Gavin QQ交流群：544917793" font="2" color="#FFFFFF" pos="3,3,810,25,0,0" id="2"/>
+	<String text="Version: 1.3.17.0507 Powered by SwordTwelve/Gavin QQ交流群：544917793" font="2" color="#FFFFFF" pos="3,3,810,25,0,0" id="2"/>
 	<String text="Log" font="3" color="#000000" pos="3,3,40,125,5,105" id="3"/>
 
 	<Image path="Res\Skin\header.png" pos="0,3,0,0,0,0" id="1"/>
