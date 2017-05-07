@@ -31,7 +31,7 @@ END_MESSAGE_MAP()
 
 BEGIN_DISPATCH_MAP(CEasyPlayerWebActiveXCtrl, COleControl)
 	DISP_FUNCTION_ID(CEasyPlayerWebActiveXCtrl, "AboutBox", DISPID_ABOUTBOX, AboutBox, VT_EMPTY, VTS_NONE)
-	DISP_FUNCTION_ID(CEasyPlayerWebActiveXCtrl, "Start", dispidStart, Start, VT_I4, VTS_BSTR VTS_BSTR VTS_BSTR VTS_BSTR)
+	DISP_FUNCTION_ID(CEasyPlayerWebActiveXCtrl, "Start", dispidStart, Start, VT_I4, VTS_BSTR VTS_BSTR VTS_BSTR VTS_BSTR VTS_BSTR)
 	DISP_FUNCTION_ID(CEasyPlayerWebActiveXCtrl, "Config", dispidConfig, Config, VT_EMPTY, VTS_BSTR VTS_BSTR VTS_BSTR VTS_BSTR)
 	DISP_FUNCTION_ID(CEasyPlayerWebActiveXCtrl, "Close", dispidClose, Close, VT_EMPTY, VTS_NONE)
 END_DISPATCH_MAP()
@@ -255,7 +255,7 @@ void CEasyPlayerWebActiveXCtrl::OnDestroy()
 }
 
 
-LONG CEasyPlayerWebActiveXCtrl::Start(LPCTSTR sURL, LPCTSTR sRenderFormat, LPCTSTR sUserName, LPCTSTR sPassword)
+LONG CEasyPlayerWebActiveXCtrl::Start(LPCTSTR sURL, LPCTSTR sRenderFormat, LPCTSTR sUserName, LPCTSTR sPassword, LPCTSTR sHardDecord)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 	// TODO: 在此添加调度处理程序代码
@@ -263,6 +263,7 @@ LONG CEasyPlayerWebActiveXCtrl::Start(LPCTSTR sURL, LPCTSTR sRenderFormat, LPCTS
 	char szRenderFormat[128] = {0,};
 	char szUserName[128] = {0,};
 	char szPassword[128] = {0,};
+	char szHardDecord[128] = {0,};
 
 	if (wcslen(sURL) < 1)		
 		return -1;
@@ -279,6 +280,12 @@ LONG CEasyPlayerWebActiveXCtrl::Start(LPCTSTR sURL, LPCTSTR sRenderFormat, LPCTS
 	{
 		__WCharToMByte(sPassword, szPassword, sizeof(szPassword)/sizeof(szPassword[0]));
 	}
+	if (wcslen(sHardDecord) > 0)
+	{
+		__WCharToMByte(sHardDecord, szHardDecord, sizeof(szHardDecord)/sizeof(szHardDecord[0]));
+	}
+	
+	int nHardDecode = atoi(szHardDecord);
 
 	int nRenderType = atoi(szRenderFormat);
 	RENDER_FORMAT eRenderFormat = DISPLAY_FORMAT_YV12;
@@ -310,7 +317,7 @@ LONG CEasyPlayerWebActiveXCtrl::Start(LPCTSTR sURL, LPCTSTR sRenderFormat, LPCTS
 		break;
 	}
 
-	int nRet = m_player.Start(szURL, m_pActiveDlg.GetSafeHwnd(), eRenderFormat , 1, szUserName , szPassword);
+	int nRet = m_player.Start(szURL, m_pActiveDlg.GetSafeHwnd(), eRenderFormat , 1, szUserName , szPassword, nHardDecode);
 	return nRet;
 }
 

@@ -45,6 +45,8 @@ int	CChannelManager::Initial()
 
 		for (int i=0; i<MAX_CHANNEL_NUM; i++)
 		{
+			
+			InitializeCriticalSection(&pRealtimePlayThread[i].critRecQueue);
 			InitializeCriticalSection(&pRealtimePlayThread[i].crit);
 			pRealtimePlayThread[i].renderFormat = GDI_FORMAT_RGB24;		//默认为GDI显示
 			pRealtimePlayThread[i].channelId = i+1;
@@ -70,6 +72,8 @@ void CChannelManager::Release()
 
 			ClosePlayThread(&pRealtimePlayThread[i]);
 			DeleteCriticalSection(&pRealtimePlayThread[i].crit);
+			DeleteCriticalSection(&pRealtimePlayThread[i].critRecQueue);
+			
 			for (int idx=0; idx<MAX_DECODER_NUM; idx++)
 			{
 				if (pRealtimePlayThread[i].decoderObj[idx].pIntelDecoder)
@@ -159,6 +163,9 @@ void CChannelManager::CloseStream(int channelId)
 	EasyRTSP_Deinit(&pRealtimePlayThread[iNvsIdx].nvsHandle);
 	//关闭播放线程
 	ClosePlayThread(&pRealtimePlayThread[iNvsIdx]);
+
+	//关闭录像
+	EasyPlayer_StopManuRecording(channelId);
 
 	LeaveCriticalSection(&crit);
 }
@@ -356,6 +363,41 @@ void CChannelManager::ClearAllSoundData()
 	}
 }
 
+void CChannelManager::CreateRecordThread(PLAY_THREAD_OBJ	*_pPlayThread)
+{
+	if (_pPlayThread->recordThread.flag == 0x00)
+	{
+		_pPlayThread->recordThread.flag = 0x01;
+		_pPlayThread->recordThread.hThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)_lpRecordThread, _pPlayThread, 0, NULL);
+		while (_pPlayThread->recordThread.flag!=0x02 && _pPlayThread->recordThread.flag!=0x00)	{Sleep(100);}
+		if (NULL != _pPlayThread->recordThread.hThread)
+		{
+			SetThreadPriority(_pPlayThread->recordThread.hThread, THREAD_PRIORITY_HIGHEST);
+		}
+
+	}
+}
+
+void CChannelManager::CloseRecordThread(PLAY_THREAD_OBJ*_pPlayThread)
+{
+	if (NULL == _pPlayThread)		return;
+
+	//关闭录像线程
+	if (_pPlayThread->recordThread.flag != 0x00)
+	{
+#ifdef _DEBUG
+		_TRACE("关闭录像线程[%d]\n", _pPlayThread->channelId);
+#endif
+		_pPlayThread->recordThread.flag = 0x03;
+		while (_pPlayThread->recordThread.flag!=0x00)	{ Sleep(100); }
+	}
+	if (NULL != _pPlayThread->recordThread.hThread)
+	{
+		CloseHandle(_pPlayThread->recordThread.hThread);
+		_pPlayThread->recordThread.hThread = NULL;
+	}
+}
+
 void CChannelManager::CreatePlayThread(PLAY_THREAD_OBJ	*_pPlayThread)
 {
 	if (NULL == _pPlayThread)		return;
@@ -383,6 +425,7 @@ void CChannelManager::CreatePlayThread(PLAY_THREAD_OBJ	*_pPlayThread)
 		}
 	}
 }
+
 void CChannelManager::ClosePlayThread(PLAY_THREAD_OBJ	*_pPlayThread)
 {
 	if (NULL == _pPlayThread)		return;
@@ -778,7 +821,8 @@ LPTHREAD_START_ROUTINE CChannelManager::_lpDecodeThread( LPVOID _pParam )
 	unsigned char *audio_buf = new unsigned char[audbuf_len+1];
 	memset(audio_buf, 0x00, audbuf_len);
 
-    //FILE *fES = fopen("1920x1080.h264", "wb");
+	FILE *fES = NULL;
+	char fH264Name[512];
 
 	while (1)
 	{
@@ -799,6 +843,13 @@ LPTHREAD_START_ROUTINE CChannelManager::_lpDecodeThread( LPVOID _pParam )
 			continue;
 		}
 
+#ifdef _DEBUG
+		if (fES == NULL)
+		{
+			sprintf(fH264Name, "./test%d.h264", channelid);
+			fES = fopen(fH264Name, "wb");
+		}
+#endif
 		if (mediatype == MEDIA_TYPE_VIDEO)
 		{
 #ifdef _DEBUG1
@@ -806,10 +857,12 @@ LPTHREAD_START_ROUTINE CChannelManager::_lpDecodeThread( LPVOID _pParam )
 #endif
 			//==============================================
 
-            //if (NULL != fES)
+#ifdef _DEBUG
+         if (NULL != fES)
             {
-                //fwrite(pbuf, 1, frameinfo.length, fES);
+                fwrite(pbuf, 1, frameinfo.length, fES);
             }
+#endif
 
 			//_TRACE("DECODE queue: %d\n", pChannelObj->pQueue->pQueHeader->videoframes);
 			if (pThread->frameQueue > MAX_CACHE_FRAME)
@@ -881,14 +934,14 @@ LPTHREAD_START_ROUTINE CChannelManager::_lpDecodeThread( LPVOID _pParam )
 			}
 			if (pThread->decodeThread.flag == 0x03)		break;
 
-			//录像
+			//开启录像
 			if (pThread->manuRecording == 0x01 && NULL==pThread->m_pMP4Writer && frameinfo.type==EASY_SDK_VIDEO_FRAME_I)//开启录制
 			{
+				//EnterCriticalSection(&pThread->critRecQueue);				
 				if (!pThread->m_pMP4Writer)
 				{
 					pThread->m_pMP4Writer = new EasyMP4Writer();
 				}
-
 				unsigned int timestamp = (unsigned int)time(NULL);
 				time_t tt = timestamp;
 				struct tm *_time = localtime(&tt);
@@ -912,21 +965,38 @@ LPTHREAD_START_ROUTINE CChannelManager::_lpDecodeThread( LPVOID _pParam )
 				}		
 				else
 				{
+
 				}
+				//LeaveCriticalSection(&pThread->critRecQueue);
 			}
 			if ( NULL != pThread->m_pMP4Writer)//录制
 			{
-				if (pThread->manuRecording == 0x00 )//停止录制
+				if (pThread->manuRecording == 0x01 )//继续MP4写数据
 				{
-					pThread->m_pMP4Writer->SaveFile();
-					delete pThread->m_pMP4Writer;
-					pThread->m_pMP4Writer=NULL;
-				} 
-				else//继续MP4写数据
-				{
+#if 0
 					pThread->m_pMP4Writer->WriteMp4File((unsigned char*)pbuf, frameinfo.length, 
 						(frameinfo.type==EASY_SDK_VIDEO_FRAME_I)?true:false, 
 						frameinfo.timestamp_sec*1000+frameinfo.timestamp_usec/1000, frameinfo.width, frameinfo.height);
+#endif
+// 					EnterCriticalSection(&pThread->critRecQueue);				
+// 					RECORD_FRAME_INFO *pFrameInfo;
+// 					pFrameInfo=new RECORD_FRAME_INFO;
+// 					pFrameInfo->pDataBuffer=new unsigned char[frameinfo.length];
+// 					memcpy(pFrameInfo->pDataBuffer, pbuf, frameinfo.length);					
+// 					pFrameInfo->nBufSize=frameinfo.length;
+// 					pFrameInfo->bIsVideo=TRUE;
+// 					pFrameInfo->bKeyFrame = (frameinfo.type==EASY_SDK_VIDEO_FRAME_I)?true:false;
+// 					pFrameInfo->nID=channelid;	
+// 					memcpy(&pFrameInfo->mediaInfo, &frameinfo, sizeof(MEDIA_FRAME_INFO) );
+// 
+// 					pFrameInfo->nTimestamp=frameinfo.timestamp_sec*1000+frameinfo.timestamp_usec/1000;
+// 					pThread->frameRecQueue.push(pFrameInfo);
+// 					LeaveCriticalSection(&pThread->critRecQueue);
+
+					if (NULL != pThread->pRecAVQueue)
+					{
+						SSQ_AddData(pThread->pRecAVQueue, channelid, MEDIA_TYPE_VIDEO, (MEDIA_FRAME_INFO*)&frameinfo, pbuf);
+					}
 				}
 			}
 
@@ -1056,13 +1126,14 @@ LPTHREAD_START_ROUTINE CChannelManager::_lpDecodeThread( LPVOID _pParam )
 		}
 		else if (MEDIA_TYPE_AUDIO == mediatype)		//音频
 		{
-#if 1
 			if (NULL != pChannelManager)
 			{
 				if (NULL != pChannelManager->pAudioPlayThread )
 				{
 					char* pDecBuffer = pbuf;
 					unsigned int nDecBufLen = frameinfo.length;
+
+#if 0
 					if (frameinfo.codec == EASY_SDK_AUDIO_CODEC_G711U || EASY_SDK_AUDIO_CODEC_G726 == frameinfo.codec || frameinfo.codec == EASY_SDK_AUDIO_CODEC_G711A) 
 					{
 						if (!m_pAACEncoderHandle)
@@ -1098,13 +1169,34 @@ LPTHREAD_START_ROUTINE CChannelManager::_lpDecodeThread( LPVOID _pParam )
 							continue;
 						}
 					}
+#endif
 
-					if (pThread&&pThread->m_pMP4Writer && frameinfo.codec == EASY_SDK_AUDIO_CODEC_AAC)//音频写入MP4文件(now we just support AAC)
+					if (pThread->manuRecording == 0x01 && pThread&&pThread->m_pMP4Writer)//音频写入MP4文件(now we support AAC, G711, G726)
 					{
+#if 0
 						if (pThread->m_pMP4Writer->CanWrite())
 						{
 							pThread->m_pMP4Writer->WriteAACToMp4File((unsigned char*)pbuf, 
 								frameinfo.length, frameinfo.timestamp_sec*1000+frameinfo.timestamp_usec/1000, frameinfo.sample_rate, frameinfo.channels, frameinfo.bits_per_sample);
+						}
+#endif
+// 						EnterCriticalSection(&pThread->critRecQueue);				
+// 						RECORD_FRAME_INFO *pFrameInfo;
+// 						pFrameInfo=new RECORD_FRAME_INFO;
+// 						pFrameInfo->pDataBuffer=new unsigned char[frameinfo.length];
+// 						memcpy(pFrameInfo->pDataBuffer, pbuf, frameinfo.length);					
+// 						pFrameInfo->nBufSize=frameinfo.length;
+// 						pFrameInfo->bIsVideo=FALSE;
+// 						pFrameInfo->nID=channelid;	
+// 						memcpy(&pFrameInfo->mediaInfo, &frameinfo, sizeof(MEDIA_FRAME_INFO) );
+// 
+// 						pFrameInfo->nTimestamp=frameinfo.timestamp_sec*1000+frameinfo.timestamp_usec/1000;
+// 						pThread->frameRecQueue.push(pFrameInfo);
+// 						LeaveCriticalSection(&pThread->critRecQueue);
+										
+						if (NULL != pThread->pRecAVQueue)
+						{
+							SSQ_AddData(pThread->pRecAVQueue, channelid, MEDIA_TYPE_AUDIO, (MEDIA_FRAME_INFO*)&frameinfo, pbuf);
 						}
 					}
 
@@ -1143,7 +1235,6 @@ LPTHREAD_START_ROUTINE CChannelManager::_lpDecodeThread( LPVOID _pParam )
 					}	
 				}
 			}
-#endif
 		}
 		else if (MEDIA_TYPE_EVENT == mediatype)
 		{
@@ -1192,7 +1283,7 @@ LPTHREAD_START_ROUTINE CChannelManager::_lpDecodeThread( LPVOID _pParam )
 	delete []pbuf;
 	pbuf = NULL;
 
-    //if (NULL != fES)    fclose(fES);
+    if (NULL != fES)    fclose(fES);
 
 	pThread->decodeThread.flag	=	0x00;
 
@@ -1223,6 +1314,143 @@ LPTHREAD_START_ROUTINE CChannelManager::_lpPhotoShotThread( LPVOID _pParam )
 	return 0;
 }
 
+
+LPTHREAD_START_ROUTINE CChannelManager::_lpRecordThread( LPVOID _pParam )
+{
+	PLAY_THREAD_OBJ *pThread = (PLAY_THREAD_OBJ*)_pParam;
+	if (NULL == pThread)			return 0;
+
+	pThread->recordThread.flag	=	0x02;
+
+#ifdef _DEBUG
+	_TRACE("录像线程[%d]已启动. ThreadId:%d ...\n", pThread->channelId, GetCurrentThreadId());
+#endif
+
+	EasyAACEncoder_Handle m_pAACEncoderHandle = NULL;
+	int buf_size = 1024*1024;
+
+	char *pbuf = new char[buf_size];
+	if (NULL == pbuf)
+	{
+		pThread->recordThread.flag	=	0x00;
+		return 0;
+	}
+
+	char* m_pAACEncBufer = new char[buf_size];
+	memset(m_pAACEncBufer, 0x00, buf_size);
+
+	//#define AVCODEC_MAX_AUDIO_FRAME_SIZE	(192000)
+#define AVCODEC_MAX_AUDIO_FRAME_SIZE	(64000)
+	int audbuf_len = (AVCODEC_MAX_AUDIO_FRAME_SIZE * 3) / 2;
+	unsigned char *audio_buf = new unsigned char[audbuf_len+1];
+	memset(audio_buf, 0x00, audbuf_len);
+
+	MEDIA_FRAME_INFO frameinfo;
+	unsigned int channelid = 0;
+	unsigned int mediatype = 0;
+
+	while (1)
+	{
+		if (pThread->recordThread.flag == 0x03)		break;
+
+		int ret = SSQ_GetData(pThread->pRecAVQueue, &channelid, &mediatype, &frameinfo, pbuf);
+		if (ret < 0)
+		{
+			_VS_BEGIN_TIME_PERIOD(1);
+			__VS_Delay(1);
+			_VS_END_TIME_PERIOD(1);
+			continue;
+		}
+
+		long long nTimeStamp = frameinfo.timestamp_sec*1000+frameinfo.timestamp_usec/1000;
+		byte*pdata=NULL;
+		int datasize=0;
+		bool keyframe=false;
+		try
+		{	
+			if (mediatype == MEDIA_TYPE_VIDEO)
+			{
+				pdata = (byte*)pbuf;//获取到的编码数据
+				datasize = frameinfo.length;
+				int nVideoWidth     = frameinfo.width;
+				int nVideoHeight    = frameinfo.height;
+				keyframe = frameinfo.type==EASY_SDK_VIDEO_FRAME_I?true:false;
+				if (pThread->m_pMP4Writer)
+				{
+					pThread->m_pMP4Writer->WriteMp4File((unsigned char*)pdata, datasize, keyframe,  nTimeStamp, nVideoWidth, nVideoHeight);
+				}
+			}
+			else //音频
+			{
+				pdata = (byte*)pbuf;//获取到的编码数据
+				datasize = frameinfo.length;
+				int bits_per_sample = frameinfo.bits_per_sample;
+				int channels = frameinfo.channels;
+				int sampleRate = frameinfo.sample_rate;
+
+				if (EASY_SDK_AUDIO_CODEC_G711U == frameinfo.codec
+					|| EASY_SDK_AUDIO_CODEC_G726 == frameinfo.codec 
+					|| EASY_SDK_AUDIO_CODEC_G711A == frameinfo.codec ) 
+				{
+					if (!m_pAACEncoderHandle)
+					{
+						InitParam initParam;
+						initParam.u32AudioSamplerate=frameinfo.sample_rate;
+						initParam.ucAudioChannel=frameinfo.channels;
+						initParam.u32PCMBitSize=frameinfo.bits_per_sample;
+						if (frameinfo.codec == EASY_SDK_AUDIO_CODEC_G711U)
+						{
+							initParam.ucAudioCodec = Law_ULaw;
+						} 
+						else if (frameinfo.codec == EASY_SDK_AUDIO_CODEC_G726)
+						{
+							initParam.ucAudioCodec = Law_G726;
+						}
+						else if (frameinfo.codec == EASY_SDK_AUDIO_CODEC_G711A)
+						{
+							initParam.ucAudioCodec = Law_ALaw;
+						}
+						m_pAACEncoderHandle = Easy_AACEncoder_Init( initParam);
+					}
+					unsigned int out_len = 0;
+					int nRet = Easy_AACEncoder_Encode(m_pAACEncoderHandle, 
+						(unsigned char*)pbuf, frameinfo.length, (unsigned char*)m_pAACEncBufer, &out_len) ;
+					if (nRet>0&&out_len>0)
+					{
+						pdata = (byte*)m_pAACEncBufer;
+						datasize = out_len;
+						frameinfo.codec = EASY_SDK_AUDIO_CODEC_AAC;
+					} 
+					else
+					{
+						continue;
+					}
+				}
+
+				if (pThread->m_pMP4Writer)
+				{
+					if (pThread->m_pMP4Writer->CanWrite())
+					{
+						pThread->m_pMP4Writer->WriteAACToMp4File((unsigned char*)pdata, 
+							datasize, nTimeStamp, sampleRate, channels, bits_per_sample);
+					}
+				}
+			}
+		}
+		catch (...)
+		{
+			continue;
+		}
+	}
+
+		pThread->recordThread.flag	=	0x00;
+
+#ifdef _DEBUG
+	_TRACE("录像线程[%d]已退出 ThreadId:%d.\n", pThread->channelId, GetCurrentThreadId());
+#endif
+
+	return 0;
+}
 
 LPTHREAD_START_ROUTINE CChannelManager::_lpDisplayThread( LPVOID _pParam )
 {
@@ -1692,7 +1920,6 @@ int	CChannelManager::ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAM
 {
 	if (NULL == pRealtimePlayThread)			return 0;
 
-
 	MediaSourceCallBack pMediaCallback = (MediaSourceCallBack )pRealtimePlayThread[_chid].pCallback;
 	if (NULL != pMediaCallback && (mediatype == EASY_SDK_VIDEO_FRAME_FLAG || mediatype == EASY_SDK_AUDIO_FRAME_FLAG || mediatype == EASY_SDK_MEDIA_INFO_FLAG))
 	{
@@ -1875,6 +2102,24 @@ int	CChannelManager::StartManuRecording(int channelId)
 
 	if (NULL == pRealtimePlayThread[iNvsIdx].mp4cHandle)
 	{
+		//初始化录像缓存队列
+		if (NULL == pRealtimePlayThread[iNvsIdx].pRecAVQueue)  
+		{
+			pRealtimePlayThread[iNvsIdx].pRecAVQueue = new SS_QUEUE_OBJ_T();
+			if (NULL != pRealtimePlayThread[iNvsIdx].pRecAVQueue)
+			{
+				memset(pRealtimePlayThread[iNvsIdx].pRecAVQueue, 0x00, sizeof(SS_QUEUE_OBJ_T));
+				SSQ_Init(pRealtimePlayThread[iNvsIdx].pRecAVQueue, 0x00, iNvsIdx, TEXT(""), MAX_AVQUEUE_SIZE, 2, 0x01);
+				SSQ_Clear(pRealtimePlayThread[iNvsIdx].pRecAVQueue);
+				pRealtimePlayThread[iNvsIdx].initRecQueue = 0x01;
+			}
+
+			pRealtimePlayThread[iNvsIdx].dwLosspacketTime=0;
+			pRealtimePlayThread[iNvsIdx].dwDisconnectTime=0;
+		}
+
+		//创建线程执行录像
+		CreateRecordThread(&pRealtimePlayThread[iNvsIdx]);
 		pRealtimePlayThread[iNvsIdx].manuRecording = 0x01;
 	}
 
@@ -1890,6 +2135,13 @@ int	CChannelManager::StopManuRecording(int channelId)
 	if (pRealtimePlayThread[iNvsIdx].manuRecording == 0x01)
 	{
 		pRealtimePlayThread[iNvsIdx].manuRecording = 0x00;
+		CloseRecordThread(&pRealtimePlayThread[iNvsIdx]);
+	}
+	if(pRealtimePlayThread[iNvsIdx].m_pMP4Writer)
+	{
+		pRealtimePlayThread[iNvsIdx].m_pMP4Writer->SaveFile();
+		delete pRealtimePlayThread[iNvsIdx].m_pMP4Writer;
+		pRealtimePlayThread[iNvsIdx].m_pMP4Writer = NULL;
 	}
 
 	return 1;

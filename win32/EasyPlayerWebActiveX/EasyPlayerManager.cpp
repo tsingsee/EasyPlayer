@@ -25,8 +25,9 @@ EasyPlayerManager::~EasyPlayerManager(void)
 // 
 // 	char szURL[128] = {0,};
 // 	__WCharToMByte(wszURL, szURL, sizeof(szURL)/sizeof(szURL[0]));
+// 	
 int EasyPlayerManager::Start(char* szURL, HWND hShowWnd, 
-	RENDER_FORMAT eRenderFormat, int rtpovertcp, const char *username, const char *password, MediaSourceCallBack callback, void *userPtr) 
+	RENDER_FORMAT eRenderFormat, int rtpovertcp, const char *username, const char *password, int bHardDecode, MediaSourceCallBack callback, void *userPtr) 
 {
 	//Stop
 	if (m_sSourceInfo.rtspSourceId > 0)
@@ -35,7 +36,8 @@ int EasyPlayerManager::Start(char* szURL, HWND hShowWnd,
 		return -1;
 	}
 
-	m_sSourceInfo.rtspSourceId = EasyPlayer_OpenStream(szURL, hShowWnd, eRenderFormat, rtpovertcp, username, password, callback, userPtr, true);
+	m_sSourceInfo.rtspSourceId = EasyPlayer_OpenStream(szURL, hShowWnd, eRenderFormat, 
+		rtpovertcp, username, password, callback, userPtr, (bHardDecode==TRUE)?true:false );
 	return	m_sSourceInfo.rtspSourceId ;
 }
  

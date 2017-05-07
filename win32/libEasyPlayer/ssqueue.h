@@ -64,7 +64,6 @@ typedef struct __SS_BUF_T
 	unsigned int flag;
 	MEDIA_FRAME_INFO	frameinfo;
 	unsigned int timestamp;
-
 }SS_BUF_T;
 
 

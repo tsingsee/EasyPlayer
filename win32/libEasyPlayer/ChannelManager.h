@@ -7,6 +7,8 @@
 */
 #pragma once
 
+#include <queue>
+
 #include "libEasyPlayerAPI.h"
 #include "EasyRTSPClient\EasyRTSPClientAPI.h"
 #include "FFDecoder\FFDecoderAPI.h"
@@ -80,11 +82,44 @@ typedef struct _YUV_FRAME_INFO			//YUV信息
 	int		Yuvsize;
 }YUV_FRAME_INFO;
 
+typedef struct tagRECORD_FRAME_INFO
+{
+	tagRECORD_FRAME_INFO() : pDataBuffer(NULL)
+		, nBufSize(0), nTimestamp(0),bIsVideo(FALSE),nID(-1)
+	{
+
+		//音视频参数
+		memset(&mediaInfo, 0x00, sizeof(MEDIA_FRAME_INFO));
+	}
+	tagRECORD_FRAME_INFO& operator=(const tagRECORD_FRAME_INFO& src)
+	{
+		pDataBuffer	 = src.pDataBuffer;
+		nBufSize     = src.nBufSize;
+		nTimestamp   = src.nTimestamp;
+		bIsVideo	=	src.bIsVideo;
+		nID			=	src.nID;
+		//视频参数
+		memcpy(&mediaInfo, &src.mediaInfo, sizeof(MEDIA_FRAME_INFO) );
+	}
+	//结构数据信息参数
+	unsigned char* pDataBuffer;
+	int nBufSize;
+	long nTimestamp;//时间戳
+	bool bIsVideo;//标识是否为视频
+	bool bKeyFrame;//标识是否为关键帧(对视频有效)
+	int nID;//文件ID
+	// 音视频信息
+	MEDIA_FRAME_INFO mediaInfo;
+}RECORD_FRAME_INFO;
+
+typedef std::queue<RECORD_FRAME_INFO*> QueueFrame;
+
 typedef struct __PLAY_THREAD_OBJ
 {
 	THREAD_OBJ		decodeThread;		//解码线程
-	THREAD_OBJ		displayThread;		//显示线程
-
+	THREAD_OBJ		displayThread;			//显示线程
+	THREAD_OBJ		recordThread;			//录像线程
+	// 
 	Easy_RTSP_Handle		nvsHandle;
 	HWND			hWnd;				//显示视频的窗口句柄
 	int				channelId;			//通道号
@@ -133,6 +168,11 @@ typedef struct __PLAY_THREAD_OBJ
 	MediaSourceCallBack pCallback;
 	void			*pUserPtr;
 
+	//录像缓存帧队列
+	int				initRecQueue;		//初始化队列标识
+	SS_QUEUE_OBJ_T	*pRecAVQueue;		//接收rtsp的帧队列
+	CRITICAL_SECTION	critRecQueue;
+
 }PLAY_THREAD_OBJ;
 
 
@@ -168,7 +208,7 @@ public:
 
 	//OpenStream 返回一个可用的通道ID
 	int		OpenStream(const char *url, HWND hWnd, RENDER_FORMAT renderFormat, int _rtpovertcp, const char *username, const char *password, MediaSourceCallBack callback=NULL, void *userPtr=NULL, bool bHardDecode=true);
-	void	CloseStream(int channelId);
+	void 	CloseStream(int channelId);
 	int		ShowStatisticalInfo(int channelId, int _show);
 	int		SetFrameCache(int channelId, int _cache);
 	int		SetShownToScale(int channelId, int ShownToScale);
@@ -195,6 +235,8 @@ public:
 	static LPTHREAD_START_ROUTINE __stdcall _lpDecodeThread( LPVOID _pParam );
 	static LPTHREAD_START_ROUTINE __stdcall _lpDisplayThread( LPVOID _pParam );
 	static LPTHREAD_START_ROUTINE __stdcall _lpPhotoShotThread( LPVOID _pParam );
+	static LPTHREAD_START_ROUTINE __stdcall _lpRecordThread( LPVOID _pParam );
+
 
 	int		ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo);
 
@@ -202,6 +244,8 @@ protected:
 	bool				GetD3DSupportFormat();			//获取D3D支持的格式
 	void	CreatePlayThread(PLAY_THREAD_OBJ	*_pPlayThread);
 	void	ClosePlayThread(PLAY_THREAD_OBJ		*_pPlayThread);
+	void CreateRecordThread(PLAY_THREAD_OBJ	*_pPlayThread);
+	void CloseRecordThread(PLAY_THREAD_OBJ	*_pPlayThread);
 
 	int		SetAudioParams(unsigned int _channel, unsigned int _samplerate, unsigned int _bitpersample);
 	void	ClearAllSoundData();

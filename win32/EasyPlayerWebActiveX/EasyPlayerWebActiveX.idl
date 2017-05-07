@@ -23,7 +23,7 @@ library EasyPlayerWebActiveXLib
 		methods:
 
 			[id(DISPID_ABOUTBOX)] void AboutBox();
-			[id(1)] LONG Start(BSTR sURL, BSTR sRenderFormat, BSTR sUserName, BSTR sPassword);
+			[id(1)] LONG Start(BSTR sURL, BSTR sRenderFormat, BSTR sUserName, BSTR sPassword, BSTR sHardDecord);
 			[id(2)] void Config(BSTR sFrameCache, BSTR sPlaySound, BSTR sShowToScale, BSTR sShowStatisticInfo);
 			[id(3)] void Close(void);
 	};

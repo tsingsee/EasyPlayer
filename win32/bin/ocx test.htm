@@ -1,6 +1,6 @@
 <HTML>
 <HEAD>
-<TITLE>MyActiveX</TITLE>
+<TITLE>EasyPlayer</TITLE>
 <script type="text/javascript">
 	
 
@@ -25,8 +25,9 @@
 		var rendertype = document.getElementById("rendertype").value;
 		var name= document.getElementById("name").value;
 		var password = document.getElementById("password").value;
+		var harddecode = document.getElementById("harddecode").value;
 
-		obj.Start(url, rendertype, name, password);
+		obj.Start(url, rendertype, name, password, harddecode);
 		config();
 
 		//alert(url+";"+rendertype+";"+name+";"+password);
@@ -45,7 +46,7 @@
 
 <BODY>
 <center>
-MyActiveX Example
+EasyPlayer Plugin Example
 <p></p>
 
 
@@ -59,6 +60,7 @@ RTSP URL：<input type="text" name="url" id="url" VALUE="rtsp://127.0.0.1:554/str
 RenderFormat：<input type="text" name="rendertype" id="rendertype" VALUE="0"/>
 用户名：<input type="text" name="name" id="name" size=25 value="admin"/>
 密码：<input type="text" name="password" id="password" size=25 value="admin"/>
+采用硬解码：<input type="text" name="harddecode" id="harddecode" size=25 value="1"/>
 
 <br>
 缓存：<input type="text" name="cache" id="cache" size=25 value ="3"/>
