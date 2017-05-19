@@ -707,7 +707,29 @@ DECODER_OBJ	*GetDecoder(PLAY_THREAD_OBJ	*_pPlayThread, unsigned int mediaType, M
 						return NULL;
 					}
 				}
+				else
+				{
+					int nDecoder = OUTPUT_PIX_FMT_YUV420P;
+					if (_pPlayThread->renderFormat == GDI_FORMAT_RGB24)
+					{
+						ParseDecoder2Render(&nDecoder, _frameinfo->width, _frameinfo->height, _pPlayThread->renderFormat, &_pPlayThread->decoderObj[iIdx].yuv_size);
+					}
+					else
+					{
+#ifdef __ENABLE_SSE
+						ParseDecoder2Render(&nDecoder, _frameinfo->width, _frameinfo->height, DISPLAY_FORMAT_YV12, &_pPlayThread->decoderObj[iIdx].yuv_size);
+#else
+						ParseDecoder2Render(&nDecoder, _frameinfo->width, _frameinfo->height, _pPlayThread->renderFormat, &_pPlayThread->decoderObj[iIdx].yuv_size);
+#endif
+					}
 
+					FFD_SetVideoDecoderParam(_pPlayThread->decoderObj[iIdx].ffDecoder, _frameinfo->width, _frameinfo->height, _frameinfo->codec, nDecoder);
+					_pPlayThread->decoderObj[iIdx].codec.vidCodec	= _frameinfo->codec;
+					_pPlayThread->decoderObj[iIdx].codec.width	= _frameinfo->width;
+					_pPlayThread->decoderObj[iIdx].codec.height = _frameinfo->height;
+
+					return &_pPlayThread->decoderObj[iIdx];
+				}
 			}
 		}
 		else if (MEDIA_TYPE_AUDIO == mediaType)
