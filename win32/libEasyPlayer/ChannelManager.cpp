@@ -23,7 +23,7 @@ CChannelManager::CChannelManager(void)
 	pRealtimePlayThread	=	NULL;
 	pAudioPlayThread	=	NULL;
 	memset(&d3dAdapter, 0x00, sizeof(D3D_ADAPTER_T));
-
+	m_bIFrameArrive = false;
 	InitializeCriticalSection(&crit);
 }
 
@@ -163,10 +163,7 @@ void CChannelManager::CloseStream(int channelId)
 	EasyRTSP_Deinit(&pRealtimePlayThread[iNvsIdx].nvsHandle);
 	//关闭播放线程
 	ClosePlayThread(&pRealtimePlayThread[iNvsIdx]);
-
-	//关闭录像
-	EasyPlayer_StopManuRecording(channelId);
-
+	m_bIFrameArrive = false;
 	LeaveCriticalSection(&crit);
 }
 
@@ -1928,7 +1925,32 @@ int	CChannelManager::ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAM
 
 	if (mediatype == EASY_SDK_VIDEO_FRAME_FLAG)
 	{
-		if ( (NULL == pRealtimePlayThread[_chid].pAVQueue) && (frameinfo->type==EASY_SDK_VIDEO_FRAME_I/*Key frame*/) )
+		if (frameinfo->type==EASY_SDK_VIDEO_FRAME_I/*Key frame*/) 
+		{
+			m_bIFrameArrive = true;
+			if ( (NULL == pRealtimePlayThread[_chid].pAVQueue))
+			{
+				pRealtimePlayThread[_chid].pAVQueue = new SS_QUEUE_OBJ_T();
+				if (NULL != pRealtimePlayThread[_chid].pAVQueue)
+				{
+					memset(pRealtimePlayThread[_chid].pAVQueue, 0x00, sizeof(SS_QUEUE_OBJ_T));
+					SSQ_Init(pRealtimePlayThread[_chid].pAVQueue, 0x00, _chid, TEXT(""), MAX_AVQUEUE_SIZE, 2, 0x01);
+					SSQ_Clear(pRealtimePlayThread[_chid].pAVQueue);
+					pRealtimePlayThread[_chid].initQueue = 0x01;
+				}
+
+				pRealtimePlayThread[_chid].dwLosspacketTime=0;
+				pRealtimePlayThread[_chid].dwDisconnectTime=0;
+			}
+		}
+		if (NULL != pRealtimePlayThread[_chid].pAVQueue && m_bIFrameArrive)
+		{
+			SSQ_AddData(pRealtimePlayThread[_chid].pAVQueue, _chid, MEDIA_TYPE_VIDEO, (MEDIA_FRAME_INFO*)frameinfo, pbuf);
+		}
+	}
+	else if (mediatype == EASY_SDK_AUDIO_FRAME_FLAG)
+	{
+		if ( (NULL == pRealtimePlayThread[_chid].pAVQueue) )
 		{
 			pRealtimePlayThread[_chid].pAVQueue = new SS_QUEUE_OBJ_T();
 			if (NULL != pRealtimePlayThread[_chid].pAVQueue)
@@ -1942,13 +1964,6 @@ int	CChannelManager::ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAM
 			pRealtimePlayThread[_chid].dwLosspacketTime=0;
 			pRealtimePlayThread[_chid].dwDisconnectTime=0;
 		}
-		if (NULL != pRealtimePlayThread[_chid].pAVQueue)
-		{
-			SSQ_AddData(pRealtimePlayThread[_chid].pAVQueue, _chid, MEDIA_TYPE_VIDEO, (MEDIA_FRAME_INFO*)frameinfo, pbuf);
-		}
-	}
-	else if (mediatype == EASY_SDK_AUDIO_FRAME_FLAG)
-	{
 		if (NULL != pRealtimePlayThread[_chid].pAVQueue)
 		{
 			SSQ_AddData(pRealtimePlayThread[_chid].pAVQueue, _chid, MEDIA_TYPE_AUDIO, (MEDIA_FRAME_INFO*)frameinfo, pbuf);

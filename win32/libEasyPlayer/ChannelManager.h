@@ -256,5 +256,6 @@ private:
 	AUDIO_PLAY_THREAD_OBJ	*pAudioPlayThread;			//“Ù∆µ≤•∑≈œﬂ≥Ã
 	CRITICAL_SECTION		crit;
 	D3D_ADAPTER_T		d3dAdapter;
+	bool m_bIFrameArrive;
 };
 extern CChannelManager	*pChannelManager;
