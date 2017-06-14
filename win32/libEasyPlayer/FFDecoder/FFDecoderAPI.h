@@ -1,11 +1,3 @@
-/*
-	Copyright (c) 2013-2014 EasyDarwin.ORG.  All rights reserved.
-	Github: https://github.com/EasyDarwin
-	WEChat: EasyDarwin
-	Website: http://www.easydarwin.org
-	Author: Gavin@easydarwin.org
-*/
-
 #ifndef __FF_DECODER_API_H__
 #define __FF_DECODER_API_H__
 
@@ -54,6 +46,21 @@
 #define OUTPUT_PIX_FMT_RGBA			28
 #endif
 
+//=======================================================
+//图像处理
+//=======================================================
+typedef enum __VIDEO_FILTER_TYPE
+{
+	VIDEO_ROTATION_90_0				=		0,	//顺时针旋转90度
+	VIDEO_ROTATION_90_1,						//逆时针旋转90度
+	VIDEO_ROTATION_90_0_FLIP,					//顺时针旋转90度,再水平翻转
+	VIDEO_ROTATION_90_1_FLIP,					//逆时针旋转90度,再垂直翻转
+
+	VIDEO_TEXT,
+
+}VIDEO_FILTER_TYPE;
+
+
 
 
 //=======================================================
@@ -80,15 +87,13 @@ extern "C"
 	//desc:				解码后的数据，直接送到指定的内存中
 	int	FFDECODER_API	FFD_DecodeVideo2Buf(FFD_HANDLE _handle, char *_inbuf, int _bufsize, void *_outbuf[8], int _pitch);
 
-	int	FFDECODER_API	FFD_DecodeVideo3(FFD_HANDLE _handle, char *_inbuf, int _bufsize, void *yuvbuf, int dstW, int dstH);
+	int	FFDECODER_API	FFD_DecodeVideo3(FFD_HANDLE _handle, char *_inbuf, int _bufsize, void *yuvbuf, int dstW, int dstH, long long  pts = 0, long long dts = 0);
 	int FFDECODER_API	FFD_DecodeVideoPacket(FFD_HANDLE _handle, char *pCodecCtx, unsigned char *avPacket, char **_outbuf);
 
 
 	int	FFDECODER_API	FFD_DecodeAudio(FFD_HANDLE _handle, char *pInBuf, int inputSize, char *pOutBuf, int *outSize);
 	int	FFDECODER_API	FFD_DecodeAudioPacket(FFD_HANDLE _handle, char *pCodecCtx, unsigned char *avPacket, char *pOutBuf, int *outSize);
 };
-
-
 
 
 #endif

@@ -209,7 +209,7 @@ void	CDlgVideo::CreateComponents()
 	}
 	if (pChkDecodeMode)
 	{
-		pChkDecodeMode->SetCheck(1);
+		pChkDecodeMode->SetCheck(0);
 	}
 }
 void	CDlgVideo::UpdateComponents()
