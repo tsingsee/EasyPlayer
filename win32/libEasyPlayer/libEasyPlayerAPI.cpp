@@ -3,7 +3,7 @@
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
-	Author: Gavin@easydarwin.org
+	Author: Sword@easydarwin.org
 */
 #include "libEasyPlayerAPI.h"
 #include "ChannelManager.h"

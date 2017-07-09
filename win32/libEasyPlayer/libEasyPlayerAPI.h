@@ -3,7 +3,7 @@
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
-	Author: Gavin@easydarwin.org
+	Author: Sword@easydarwin.org
 */
 
 #ifndef __LIB_EASY_PLAYER_API_H__

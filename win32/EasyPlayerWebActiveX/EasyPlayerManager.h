@@ -11,7 +11,7 @@
 
 #include "./libEasyPlayer/libEasyPlayerAPI.h"
 
-//Gavin's Source Struct流信息结构
+//Sword's Source Struct流信息结构
 typedef struct __EASY_LOCAL_SOURCE_T
 {	
 	int		rtspSourceId;

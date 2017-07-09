@@ -3,7 +3,7 @@
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
-	Author: Gavin@easydarwin.org
+	Author: Sword@easydarwin.org
 */
 #ifndef __SHARE_MEMORY_QUEUE_H__
 #define __SHARE_MEMORY_QUEUE_H__
