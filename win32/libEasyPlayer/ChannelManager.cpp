@@ -1078,7 +1078,10 @@ LPTHREAD_START_ROUTINE CChannelManager::_lpDecodeThread( LPVOID _pParam )
 			int nRet = 1;
 			if (pDecoderObj->pIntelDecoder)
 			{
-				nRet = pDecoderObj->pIntelDecoder->Decode((unsigned char*)pbuf, frameinfo.length, (unsigned char*)/*pThread->yuvFrame[pThread->decodeYuvIdx].pYuvBuf*/NULL);
+				if(frameinfo.length > 0)
+				{
+					nRet = pDecoderObj->pIntelDecoder->Decode((unsigned char*)pbuf, frameinfo.length, (unsigned char*)/*pThread->yuvFrame[pThread->decodeYuvIdx].pYuvBuf*/NULL);
+				}
 			}
 			else
 			{
