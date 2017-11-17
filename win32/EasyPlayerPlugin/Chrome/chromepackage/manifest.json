@@ -1,9 +1,0 @@
-{
-  "name": "EasyPlayer Plugin",
-  "version": "${FBSTRING_PLUGIN_VERSION}",
-  "description": "EasyPlayer Plugin",
-
-	"plugins": [
-    { "path": "npEasyPlayerPlugin.dll", "public": true }
-  ]
-}
