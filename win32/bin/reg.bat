@@ -1,2 +1,2 @@
-cd ./
-regsvr32 EasyPlayerWebActiveX.ocx
+
+regsvr32 "%~dp0EasyPlayerWebActiveX.ocx" 

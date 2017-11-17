@@ -1,6 +1,6 @@
 #/**********************************************************\ 
 # Auto-generated Mac project definition file for the
-# EasyPlayer Web Plugin project
+# EasyPlayer Plugin project
 #\**********************************************************/
 
 # Mac template platform definition CMake file

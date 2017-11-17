@@ -67,7 +67,7 @@ void EasyPlayerPluginAPI::testEvent()
     fire_test();
 }
 
-int EasyPlayerPluginAPI::Start( std::string& sURL, int nRenderFormat,  std::string& sUserName,  std::string& sPassword)
+int EasyPlayerPluginAPI::Start( std::string& sURL, int nRenderFormat,  std::string& sUserName,  std::string& sPassword, int nHardDecode)
 {
 	if (m_player)
 	{
@@ -103,7 +103,7 @@ int EasyPlayerPluginAPI::Start( std::string& sURL, int nRenderFormat,  std::stri
 		EasyPlayerWnd *pwnd = getPlugin()->GetWindow()->get_as<EasyPlayerWnd>();  
 		HWND hwnd = pwnd->getHWND();  
 
-		m_player->Start((char*)sURL.c_str(), hwnd, eRenderFormat, 1, sUserName.c_str() , sPassword.c_str());
+		m_player->Start((char*)sURL.c_str(), hwnd, eRenderFormat, 1, sUserName.c_str() , sPassword.c_str(), nHardDecode);
 	}
 	return 1;
 }

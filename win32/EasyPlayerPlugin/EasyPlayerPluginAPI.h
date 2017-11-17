@@ -82,7 +82,7 @@ public:
     // Read-only property ${PROPERTY.ident}
     std::string get_version();
 	// 自定义插件接口函数 [4/8/2016 Dingshuai]
-	int Start( std::string& sURL, int nRenderFormat,  std::string& sUserName,  std::string& sPassword);
+	int Start( std::string& sURL, int nRenderFormat,  std::string& sUserName,  std::string& sPassword, int nHardDecode);
 	void Config(int nFrameCache, int nPlaySound, int nShowToScale, int nShowStatisticInfo);
 	void Close(void);
 

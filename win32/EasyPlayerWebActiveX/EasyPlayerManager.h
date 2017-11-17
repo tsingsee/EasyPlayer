@@ -9,9 +9,9 @@
 
 #pragma once
 
-#include "./libEasyPlayer/libEasyPlayerAPI.h"
+#include "../libEasyPlayer/libEasyPlayerAPI.h"
 
-//Sword's Source Struct流信息结构
+//Gavin's Source Struct流信息结构
 typedef struct __EASY_LOCAL_SOURCE_T
 {	
 	int		rtspSourceId;

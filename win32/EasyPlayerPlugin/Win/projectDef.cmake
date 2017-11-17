@@ -1,6 +1,6 @@
 #/**********************************************************\ 
 # Auto-generated Windows project definition file for the
-# EasyPlayer Web Plugin project
+# EasyPlayer Plugin project
 #\**********************************************************/
 
 # Windows template platform definition CMake file

@@ -23,6 +23,7 @@ BEGIN_MESSAGE_MAP(CEasyPlayerWebActiveXCtrl, COleControl)
 	ON_OLEVERB(AFX_IDS_VERB_PROPERTIES, OnProperties)
 	ON_WM_CREATE()
 	ON_WM_DESTROY()
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 
@@ -155,6 +156,18 @@ CEasyPlayerWebActiveXCtrl::CEasyPlayerWebActiveXCtrl()
 {
 	InitializeIIDs(&IID_DEasyPlayerWebActiveX, &IID_DEasyPlayerWebActiveXEvents);
 	// TODO: 在此初始化控件的实例数据。
+	m_bInit = false;
+
+	memset(szURL, 0x00, 512);
+	memset(szUserName, 0x00, 128);
+	memset(szPassword, 0x00, 128);
+	nHardDecode = 0;
+	eRenderFormat = DISPLAY_FORMAT_YV12;
+
+	nFrameCache = 3;
+	bPlaySound = TRUE;
+	bShowToScale = FALSE;
+	bShowStatisticInfo = TRUE;
 }
 
 
@@ -164,11 +177,13 @@ CEasyPlayerWebActiveXCtrl::CEasyPlayerWebActiveXCtrl()
 CEasyPlayerWebActiveXCtrl::~CEasyPlayerWebActiveXCtrl()
 {
 	// TODO: 在此清理控件的实例数据。
+
 }
 
 
 
-// CEasyPlayerWebActiveXCtrl::OnDraw - 绘图函数
+// CE	AfxMessageBox(_T("页面已经关闭，重新加载OCX"));
+
 
 void CEasyPlayerWebActiveXCtrl::OnDraw(
 			CDC* pdc, const CRect& rcBounds, const CRect& rcInvalid)
@@ -236,7 +251,6 @@ int CEasyPlayerWebActiveXCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 
 	// TODO:  在此添加您专用的创建代码
-	EasyPlayerManager::Init();
 	// OCX内置窗口必须以OCX控件为父类窗口的子窗口，否则界面显示会有问题 [4/14/2014-10:12:38 Dingshuai]
 	m_pActiveDlg.Create(CMainVideoWnd::IDD, this);
 
@@ -247,77 +261,80 @@ int CEasyPlayerWebActiveXCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 void CEasyPlayerWebActiveXCtrl::OnDestroy()
 {
 	COleControl::OnDestroy();
-
 	// TODO: 在此处添加消息处理程序代码
 	m_pActiveDlg.DestroyWindow();
-	EasyPlayerManager::UnInit();
 
 }
 
+int StartStream();
 
 LONG CEasyPlayerWebActiveXCtrl::Start(LPCTSTR sURL, LPCTSTR sRenderFormat, LPCTSTR sUserName, LPCTSTR sPassword, LPCTSTR sHardDecord)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 	// TODO: 在此添加调度处理程序代码
-	char szURL[512] = {0,};
-	char szRenderFormat[128] = {0,};
-	char szUserName[128] = {0,};
-	char szPassword[128] = {0,};
-	char szHardDecord[128] = {0,};
+	int nRet = 0;
+	if (m_bInit)
+	{
+		char szRenderFormat[128] ;
+		char szHardDecord[128] ;
+		if (wcslen(sURL) < 1)		
+			return -1;
+		__WCharToMByte(sURL, szURL, sizeof(szURL)/sizeof(szURL[0]));
+		if (wcslen(sRenderFormat) > 0)
+		{
+			__WCharToMByte(sRenderFormat, szRenderFormat, sizeof(szRenderFormat)/sizeof(szRenderFormat[0]));
+		}
+		if (wcslen(sUserName) > 0)
+		{
+			__WCharToMByte(sUserName, szUserName, sizeof(szUserName)/sizeof(szUserName[0]));
+		}
+		if (wcslen(sPassword) > 0)
+		{
+			__WCharToMByte(sPassword, szPassword, sizeof(szPassword)/sizeof(szPassword[0]));
+		}
+		if (wcslen(sHardDecord) > 0)
+		{
+			__WCharToMByte(sHardDecord, szHardDecord, sizeof(szHardDecord)/sizeof(szHardDecord[0]));
+		}
 
-	if (wcslen(sURL) < 1)		
-		return -1;
-	__WCharToMByte(sURL, szURL, sizeof(szURL)/sizeof(szURL[0]));
-	if (wcslen(sRenderFormat) > 0)
-	{
-		__WCharToMByte(sRenderFormat, szRenderFormat, sizeof(szRenderFormat)/sizeof(szRenderFormat[0]));
-	}
-	if (wcslen(sUserName) > 0)
-	{
-		__WCharToMByte(sUserName, szUserName, sizeof(szUserName)/sizeof(szUserName[0]));
-	}
-	if (wcslen(sPassword) > 0)
-	{
-		__WCharToMByte(sPassword, szPassword, sizeof(szPassword)/sizeof(szPassword[0]));
-	}
-	if (wcslen(sHardDecord) > 0)
-	{
-		__WCharToMByte(sHardDecord, szHardDecord, sizeof(szHardDecord)/sizeof(szHardDecord[0]));
-	}
-	
-	int nHardDecode = atoi(szHardDecord);
-
-	int nRenderType = atoi(szRenderFormat);
-	RENDER_FORMAT eRenderFormat = DISPLAY_FORMAT_YV12;
-	switch (nRenderType)
-	{
-	case 0:
+		nHardDecode = atoi(szHardDecord);
+		int nRenderType = atoi(szRenderFormat);
 		eRenderFormat = DISPLAY_FORMAT_YV12;
-		break;
-	case 1:
-		eRenderFormat = DISPLAY_FORMAT_YUY2;
-		break;
-	case 2:
-		eRenderFormat = DISPLAY_FORMAT_UYVY;
-		break;
-	case 3:
-		eRenderFormat = DISPLAY_FORMAT_A8R8G8B8;
-		break;
-	case 4:
-		eRenderFormat = DISPLAY_FORMAT_X8R8G8B8;
-		break;
-	case 5:
-		eRenderFormat = DISPLAY_FORMAT_RGB565;
-		break;
-	case 6:
-		eRenderFormat = DISPLAY_FORMAT_RGB555;
-		break;
-	case 7:
-		eRenderFormat = DISPLAY_FORMAT_RGB24_GDI;
-		break;
+		switch (nRenderType)
+		{
+		case 0:
+			eRenderFormat = DISPLAY_FORMAT_YV12;
+			break;
+		case 1:
+			eRenderFormat = DISPLAY_FORMAT_YUY2;
+			break;
+		case 2:
+			eRenderFormat = DISPLAY_FORMAT_UYVY;
+			break;
+		case 3:
+			eRenderFormat = DISPLAY_FORMAT_A8R8G8B8;
+			break;
+		case 4:
+			eRenderFormat = DISPLAY_FORMAT_X8R8G8B8;
+			break;
+		case 5:
+			eRenderFormat = DISPLAY_FORMAT_RGB565;
+			break;
+		case 6:
+			eRenderFormat = DISPLAY_FORMAT_RGB555;
+			break;
+		case 7:
+			eRenderFormat = DISPLAY_FORMAT_RGB24_GDI;
+			break;
+		}
+
+		nRet = m_player.Start(szURL, m_pActiveDlg.GetSafeHwnd(), eRenderFormat , 1, szUserName , szPassword, nHardDecode);
+	}
+	else
+	{
+		SetTimer( WM_TIMER_START_ID, 500, NULL );
 	}
 
-	int nRet = m_player.Start(szURL, m_pActiveDlg.GetSafeHwnd(), eRenderFormat , 1, szUserName , szPassword, nHardDecode);
 	return nRet;
 }
 
@@ -325,41 +342,44 @@ LONG CEasyPlayerWebActiveXCtrl::Start(LPCTSTR sURL, LPCTSTR sRenderFormat, LPCTS
 void CEasyPlayerWebActiveXCtrl::Config(LPCTSTR sFrameCache, LPCTSTR sPlaySound, LPCTSTR sShowToScale, LPCTSTR sShowStatisticInfo )
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
-
 	// TODO: 在此添加调度处理程序代码
-	char szFrameCache[128] = {0,};
-	char szPlaySound[128] = {0,};
-	char szShowToScale[128] = {0,};
-	char szShowStatisticInfo[128] = {0,};
-	int nFrameCache = 3;
-	BOOL bPlaySound = TRUE;
-	BOOL bShowToScale = FALSE;
-	BOOL bShowStatisticInfo = TRUE;
+	// 
+	if (m_bInit)
+	{
+		char szFrameCache[128] = {0,};
+		char szPlaySound[128] = {0,};
+		char szShowToScale[128] = {0,};
+		char szShowStatisticInfo[128] = {0,};
 
-	if (wcslen(sFrameCache) > 0)
-	{
-		__WCharToMByte(sFrameCache, szFrameCache, sizeof(szFrameCache)/sizeof(szFrameCache[0]));
-		nFrameCache = atoi(szFrameCache);
-	}
-	if (wcslen(sPlaySound) > 0)
-	{
-		__WCharToMByte(sPlaySound, szPlaySound, sizeof(szPlaySound)/sizeof(szPlaySound[0]));
-		bPlaySound = atoi(szPlaySound);
-	}
-	if (wcslen(sShowToScale) > 0)
-	{
-		__WCharToMByte(sShowToScale, szShowToScale, sizeof(szShowToScale)/sizeof(szShowToScale[0]));
-		bShowToScale = atoi(szShowToScale);
-	}
-	if (wcslen(sShowStatisticInfo) > 0)
-	{
-		__WCharToMByte(sShowStatisticInfo, szShowStatisticInfo, sizeof(szShowStatisticInfo)/sizeof(szShowStatisticInfo[0]));
-		bShowStatisticInfo = atoi(szShowStatisticInfo);
-	}
 
-	m_player.Config(nFrameCache, bPlaySound, bShowToScale, bShowStatisticInfo );
+		if (wcslen(sFrameCache) > 0)
+		{
+			__WCharToMByte(sFrameCache, szFrameCache, sizeof(szFrameCache)/sizeof(szFrameCache[0]));
+			nFrameCache = atoi(szFrameCache);
+		}
+		if (wcslen(sPlaySound) > 0)
+		{
+			__WCharToMByte(sPlaySound, szPlaySound, sizeof(szPlaySound)/sizeof(szPlaySound[0]));
+			bPlaySound = atoi(szPlaySound);
+		}
+		if (wcslen(sShowToScale) > 0)
+		{
+			__WCharToMByte(sShowToScale, szShowToScale, sizeof(szShowToScale)/sizeof(szShowToScale[0]));
+			bShowToScale = atoi(szShowToScale);
+		}
+		if (wcslen(sShowStatisticInfo) > 0)
+		{
+			__WCharToMByte(sShowStatisticInfo, szShowStatisticInfo, sizeof(szShowStatisticInfo)/sizeof(szShowStatisticInfo[0]));
+			bShowStatisticInfo = atoi(szShowStatisticInfo);
+		}
+
+		m_player.Config(nFrameCache, bPlaySound, bShowToScale, bShowStatisticInfo );
+	}
+	else
+	{
+		SetTimer( WM_TIMER_CONFIG_ID, 500, NULL );
+	}
 }
-
 
 void CEasyPlayerWebActiveXCtrl::Close(void)
 {
@@ -367,4 +387,60 @@ void CEasyPlayerWebActiveXCtrl::Close(void)
 
 	// TODO: 在此添加调度处理程序代码
 	m_player.Close();
+}
+
+void CEasyPlayerWebActiveXCtrl::OnSetClientSite()
+{
+	// TODO: 
+	if (m_pClientSite) 
+	{
+		int ret = EasyPlayerManager::Init();
+#if 0
+		CString str = _T("");
+		str.Format(_T("Init = %d"), ret);
+		AfxMessageBox(str);
+#endif
+		//父窗口及其大小并不重要，因为控件在本地激活时会自动重画和重新定位。
+		VERIFY (CreateControlWindow (::GetDesktopWindow(), CRect(0,0,0,0), CRect(0,0,0,0)));
+		m_bInit = true;
+	}
+	else
+	{
+		Close();
+		// 调用刷新会报错 [10/12/2017 dingshuai]
+		//EasyPlayerManager::UnInit();
+		//AfxMessageBox(_T("页面已经关闭，重新加载OCX"));
+		DestroyWindow();
+		m_bInit = false;
+
+	}
+	COleControl::OnSetClientSite();
+}
+
+void CEasyPlayerWebActiveXCtrl::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: 
+	switch (nIDEvent)
+	{
+	case WM_TIMER_START_ID:
+		{
+			if (m_bInit)
+			{
+				int ret = m_player.Start(szURL, m_pActiveDlg.GetSafeHwnd(), eRenderFormat , 1, szUserName , szPassword, nHardDecode);
+				KillTimer(WM_TIMER_START_ID);
+			}
+		}
+		break;
+	case WM_TIMER_CONFIG_ID:
+		{
+			if (m_bInit)
+			{
+				m_player.Config(nFrameCache, bPlaySound, bShowToScale, bShowStatisticInfo );
+				KillTimer(WM_TIMER_CONFIG_ID);
+			}
+		}
+		break;
+	}
+
+	COleControl::OnTimer(nIDEvent);
 }

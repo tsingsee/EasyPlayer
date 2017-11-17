@@ -1,7 +1,7 @@
 {
-  "name": "EasyPlayer Web Plugin",
+  "name": "EasyPlayer Plugin",
   "version": "${FBSTRING_PLUGIN_VERSION}",
-  "description": "EasyPlayer Web Plugin",
+  "description": "EasyPlayer Plugin",
 
 	"plugins": [
     { "path": "npEasyPlayerPlugin.dll", "public": true }

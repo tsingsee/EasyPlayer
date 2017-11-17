@@ -4,6 +4,9 @@
 // 增加EasyPlayer管理类 [3/6/2016 dingshuai]
 #include "EasyPlayerManager.h"
 
+#define WM_TIMER_START_ID 1001
+#define WM_TIMER_CONFIG_ID 1002
+
 // EasyPlayerWebActiveXCtrl.h : CEasyPlayerWebActiveXCtrl ActiveX 控件类的声明。
 
 // CEasyPlayerWebActiveXCtrl : 有关实现的信息，请参阅 EasyPlayerWebActiveXCtrl.cpp。
@@ -66,5 +69,22 @@ protected:
 
 private:
 	EasyPlayerManager m_player;
+	bool m_bInit;
+
+	char szURL[512] ;
+	char szUserName[128] ;
+	char szPassword[128] ;
+
+	int nHardDecode;
+    RENDER_FORMAT eRenderFormat;
+
+	int	   nFrameCache ;
+	BOOL bPlaySound ;
+	BOOL bShowToScale ;
+	BOOL bShowStatisticInfo ;
+
+public:
+	virtual void OnSetClientSite();
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 };
 

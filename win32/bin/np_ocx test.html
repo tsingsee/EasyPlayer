@@ -25,8 +25,10 @@
 		var rendertype = document.getElementById("rendertype").value;
 		var name= document.getElementById("name").value;
 		var password = document.getElementById("password").value;
+		var hardDecode = document.getElementById("hardwareDecode").value;
+		
 
-		obj.Start(url, rendertype, name, password);
+		obj.Start(url, rendertype, name, password,hardDecode);
 		config();
 
 		//alert(url+";"+rendertype+";"+name+";"+password);
@@ -63,6 +65,7 @@ RTSP URL：<input type="text" name="url" id="url" VALUE="rtsp://127.0.0.1:554/str
 RenderFormat：<input type="text" name="rendertype" id="rendertype" VALUE="0"/>
 用户名：<input type="text" name="name" id="name" size=25 value="admin"/>
 密码：<input type="text" name="password" id="password" size=25 value="admin"/>
+是否使用硬件解码：<input type="text" name="hardwareDecode" id="hardwareDecode" size=25 value="0"/>
 
 <br>
 缓存：<input type="text" name="cache" id="cache" size=25 value ="3"/>

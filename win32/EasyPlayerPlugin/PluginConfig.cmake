@@ -1,12 +1,12 @@
 #/**********************************************************\ 
 #
 # Auto-Generated Plugin Configuration file
-# for EasyPlayer Web Plugin
+# for EasyPlayer Plugin
 #
 #\**********************************************************/
 
 set(PLUGIN_NAME "EasyPlayerPlugin")
-set(PLUGIN_PREFIX "EPWP")
+set(PLUGIN_PREFIX "EPP")
 set(COMPANY_NAME "EasyDarwin")
 
 # ActiveX constants:
@@ -42,20 +42,20 @@ endif ( FB_PLATFORM_ARCH_32 )
 
 # strings
 set(FBSTRING_CompanyName "EasyDarwin")
-set(FBSTRING_PluginDescription "EasyPlayer Web Plugin")
+set(FBSTRING_PluginDescription "EasyPlayer Plugin")
 set(FBSTRING_PLUGIN_VERSION "1.0.0.0")
-set(FBSTRING_LegalCopyright "Copyright 2016 EasyDarwin")
+set(FBSTRING_LegalCopyright "Copyright 2017 EasyDarwin")
 set(FBSTRING_PluginFileName "np${PLUGIN_NAME}")
 if (APPLE)
     # On apple, np is not needed
     set(FBSTRING_PluginFileName "${PLUGIN_NAME}")
 endif()
-set(FBSTRING_ProductName "EasyPlayer Web Plugin")
+set(FBSTRING_ProductName "EasyPlayer Plugin")
 set(FBSTRING_FileExtents "")
 if ( FB_PLATFORM_ARCH_32 )
-    set(FBSTRING_PluginName "EasyPlayer Web Plugin")  # No 32bit postfix to maintain backward compatability.
+    set(FBSTRING_PluginName "EasyPlayer Plugin")  # No 32bit postfix to maintain backward compatability.
 else ( FB_PLATFORM_ARCH_32 )
-    set(FBSTRING_PluginName "EasyPlayer Web Plugin_${FB_PLATFORM_ARCH_NAME}")
+    set(FBSTRING_PluginName "EasyPlayer Plugin_${FB_PLATFORM_ARCH_NAME}")
 endif ( FB_PLATFORM_ARCH_32 )
 set(FBSTRING_MIMEType "application/x-easyplayerplugin")
 

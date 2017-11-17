@@ -62,6 +62,7 @@
       <ModuleDefinitionFile>.\EasyPlayerWebActiveX.def</ModuleDefinitionFile>
       <OutputFile>..\bin\$(ProjectName).ocx</OutputFile>
       <RegisterOutput>true</RegisterOutput>
+      <AdditionalDependencies>..\bin\libEasyPlayer.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -97,6 +98,8 @@
       <ModuleDefinitionFile>.\EasyPlayerWebActiveX.def</ModuleDefinitionFile>
       <OutputFile>..\bin\$(ProjectName).ocx</OutputFile>
       <RegisterOutput>true</RegisterOutput>
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
+      <AdditionalDependencies>..\bin\libEasyPlayer.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>

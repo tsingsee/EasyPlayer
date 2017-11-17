@@ -13,8 +13,8 @@
 		<em:localized>
 			<Description>
 				<em:locale>en-US</em:locale>
-				<em:name>EasyPlayer Web Plugin</em:name>
-				<em:description>EasyPlayer Web Plugin</em:description>
+				<em:name>EasyPlayer Plugin</em:name>
+				<em:description>EasyPlayer Plugin</em:description>
 				<em:creator>EasyDarwin</em:creator>
 				<em:homepageURL>http://www.easydarwin.org</em:homepageURL>
 			</Description>

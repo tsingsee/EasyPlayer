@@ -9,8 +9,8 @@
 
 #pragma once
 
-#include "./Win/libEasyPlayer/EasyRTSPClient/EasyTypes.h"
-#include "./Win/libEasyPlayer/libEasyPlayerAPI.h"
+#include "./libEasyPlayer/EasyRTSPClient/EasyTypes.h"
+#include "./libEasyPlayer/libEasyPlayerAPI.h"
 
 //Gavin's Source Struct流信息结构
 typedef struct __EASY_LOCAL_SOURCE_T
@@ -45,7 +45,9 @@ public:
 	}
 
 	//打开流
-	int Start(char* szURL, HWND hShowWnd, RENDER_FORMAT eRenderFormat, int rtpovertcp, const char *username, const char *password, MediaSourceCallBack callback=NULL, void *userPtr=NULL) ;
+	int Start(char* szURL, HWND hShowWnd, RENDER_FORMAT eRenderFormat, int rtpovertcp, 
+		const char *username, const char *password, BOOL bHardDecode,
+		MediaSourceCallBack callback=NULL, void *userPtr=NULL) ;
 	//设置参数
 	void Config(int nFrameCache,  BOOL bPlaySound, BOOL bShowToScale = TRUE, BOOL  bShowStatisticInfo = FALSE);
 	//关闭流
