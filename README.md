@@ -41,29 +41,8 @@ EasyPlayer是由EasyDarwin开源团队开发和维护的一个流媒体播放器
 
 - EasyPlayerPro-iOS：[https://github.com/EasyDSS/EasyPlayerPro-iOS](https://github.com/EasyDSS/EasyPlayerPro-iOS "EasyPlayerPro-iOS")
 
-## 版本下载 ##
 
-- Windows RTSP播放器：[https://github.com/EasyDarwin/EasyPlayer/releases](https://github.com/EasyDarwin/EasyPlayer/releases "EasyPlayer_Win")
-
-- Windows Pro全功能播放器：[https://github.com/EasyDarwin/EasyPlayer/releases/tag/v1.0.17.0315](https://github.com/EasyDarwin/EasyPlayer/releases/tag/v1.0.17.0315 "EasyPlayPro_win_v1.0.17.0315")
-
-- Android RTSP版：http://fir.im/EasyPlayer
-
-![EasyPlayer Android](http://www.easydarwin.org/github/images/easyplayer/firimeasyplayerdroid.png)
-
-- Android Pro全功能版：http://fir.im/EasyPlayerPro
-
-![EasyPlayer Pro 版](http://www.easydarwin.org/github/images/easyplayerprofirim20170205.png)
-
-- iOS RTSP版：[https://itunes.apple.com/us/app/easy-player/id1158675416?l=zh&ls=1&mt=8](https://itunes.apple.com/us/app/easy-player/id1158675416?l=zh&ls=1&mt=8)
-
-![EasyPlayer](http://www.easydarwin.org/github/images/easyplayer/easyplayerios20170313.png)
-
-- iOS Pro全功能版：[https://itunes.apple.com/us/app/easyplayerpro/id1205087581?l=zh&ls=1&mt=8](https://itunes.apple.com/us/app/easyplayerpro/id1205087581?l=zh&ls=1&mt=8)
-
-![EasyPlayer Pro 版](http://www.easydarwin.org/github/images/easyplayer/easyplayerproios20170313.png)
-
-## DEMO效果 ##
+## 播放器效果 ##
 
 ![EasyPlayer Win](http://www.easydarwin.org/github/images/easyplayer20160908171027.png)
 
