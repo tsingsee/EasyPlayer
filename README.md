@@ -10,7 +10,7 @@ EasyPlayer是由EasyDarwin开源团队开发和维护的一个流媒体播放器
 
 ## 项目集群说明 ##
 
-### [x] EasyPlayer-RTSP ###
+### √ EasyPlayer-RTSP ###
 
 **EasyPlayer-RTSP**是一套RTSP播放器项目，目前包括有Windows、Android、iOS多个分支，主要用于RTSP专用播放，比大部分通用播放器更加精炼，而且延时控制方面非常优秀：
 
@@ -21,7 +21,7 @@ EasyPlayer是由EasyDarwin开源团队开发和维护的一个流媒体播放器
 - EasyPlayer-RTSP-iOS：[https://github.com/EasyDSS/EasyPlayer-RTSP-iOS](https://github.com/EasyDSS/EasyPlayer-RTSP-iOS "EasyPlayer-RTSP-iOS")
 
 
-### [x] EasyPlayer-RTMP ###
+### √ EasyPlayer-RTMP ###
 
 **EasyPlayer-RTMP**是一套RTMP播放器项目，目前包括有Windows、Android、iOS多个分支，主要用于RTMP专用播放，比大部分ffmpeg封装类型播放器更加精炼，而且延时控制方面非常优秀：
 
@@ -31,7 +31,7 @@ EasyPlayer是由EasyDarwin开源团队开发和维护的一个流媒体播放器
 
 - EasyPlayer-RTMP-iOS：[https://github.com/EasyDSS/EasyPlayer-RTMP-iOS](https://github.com/EasyDSS/EasyPlayer-RTMP-iOS "EasyPlayer-RTMP-iOS")
 
-### [x] EasyPlayerPro ###
+### √ EasyPlayerPro ###
 
 **EasyPlayerPro**是一款全功能的流媒体播放器，支持RTSP、RTMP、HTTP、HLS、UDP、RTP、File等多种流媒体协议播放、支持本地文件播放，支持本地抓拍、本地录像、播放旋转、多屏播放、倍数播放等多种功能特性，核心基于ffmpeg，稳定、高效、可靠、可控，支持Windows、Android、iOS三个平台，目前在多家教育、安防、行业型公司，都得到的应用，广受好评！
 
