@@ -1,4 +1,4 @@
-# EasyPlayer系列项目 #
+# EasyPlayer播放器系列项目 #
 
 EasyPlayer是由EasyDarwin开源团队开发和维护的一个流媒体播放器系列项目，包括有：
 
