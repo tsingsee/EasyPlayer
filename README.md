@@ -1,6 +1,6 @@
 # EasyPlayer播放器系列项目 #
 
-EasyPlayer是由EasyDarwin开源团队开发和维护的一个流媒体播放器系列项目，包括有：
+EasyPlayer是由EasyDarwin开源团队开发和维护的一个流媒体播放器系列项目，随着多年不断的发展和迭代，不断基于成功的实践经验，发展出包括有：
 
 - EasyPlayer **RTSP播放器**（Windows / Android / iOS）
 
@@ -8,7 +8,8 @@ EasyPlayer是由EasyDarwin开源团队开发和维护的一个流媒体播放器
 
 - EasyPlayerPro **全功能播放器**（Windows / Android / iOS）
 
-## 项目集群说明 ##
+
+## EasyPlayer项目集群说明 ##
 
 ### √ EasyPlayer-RTSP ###
 
