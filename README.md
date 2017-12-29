@@ -43,6 +43,11 @@ EasyPlayer是由EasyDarwin开源团队开发和维护的一个流媒体播放器
 - EasyPlayerPro-iOS：[https://github.com/EasyDSS/EasyPlayerPro-iOS](https://github.com/EasyDSS/EasyPlayerPro-iOS "EasyPlayerPro-iOS")
 
 
+### 有了EasyPlayerPro，为什么我们还要开发EasyPlayer-RTSP和EasyPlayer-RTMP？ ###
+
+EasyPlayerPro虽然支持了几乎所有的流媒体协议，但是在很多场景和需求下面（例如：SDK包大小、自定义协议、数据加密），EasyPlayerPro的定制成本比较高，灵活程度没有EasyPlayer-RTSP和EasyPlayer-RTMP专用播放器的灵活程度高，EasyPlayerPro考虑的是通用性，而且专用播放器考虑的是定制性（例如EasyPlayer-RTMP将要定制H.265，这个是其他RTMP通用播放器都不能支持的），同样，在起播等方面，专用播放器更优！
+
+
 ## 播放器效果 ##
 
 ![EasyPlayer Win](http://www.easydarwin.org/github/images/easyplayer20160908171027.png)
