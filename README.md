@@ -1,6 +1,6 @@
 # EasyPlayer播放器系列项目 #
 
-EasyPlayer是由EasyDarwin开源团队开发和维护的一个流媒体播放器系列项目，随着多年不断的发展和迭代，不断基于成功的实践经验，发展出包括有：
+EasyPlayer是由**紫鲸团队**开发和维护的一个流媒体播放器系列项目，随着多年不断的发展和迭代，不断基于成功的实践经验，发展出包括有：
 
 - EasyPlayer **RTSP播放器**（Windows / Android / iOS）
 
@@ -13,7 +13,7 @@ EasyPlayer是由EasyDarwin开源团队开发和维护的一个流媒体播放器
 
 ### √ EasyPlayer-RTSP ###
 
-**EasyPlayer-RTSP**是一套RTSP播放器项目，目前包括有Windows、Android、iOS多个分支，主要用于RTSP专用播放，比大部分通用播放器更加精炼，而且延时控制方面非常优秀：
+**EasyPlayer-RTSP**是一套RTSP播放器项目，目前包括有Windows、Android、iOS多个分支，主要用于RTSP专用播放，比大部分通用播放器更加精炼，而且延时控制方面非常优秀，非常适用于安防行业：
 
 - EasyPlayer-RTSP-Win：[https://github.com/EasyDSS/EasyPlayer-RTSP-Win](https://github.com/EasyDSS/EasyPlayer-RTSP-Win "EasyPlayer-RTSP-Win")
 
@@ -24,7 +24,7 @@ EasyPlayer是由EasyDarwin开源团队开发和维护的一个流媒体播放器
 
 ### √ EasyPlayer-RTMP ###
 
-**EasyPlayer-RTMP**是一套RTMP播放器项目，目前包括有Windows、Android、iOS多个分支，主要用于RTMP专用播放，比大部分ffmpeg封装类型播放器更加精炼，而且延时控制方面非常优秀：
+**EasyPlayer-RTMP**是一套RTMP播放器项目，目前包括有Windows、Android、iOS多个分支，主要用于RTMP专用播放，比大部分ffmpeg封装类型播放器更加精炼，而且延时控制方面非常优秀，自定义扩展RTMP H.265支持：
 
 - EasyPlayer-RTMP-Win：[https://github.com/EasyDSS/EasyPlayer-RTMP-Win](https://github.com/EasyDSS/EasyPlayer-RTMP-Win "EasyPlayer-RTMP-Win")
 
@@ -63,7 +63,7 @@ EasyPlayerPro虽然支持了几乎所有的流媒体协议，但是在很多场�
 
 - Tel：13718530929
 
-- QQ交流群：[544917793](http://jq.qq.com/?_wv=1027&k=2IDkJId "EasyPlayer")
+- QQ交流群：<a href="http://jq.qq.com/?_wv=1027&k=2IDkJId" target="_blank" title="EasyPlayer">544917793</a>
 
 > EasyPlayer是一款非常稳定的全协议/全功能/全平台播放器，各平台版本需要经过授权才能商业使用，商业授权方案可以通过以上渠道进行更深入的技术与合作咨询；
 
@@ -76,6 +76,6 @@ EasyPlayerPro虽然支持了几乎所有的流媒体协议，但是在很多场�
 
 **EasyNVR**无插件直播方案：[www.EasyNVR.com](http://www.easynvr.com)
 
-Copyright &copy; EasyDarwin Team 2012-2017
+Copyright &copy; EasyDarwin Team 2012-2018
 
 ![EasyDarwin](http://www.easydarwin.org/skin/easydarwin/images/wx_qrcode.jpg)
