@@ -1,6 +1,6 @@
 # EasyPlayer播放器系列项目 #
 
-EasyPlayer是由**紫鲸团队**开发和维护的一个流媒体播放器系列项目，随着多年不断的发展和迭代，不断基于成功的实践经验，发展出包括有：
+EasyPlayer是由**[青犀TSINGSEE开放平台](http://www.tsingsee.com "青犀TSINGSEE")**开发和维护的一个流媒体播放器系列项目，随着多年不断的发展和迭代，不断基于成功的实践经验，发展出包括有：
 
 - EasyPlayer **RTSP播放器**（Windows / Android / iOS）
 
@@ -74,6 +74,6 @@ EasyPlayerPro虽然支持了几乎所有的流媒体协议，但是在很多场�
 
 **EasyNVR**无插件直播方案：[www.EasyNVR.com](http://www.easynvr.com)
 
-Copyright &copy; EasyDarwin Team 2012-2018
+Copyright &copy; EasyDarwin Team 2012-2019
 
 ![EasyDarwin](http://www.easydarwin.org/skin/easydarwin/images/wx_qrcode.jpg)
