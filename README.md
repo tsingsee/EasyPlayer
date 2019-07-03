@@ -42,6 +42,12 @@ EasyPlayer是由**[青犀TSINGSEE开放平台](http://www.tsingsee.com "青犀TS
 
 - EasyPlayerPro-iOS：[https://github.com/EasyDSS/EasyPlayerPro-iOS](https://github.com/EasyDSS/EasyPlayerPro-iOS "EasyPlayerPro-iOS")
 
+### √ EasyPlayer.js ###
+
+**EasyPlayer.js**是EasyPlayer H5版，支持http、rtmp、flv、hls等多种协议，支持全平台、全终端（Windows、Linux、Android、iOS）播放；
+
+- EasyPlayer.js：[https://github.com/EasyDSS/EasyPlayer.js](https://github.com/EasyDSS/EasyPlayer.js "EasyPlayer.js")
+
 
 ### 有了EasyPlayerPro，为什么我们还要开发EasyPlayer-RTSP和EasyPlayer-RTMP？ ###
 
