@@ -1,6 +1,6 @@
 # EasyPlayer系列播放器项目
 
-EasyPlayer是由**[青犀TSINGSEE开放平台](http://open.tsingsee.com "青犀TSINGSEE")**开发和维护的一个流媒体播放器系列项目，随着多年不断的发展和迭代，不断基于成功的实践经验，发展出包括有：
+EasyPlayer是由[TSINGSEE | 开放平台](http://open.tsingsee.com "青犀TSINGSEE")开发和维护的一个流媒体播放器系列项目，随着多年不断的发展和迭代，不断基于成功的实践经验，发展出包括有：
 
 - EasyPlayer **RTSP播放器**（Windows / Android / iOS）
 
