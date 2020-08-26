@@ -57,7 +57,7 @@ EasyPlayerPro虽然支持了几乎所有的流媒体协议，但是在很多场�
 
 ## 技术支持
 
-- 邮件：[support@easydarwin.org](mailto:support@easydarwin.org) 
+- 邮件：[support@tsingsee.com](mailto:support@tsingsee.com) 
 
 - QQ交流群：<a href="http://jq.qq.com/?_wv=1027&k=2IDkJId" target="_blank" title="EasyPlayer">544917793</a>
 
