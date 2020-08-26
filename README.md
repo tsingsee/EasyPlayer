@@ -55,15 +55,6 @@ EasyPlayer是由[TSINGSEE | 开放平台](http://open.tsingsee.com "青犀TSINGS
 EasyPlayerPro虽然支持了几乎所有的流媒体协议，但是在很多场景和需求下面（例如：SDK包大小、自定义协议、数据加密），EasyPlayerPro的定制成本比较高，灵活程度没有EasyPlayer-RTSP和EasyPlayer-RTMP专用播放器的灵活程度高，EasyPlayerPro考虑的是通用性，而且专用播放器考虑的是定制性（例如EasyPlayer-RTMP将要定制H.265，这个是其他RTMP通用播放器都不能支持的），同样，在起播等方面，专用播放器更优！
 
 
-## 播放器效果
-
-![EasyPlayer Win](http://www.easydarwin.org/github/images/easyplayer20160908171027.png)
-
-![EasyPlayer Android](https://raw.githubusercontent.com/EasyDarwin/EasyPlayer_Android/master/EasyPlayer/screenshot/single_video.jpg?raw=true)
-
-![EasyPlayer iOS](http://www.easydarwin.org/github/images/easyplayeriosdemo20170310.jpg)
-
-
 ## 技术支持
 
 - 邮件：[support@easydarwin.org](mailto:support@easydarwin.org) 
